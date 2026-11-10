@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adventure</title>
+<link rel="stylesheet" href="engine/style.css">
+</head>
+<body class="theme-paper">
+<div id="book">
+  <header id="top">
+    <h1 id="title">Loading the story…</h1>
+    <p id="byline"></p>
+  </header>
+  <div id="notice" hidden></div>
+  <article id="scene" tabindex="-1" aria-live="polite"></article>
+  <ol id="choices"></ol>
+  <p id="carrying" hidden></p>
+</div>
+<nav id="bar" aria-label="Story controls">
+  <button id="btn-restart" type="button">Start over</button>
+  <button id="btn-back" type="button">Back</button>
+  <button id="btn-map" type="button">Story map</button>
+  <button id="btn-draft" type="button">Test a draft</button>
+  <button id="btn-problems" type="button">Checking…</button>
+  <span id="endings"></span>
+</nav>
+<p id="help"><kbd>1</kbd>–<kbd>9</kbd> pick a choice &middot; <kbd>B</kbd> back &middot; <kbd>M</kbd> story map</p>
+<div id="panel" hidden role="dialog" aria-modal="true" aria-labelledby="panel-title">
+  <div id="panel-box">
+    <div id="panel-head"><h2 id="panel-title"></h2><button id="panel-close" type="button" aria-label="Close">×</button></div>
+    <div id="panel-body"></div>
+  </div>
+</div>
+
+<!-- The engine. The story itself lives in the story/ folder. -->
+<script src="engine/story.js"></script>
+<script src="engine/map.js"></script>
+<script src="engine/draft.js"></script>
+<script src="engine/play.js"></script>
+</body>
+</html>

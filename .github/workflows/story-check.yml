@@ -1,0 +1,16 @@
+# The Story check: runs engine/check-cli.js on every pull request and every
+# change to main, and shows a green check or a red X. You don't need to edit
+# this file.
+name: Story check
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  check:
+    name: Story check
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check every story file
+        run: node engine/check-cli.js
