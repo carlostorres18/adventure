@@ -67,6 +67,7 @@
 by: Nistopher Chrolan
 
 ## path-2
+theme: storm
 ![A narrow trail along a cliff above a grey sea, with wind driving fog past and gulls wheeling](images/cliff-trail.svg)
 effect: fog
 sound: wind
@@ -87,6 +88,7 @@ Two things on this stretch of cliff. A little stone shelter squats on the high s
 [Go back to the crossroads](#crossroads)
 
 ## the-edge
+theme: storm
 effect: shake
 sound: splash
 
@@ -102,6 +104,7 @@ get: a bruise shaped like the island
 [Crawl out onto the grey sand](#path-3)
 
 ## star-count
+theme: storm
 You lie in the pool with your ears underwater and look straight up.
 
 Gulls are crossing the sky. Not circling. Crossing, in a line, all of them going the same way, out over the water and back again, out and back, the way a lamp turns.
@@ -114,6 +117,7 @@ They are doing it in shifts.
 [Find the steps cut into the cliff and go back up](#sea-stair)
 
 ## bell-house
+theme: storm
 sound: wind
 
 Four stone legs and a slate roof, and under it a bronze fog bell the size of a washtub, green at the shoulders and polished gold along the rim where two hundred years of hands have gone past it.
@@ -130,6 +134,7 @@ get: the rota
 [Back out onto the trail](#path-2)
 
 ## eleven-names
+theme: storm
 Eleven names, in eleven different hands, each with two dates beside it. Started, and finished.
 
 *M. VELL, 1801.* The writing is beautiful and the ink is brown as tea.
@@ -147,6 +152,7 @@ You are fairly sure the old man in the village answered his own front door tonig
 [Go and look at that cave](#cave-mouth)
 
 ## your-name
+theme: storm
 effect: flicker
 
 You write your name on the twelfth line. It is a stupid thing to do and you know it while you are doing it, the way you know about the second slice of cake.
@@ -160,6 +166,7 @@ So is the tenth.
 [Put the slate back on its nail, face in](#bell-house)
 
 ## ring-it
+theme: storm
 game: bell
 sound: bell
 
@@ -171,6 +178,7 @@ You take the bell by the rim with both hands. It weighs as much as a person. To 
 [Your arms give out](#arms-gave-out) on lose
 
 ## toll
+theme: storm
 ![A bronze fog bell hanging in a small stone shelter on a clifftop, swinging, with rings of sound spreading out into the fog](images/fog-bell.svg)
 sound: bell
 
@@ -185,6 +193,7 @@ In the morning you go back in and look at the slate, and the twelfth line is sti
 THE END
 
 ## arms-gave-out
+theme: storm
 Your arms stop being arms somewhere around the twentieth swing. The bell goes on moving for a while without you, getting quieter, the way a conversation does.
 
 You sit down in the wet grass underneath it and listen to the horn out there, which does not change course, and does not stop, and then does stop.
@@ -194,6 +203,7 @@ In the morning they find the bell still faintly warm where your hands were, and 
 THE END
 
 ## cave-mouth
+theme: cave
 ![A black cave mouth in a wet cliff face, with dust drifting in the air and faint points of light far inside](images/cave-mouth.svg)
 effect: dark
 
@@ -210,6 +220,7 @@ There is a smell of old fish and new paint.
 [Back out into the wind](#path-2) haunted flees
 
 ## blind-crawl
+theme: cave
 effect: dark, dread
 sound: heartbeat
 
@@ -229,6 +240,7 @@ The twelfth is wet.
 [Keep your hand exactly where it is](#wet-paint)
 
 ## wet-paint
+theme: cave
 effect: dread, static
 sound: heartbeat
 
@@ -244,6 +256,7 @@ get: a name you didn't give
 [Run](#path-2)
 
 ## answered
+theme: night
 You answer. Of course you answer. Somebody called you by your real name in the dark and you are only a person.
 
 The cave fills with wings. Not noise, exactly. Pressure, like a held breath let out all at once, and then you are up, and the ceiling does not stop you.
@@ -255,6 +268,7 @@ All of you turn together and go to put a stop to it, and your new name is alread
 THE END
 
 ## the-register
+theme: ember
 ![A cave wall painted in ochre: a tall tower throwing a light, waves below, and a row of eleven human figures. A twelfth figure appears in wet paint at the end of the row](images/register-wall.svg)
 effect: flicker
 sound: lamp
@@ -272,6 +286,7 @@ Above you, in the dark, the nests. Hundreds of them. Nobody up there is asleep.
 [Back out into the wind](#cave-mouth) haunted glitch
 
 ## twelve
+theme: ember
 effect: slow, dread
 sound: heartbeat
 
@@ -291,11 +306,14 @@ At the end of the row there is a twelfth, and it is being painted while you watc
 
 (if ending undertow) One of them is wet to the shoulder. You know which go that was.
 
+(if remembered pocket) In your coat pocket, something that has been asleep since the beach puts one claw out and holds on to the seam.
+
 [Leave. Just leave](#path-2) haunted gone
 [Put your hand flat against the wet one](#wet-paint)
 [Finish it yourself](#maren) haunted waits 9
 
 ## maren
+theme: ember
 ![A large white gull sitting in a nest of driftwood, wearing a tiny golden crown, with hundreds of pale eyes watching from the dark behind her](images/gull-queen.svg)
 effect: flicker, dread
 keep: the gulls know your face
@@ -319,10 +337,12 @@ It is the same hand that wrote the eleventh name. It has just had longer to get 
 [Ask whether anybody has ever been let off](#the-ritual)
 [Ask her what she already knows about you](#she-recites) if run 2
 [Show her the stopped watch](#the-watch) if stopped watch
+[Put Clackers down in front of her](#clackers-meets-maren) if a brass button
 [Show her your bruise](#bruise) if a bruise shaped like the island
 [Back away slowly](#the-register)
 
 ## she-recites
+theme: ember
 effect: slow, static
 
 You ask her what she knows.
@@ -342,6 +362,7 @@ You started coming here {first-played}.
 [Back away slowly](#the-register)
 
 ## the-watch
+theme: ember
 sound: tick
 
 You take out the silver pocket watch with its hands stopped at 9:47 and hold it where she can see it.
@@ -355,7 +376,30 @@ She has seen that watch before. She was there when it stopped.
 [Bow](#the-gift)
 [Back away slowly](#the-register)
 
+## clackers-meets-maren
+theme: ember
+sound: tick
+
+You put the crab down on the rock between you, with the brass button still
+held up in front of him like a season ticket.
+
+The Gull Queen looks at the button. Then at the crab. Then at the button.
+
+It is a keeper's coat button, and she has worn that coat, and she has drowned
+in that coat, and a crab on a beach has been carrying one around for years
+because it was shiny and it was his.
+
+She bows to him. A gull bows to a crab, in a cave, at some hour of the night,
+and neither of them thinks this is strange, and you are the only person who
+will ever know it happened.
+
+Clackers walks back up your sleeve and into the pocket.
+
+[Bow as well, because what else](#the-gift)
+[Back away slowly](#the-register)
+
 ## she-cannot
+theme: ember
 "How do I light it," you say, out loud, to a bird.
 
 She comes up off the nest so fast you sit down. She lands on the rim, and she lifts one wing, and she holds it out to you, and she keeps holding it out, and she will not stop holding it out until you have understood.
@@ -370,6 +414,7 @@ She folds the wing. She puts the side of her head against your palm and leaves i
 [Back away slowly](#the-register)
 
 ## bruise
+theme: ember
 You push your sleeve up and show her the bruise you got falling off her cliff. It came up blue and green and it is, you have to admit, a very good likeness. There is the headland. There is the long bay. There is the hook at the south end where the sand is.
 
 She studies it for a long time, turning her head.
@@ -382,6 +427,7 @@ Then she taps it again, lower down, where the sand is, and then she taps it a th
 [Back away slowly](#the-register)
 
 ## the-gift
+theme: ember
 You bow, which feels enormously stupid for about a second and a half, and then does not.
 
 She gets up. She puts her head down into her own breast, right down, and pulls, and it must hurt because her whole body goes with it, and she comes up with one feather and lays it across your palm.
@@ -397,6 +443,7 @@ get: white feather
 [Go back out to the trail](#path-2)
 
 ## chorus-flight
+theme: night
 ![Thousands of white gulls spiralling over the rocks at night, their wings so bright they light the water below, while a ship's lamp turns away from the shore](images/chorus.svg)
 sound: gull
 
@@ -415,6 +462,7 @@ In the morning you tell the village, and the village is very kind about it.
 THE END
 
 ## the-ritual
+theme: ember
 effect: flicker
 
 You ask her whether anybody has ever been let off.
@@ -429,6 +477,7 @@ A register is only a register if somebody can read it, sign it, prove it, and bu
 [Leave it. Two hundred years is not your mess](#the-register)
 
 ## rite-light
+theme: ember
 sound: lamp
 
 You set the lantern down in the worn place and it fits like a cup in a saucer.
@@ -441,6 +490,7 @@ That is the reading done.
 [Pick your lantern back up and go](#the-register)
 
 ## rite-breath
+theme: ember
 effect: wrong
 sound: wind
 
@@ -456,6 +506,7 @@ That is the signing done.
 [Spit out the feather](#the-register)
 
 ## rite-name
+theme: ember
 effect: dread
 
 You hold the slate up in the lantern light and turn it so she can see.
@@ -471,6 +522,7 @@ The proof would have to be a thing that was in two centuries at once, and still 
 [Tell her the truth, which is that you can't prove anything](#not-yet)
 
 ## not-yet
+theme: ember
 "I can't prove it," you say. "I haven't got anything."
 
 She takes it better than you do. She has had practice. She settles down onto the stone with her feet tucked under her, which is a bird saying *fine, I'll wait*, and the waiting is the worst thing you have ever been forgiven with.
@@ -481,6 +533,7 @@ Then she gets up again and walks to the cave mouth and stands looking down, sout
 [Go back out to the trail](#path-2)
 
 ## the-twelfth-line
+theme: dawn
 effect: slow
 
 You cannot prove you can get out of the night. You have not got two of anything. What you have got is a name that was handed to you in the dark by something that was already here, and you have been carrying it around all night in the pocket where you keep the things you are not ready to look at.
@@ -504,6 +557,7 @@ And then one foggy evening a long way from now, somebody young comes up the clif
 THE END
 
 ## relieved
+theme: dawn
 ![The painted register with the first name struck through, as the painted figures lift off the wall one by one and leave as birds of light](images/relieved.svg)
 effect: slow
 sound: lamp
@@ -532,6 +586,7 @@ You are not late.
 THE END
 
 ## stone-coat
+theme: storm
 effect: dread
 sound: heartbeat
 

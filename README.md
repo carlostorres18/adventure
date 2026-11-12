@@ -171,6 +171,9 @@ Everything above is all you need. If you want more, a scene can also
   which reads the items you are carrying and always has a button to skip it
 - **change how the page looks**: `effect: fog`, `sound: bell`
 - **misbehave**: `haunted gone` on a choice you can see and cannot pick
+- **change the weather**: `theme: cave` on a scene, and the page cross-fades
+- **keep a creature**: `catch: clackers` gives you something that survives
+  **Start over**, levels up, and fights for you in a `game: duel`
 
 It is all written up, with every rule, in **[docs/ENGINE.md](docs/ENGINE.md)**.
 None of it can trap a player: the checker refuses to build a story where it could.

@@ -112,6 +112,8 @@ Write any of these in a sentence and the engine swaps in the real number.
 | `{clock}` | the real time on the player's own computer |
 | `{first-played}` | when they first opened the story (*"three days ago"*) |
 | `{last-ending}` | the ending that finished their previous go |
+| `{creature-level}` | what level the creature they caught is on |
+| `{sand}` | the biggest pile of sand they have ever made |
 
 ```text
 You have had {runs} goes at this island, and you would like it very much
@@ -140,6 +142,8 @@ not clicked, they are the two ways out.
 | --- | --- |
 | `undertow` | swim up through dark water while the sea throws things at you |
 | `bell` | ring a heavy bell in time with its swing |
+| `duel` | turn by turn, with a creature you caught. Needs an `against:` line |
+| `clicker` | pile up sand by clicking, spend it on things that pile it up faster |
 
 **Both games read what the player is carrying.** In `undertow`, a `lantern`
 lets you see much further, a `white feather` gives you more air and longer to
@@ -157,6 +161,66 @@ and both have:
 
 The checker makes sure every `game:` scene has exactly one `on win` and one
 `on lose`, and that no other scene uses them.
+
+---
+
+## Creatures
+
+Something you catch once and keep forever. Not an item: a creature survives
+**Start over**, remembers what it learned, and gets better at fighting.
+
+```text
+## pocket
+catch: clackers
+```
+
+| | |
+| --- | --- |
+| `clackers` | a pocket crab. Pinch, Sidle, Bubble Rasp |
+| `squib` | a very small squid. Tug, Ink, Jet |
+| `pib` | one gull chick. Peck, Shriek, Fluff |
+
+Each of them has a **fourth move that only appears if the player is carrying
+the right item** — Clackers' Button Flash needs `a brass button`, Squib's
+Lamplight needs a `lantern`, Pib's The Chorus needs a `white feather`. That is
+the best thing in here: an item you picked up by reading turns into a button
+in a fight.
+
+Creatures level up by winning, and the level is kept between goes, so a crab
+that lost on your first go can win on your third.
+
+## Duels
+
+```text
+## molly-duel
+game: duel
+against: Old Molly, 4
+[She lets you past](#molly-won) on win
+[She does not let you past](#molly-lost) on lose
+```
+
+`against:` takes a name and a level from 1 to 9. **Any name works.** The
+engine builds the opponent from the name itself — its shape, its colour, how
+many spines it has — so `against: the harbour master's dog, 2` gets you a
+particular dog, and it is the same dog every time anybody meets it.
+
+A player with no creature is offered a way out instead of a fight, and
+**Run away** always goes to the `on lose` scene. The checker warns you if a
+story has a duel in it but no scene anywhere does `catch:`.
+
+## The clicker
+
+```text
+## the-build
+game: clicker
+[The tide takes it](#finished) on win
+[You stop, a long way short](#gave-up) on lose
+```
+
+Click the sand, buy a bucket, buy a gull, buy three more gulls, until the
+tower is finished. A `lantern` makes each handful bigger and `clackers` digs
+alongside you. The best pile anyone has ever made in that browser is kept, and
+`{sand}` puts the number in a sentence.
 
 ---
 
@@ -187,6 +251,36 @@ Sounds are made by the browser itself, so there are no files to upload. Sound
 is **off** until the player turns it on with the button in the bar.
 
 Everything here stops under the reader's **reduce motion** setting.
+
+---
+
+## Themes, and changing them mid-story
+
+`start.md` picks the theme the story opens in. **Any scene can change it** with
+a `theme:` line of its own, and the page cross-fades rather than snapping, so
+walking from the beach into a cave is a change in the weather.
+
+```text
+## the-fold
+theme: deep
+effect: underwater
+```
+
+| | |
+| --- | --- |
+| `paper` | the default: warm, printed, quiet |
+| `night` | deep blue, with a lit window somewhere |
+| `forest` `ocean` | green and daylight; blue and daylight |
+| `cave` | wet rock, and whatever you brought to see by |
+| `deep` | a long way down, and getting further |
+| `ember` | lamplight, close walls, orange on black |
+| `storm` | slate, cold, weather with an opinion |
+| `dawn` | it was over hours ago and nobody told you |
+
+A theme is more than five colours. Each one sets the paper the page is printed
+on, the grain over the top of it, the edge and shadow of the card, what a
+choice looks like when you hover it, and what is happening in the air behind
+everything.
 
 ---
 
@@ -239,12 +333,18 @@ There are two pages for testing the engine itself, which players never see:
   anything in `engine/`.
 - **`look.html?scene=the-dive&items=lantern`** — jumps straight to one scene
   with whatever items you name, for looking at it closely.
-- **`balance.html`** — plays both games several times with a bot at the
+- **`themes.html`** — every theme at once, on one sheet, so you can see what
+  you are choosing between.
+- **`balance.html`** — plays all four games several times with a bot at the
   controls and reports how often it wins. It is how the bell got fixed: the
   fade used to run *after* the hit, so the resonance could touch 100 and be
   knocked back under it every single time, and the bell could not be rung at
   all. The bot sees everything and never panics, so its win rate is an upper
-  bound, not a difficulty setting.
+  bound, not a difficulty setting. It is also where the duel got its numbers:
+  over 14 fights each, Clackers beats Old Molly **7%** of the time at level 1,
+  **86%** at level 3, and **100%** at level 3 carrying the brass button.
+  Losing your first fight is meant to happen, which is why `molly-lost` is a
+  scene and not an ending.
 
 ---
 
@@ -254,6 +354,9 @@ There are two pages for testing the engine itself, which players never see:
 | --- | --- |
 | `game: bell` | `ring-it`, in `path-2.md` |
 | `game: undertow` | `the-dive`, in `path-3.md` |
+| `game: duel` + `catch:` | `pocket`, `old-molly`, `molly-duel`, in `path-3.md` |
+| `game: clicker` | `the-build`, in `path-3.md` |
+| `theme:` per scene | every scene in both files |
 | `haunted gone` + `waits` | `twelve`, in `path-2.md` |
 | `{runs}`, `{endings-list}` | `the-register`, `maren`, `she-recites` |
 | `keep:` | `maren`, `relieved` |

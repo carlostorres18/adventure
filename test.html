@@ -18,6 +18,7 @@
   <article id="scene" tabindex="-1" aria-live="polite"></article>
   <ol id="choices"></ol>
   <p id="carrying" hidden></p>
+  <p id="companions" hidden></p>
 </div>
 <nav id="bar">
   <button id="btn-restart"></button><button id="btn-back"></button><button id="btn-map"></button>
@@ -30,14 +31,11 @@
 </div></div>
 <div id="report"><b>running…</b></div>
 
+<!-- A dev page always wants the engine as it is on disk, never the copy the
+     browser kept from five minutes ago. -->
+<script>document.write(["story", "memory", "effects", "arcade", "map", "draft", "play"]
+  .map(n => "<scr" + "ipt src=\"engine/" + n + ".js?dev=" + Date.now() + "\"></scr" + "ipt>").join(""));</script>
 <script>window.__errors = []; window.onerror = (m, src, l, c, e) => { window.__errors.push(m + " @" + (src||"").split("/").pop() + ":" + l); };</script>
-<script src="engine/story.js"></script>
-<script src="engine/memory.js"></script>
-<script src="engine/effects.js"></script>
-<script src="engine/arcade.js"></script>
-<script src="engine/map.js"></script>
-<script src="engine/draft.js"></script>
-<script src="engine/play.js"></script>
 <script>
 (function () {
   const out = [];
@@ -144,6 +142,41 @@
       mount.remove();
     } catch (e) { ok(false, `${g} threw: ${e.message}`); }
   }
+
+  head("Creatures and themes");
+  t("the engine knows its creatures", () => Story.CREATURES.length >= 1);
+  t("catching one sticks, and it levels up", () => {
+    Memory.forget();
+    const first = Memory.caught("clackers");
+    const again = Memory.caught("clackers");
+    const c0 = Memory.creature("clackers").level;
+    for (let i = 0; i < 6; i++) Memory.duelOver("clackers", true);
+    const c1 = Memory.creature("clackers").level;
+    return first === true && again === false && c0 === 1 && c1 > c0;
+  });
+  t("every theme has colours defined", () => {
+    const probe = document.createElement("div");
+    document.body.appendChild(probe);
+    const bad = Story.THEMES.filter((th) => {
+      probe.className = "theme-" + th;
+      const cs = getComputedStyle(probe);
+      return !cs.getPropertyValue("--page").trim() || !cs.getPropertyValue("--accent").trim();
+    });
+    probe.remove();
+    if (bad.length) out.push(`<div class="fail">   missing: ${bad.join(", ")}</div>`);
+    return bad.length === 0;
+  });
+  t("a duel without a creature still offers a way out", () => {
+    const mount = document.createElement("div"); document.body.appendChild(mount);
+    let done = null;
+    Arcade.play("duel", { mount, items: new Set(), creatures: [], scene: { against: { who: "Nobody", level: 2 } },
+                          onDone: (w) => { done = w; } });
+    const n = mount.querySelectorAll(".arcade-buttons button").length;
+    const skip = [...mount.querySelectorAll("button")].find(b => b.className === "arcade-skip");
+    if (skip) skip.click();
+    mount.remove();
+    return n >= 2 && done === true;
+  });
 
   head("Story map still draws");
   try { const svg = StoryMap.draw(st, { current: st.start, found: new Set(), onPick: () => {} });

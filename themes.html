@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The themes</title>
+<link rel="stylesheet" href="engine/style.css">
+<style>
+  body { display: block !important; padding: 0 !important; background: #111 !important; }
+  .sheet { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .cell { position: relative; height: 310px; overflow: hidden; }
+  .cell .inner {
+    position: absolute; inset: 0; background: var(--sky), var(--page);
+    color: var(--ink); font: 15px/1.5 var(--font); padding: 16px;
+  }
+  .cell .grain { position: absolute; inset: 0; background: var(--grain); background-size: 4px 4px; }
+  .cell .air { position: absolute; inset: 0; background: var(--air); }
+  .cell .card {
+    position: relative; background: var(--card); border: var(--card-edge);
+    border-radius: 10px; padding: 12px 14px; box-shadow: var(--card-shadow);
+  }
+  .cell h3 { margin: 0 0 2px; color: var(--accent); font-size: 1.1em; text-shadow: var(--title-shadow); }
+  .cell .by { margin: 0 0 8px; color: var(--muted); font-style: italic; font-size: 0.8em; }
+  .cell p.t { margin: 0 0 10px; font-size: 0.86em; }
+  .cell .ch {
+    display: block; background: var(--choice-bg); border: 1px solid var(--line);
+    border-radius: 7px; padding: 7px 10px; margin-bottom: 6px; font-size: 0.82em; color: var(--ink);
+  }
+  .cell .ch.hov { background: var(--choice-hover); border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: -1px; }
+  .cell .tag { position: absolute; right: 8px; bottom: 6px; font: bold 10px/1 ui-monospace, monospace;
+               color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+</style></head><body>
+<div class="sheet" id="sheet"></div>
+<script src="engine/story.js"></script>
+<script>
+const LINES = {
+  paper:  ["The Last Light on Gull Island", "The ferry leaves you on a crooked wooden dock and chugs off into the fog."],
+  night:  ["The Village", "Every window is dark except the bakery's, where warm light spills onto the cobbles."],
+  forest: ["The Long Way Round", "The path goes in under the trees and does not come out where it said it would."],
+  ocean:  ["Low Water", "The tide is a long way out and going to be sorry about it later."],
+  cave:   ["The Register", "Three steps in, the night gives up and hands you over to something darker."],
+  deep:   ["The Fold", "The water warms. It gets lighter instead of darker, and the light is swinging."],
+  ember:  ["Wet Paint", "The lantern throws your shadow a hundred feet up a wall that is painted all over."],
+  storm:  ["The Cliff Trail", "The wind shoves at you the whole way, like something that knows which shoulder to pick."],
+  dawn:   ["Relieved", "The sun comes up over water with a ship anchored in it, whole, fine, rolling gently."],
+};
+document.getElementById("sheet").innerHTML = Story.THEMES.map((t) => {
+  const [title, text] = LINES[t] || [t, "Some words."];
+  return `<div class="cell theme-${t}"><div class="inner">
+    <div class="grain"></div><div class="air"></div>
+    <div class="card">
+      <h3>${title}</h3><p class="by">by Nistopher Chrolan</p>
+      <p class="t">${text}</p>
+      <span class="ch hov">Go on, then</span>
+      <span class="ch">Go back to the crossroads</span>
+    </div>
+    <span class="tag">theme: ${t}</span>
+  </div></div>`;
+}).join("");
+</script></body></html>

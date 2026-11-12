@@ -32,6 +32,8 @@ const Memory = (() => {
     games: {},          // game name  -> { won, lost }
     lastEnding: "",     // the ending that finished the previous go
     kept: {},           // things a scene said to keep: remembered for good
+    creatures: {},      // a creature you caught -> { level, wins, losses }
+    sand: 0,            // the most sand anyone has ever piled up here
   };
 
   let state = load();
@@ -96,6 +98,36 @@ const Memory = (() => {
   }
 
   function kept(thing) { return !!state.kept[thing]; }
+
+  // ---------- creatures ----------
+  // A creature you catch stays caught, and keeps what it learned, across every
+  // go at the story. It is the only thing in here that gets better.
+
+  function caught(who) {
+    if (state.creatures[who]) return false;
+    state.creatures[who] = { level: 1, wins: 0, losses: 0 };
+    save();
+    return true;                   // true the first time only
+  }
+
+  function creature(who) { return state.creatures[who] || null; }
+  function creatureList() { return Object.keys(state.creatures); }
+
+  function duelOver(who, won) {
+    const c = state.creatures[who];
+    if (!c) return null;
+    if (won) { c.wins += 1; if (c.wins >= c.level * 2) c.level = Math.min(9, c.level + 1); }
+    else c.losses += 1;
+    save();
+    return c;
+  }
+
+  function sandRecord(n) {
+    if (n <= state.sand) return false;
+    state.sand = n;
+    save();
+    return true;
+  }
 
   // ---------- the story asks us questions ----------
 
@@ -172,6 +204,11 @@ const Memory = (() => {
         case "clock": return clock();
         case "first-played": return ago(state.firstPlayed);
         case "last-ending": return state.lastEnding || "nothing";
+        case "creature-level": {
+          const list = creatureList();
+          return list.length ? spell(state.creatures[list[0]].level) : "no";
+        }
+        case "sand": return String(state.sand);
         default: return whole;
       }
     });
@@ -194,6 +231,7 @@ const Memory = (() => {
 
   return {
     startRun, sawScene, gotItem, reachedEnding, playedGame, keep, kept,
+    caught, creature, creatureList, duelOver, sandRecord,
     remembered, reachedBefore, test, why, fill, forget, setOn, clock, spell, ago,
     get state() { return state; },
     get on() { return on; },
