@@ -21,7 +21,7 @@
   Lines inside these comment marks are notes. Players never see them.
 -->
 
-by:
+by: Carlos Torres
 
 ## path-4
 Up close, the lighthouse is taller than it looked. Its white paint is peeling, and the great lamp room at the top is completely dark. The door is thick oak with an iron lock.
