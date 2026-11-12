@@ -21,6 +21,18 @@
   Lines inside these comment marks are notes. Players never see them.
 -->
 
+<!--
+  NOTES FOR THE TEAM (path-4)
+  ITEMS THIS FILE GIVES
+     lamp oil       (stairs)   for path-2's "fifth tumbler" hook, if you want it
+  ITEMS THIS FILE NEEDS
+     iron key       from path-3.md (the-ribs)
+     lantern        from path-1.md (bakery or abernathy-warning)
+     stopped watch  from path-1.md (Abernathy's chair) -> true ending
+  TEST:  ?scene=lamp-room&items=lantern,lamp oil
+         ?scene=lamp-room&items=lantern,lamp oil,stopped watch
+-->
+
 by: Carlos Torres
 
 ## path-4
@@ -39,7 +51,7 @@ Then, from the other side of the door, three knocks answer. Same rhythm. Same st
 
 You press your ear to the oak. A voice comes through, muffled and tired. It sounds a lot like yours.
 
-"Not yet. Find the key first."
+"Not yet. The key went down with *Abernathy's Pride*. South beach, low tide."
 
 [Step back](#path-4)
 
@@ -48,11 +60,15 @@ The key turns with a groan. Inside, a spiral staircase winds up into total darkn
 
 Someone has scratched numbers into the steps. The first step says 100. The next says 99. The numbers count *down* as you climb, as if the stairs are counting down to something.
 
+On the first landing sits a dented can of lamp oil, full, with a label in faded pencil: *For the twelfth. Don't be late.*
+
+get: lamp oil
+
 [Climb in the dark](#fall)
 [Light your lantern and climb](#lamp-room) if lantern
 
 ## fall
-Somewhere around step forty, your foot finds nothing at all. You sit down hard and decide to wait for morning.
+Somewhere around step eleven, the one with its number scratched out, your foot finds nothing at all. You sit down hard and decide to wait for morning.
 
 The ship gets past the rocks, just barely. The next day, its captain sends you a very angry letter.
 
@@ -65,13 +81,13 @@ At the top, the great lamp sits inside a cage of glass prisms. Beside it is the 
 
 In the center of the gears is a small round slot, empty, about the size of a pocket watch.
 
-On the floor, someone has scratched tally marks into the boards. Hundreds of them. Maybe thousands.
+On the floor, someone has scratched tally marks into the boards: eleven long columns, each in a different hand, one mark for every night of duty. The first column is in a beautiful old script. The eleventh, cut deep and angry, stops short in November 1984.
 
 [Light the lamp the way it is](#lighthouse-lit)
 [Fit the stopped watch into the clockwork](#lighthouse-wind) if stopped watch
 
 ## lighthouse-lit
-You open the little door at the lamp's base, turn the brass valve, and touch your lantern's flame to the wick.
+You open the little door at the lamp's base, pour in the lamp oil, turn the brass valve, and touch your lantern's flame to the wick.
 
 The light blooms. Far out in the fog, a ship's horn answers with two long blasts. *Thank you.*
 
@@ -79,7 +95,7 @@ But the lens doesn't turn. The clockwork is still stuck at 9:47, so the beam jus
 
 In its light you see the ferry pulling in. A new keeper steps off, holding a brass lantern, looking up at you.
 
-You pick up a nail and scratch one more tally mark into the floor.
+You pick up a nail and start a twelfth column. One mark. You have a feeling it won't be the last.
 
 THE END
 
@@ -88,7 +104,9 @@ You press the watch into the slot. It clicks into place like it was made for it.
 
 For a moment, nothing happens. Then the watch gives a single tick, and the big dial jumps from 9:47 to **9:48**.
 
-The gears groan and start to turn. The prisms begin to rotate, and as they do, you see things in the glass: the dock, the bakery, Abernathy's doorway. A keeper on the cliff trail. A keeper on the beach. Hundreds of keepers, hundreds of nights, all of them you.
+The gears groan and start to turn. The prisms begin to rotate, and as they do, you see things in the glass: the dock, the bakery, Abernathy's doorway, the painted wall in the gull cave. And the keepers. A tall woman in a long wet coat, running up these stairs with an oil lamp in 1801. Nine more after her. A big dark man at the oars of a fishing boat, rowing into the fog.
+
+And a twelfth, standing at the lamp, right now. You.
 
 [Look closer at the prisms](#lighthouse-prisms)
 [Light the lamp before anything else changes](#lighthouse-dawn)
@@ -103,9 +121,11 @@ Behind you in the reflection, Abernathy is smiling. When you spin around, nobody
 [Light the lamp](#lighthouse-dawn)
 
 ## lighthouse-dawn
-You turn the valve and touch your lantern to the wick. The light blooms, and this time the lens carries it around in a slow, sweeping beam, out across the water, again and again.
+You pour in the lamp oil, turn the valve, and touch your lantern to the wick. The light blooms, and this time the lens carries it around in a slow, sweeping beam, out across the water, again and again.
 
 Far out in the fog, a ship's horn answers with two long blasts. *Thank you.*
+
+On the next sweep, for one heartbeat, the beam catches something much closer: a small fishing boat with a crisp new name on her side, and a big dark man at the oars. He squints up at the light. Then he lifts one oar out of the water like a wave, and turns her around, and rows for home.
 
 You stay at the lamp all night. At some point you realize you've stopped counting the minutes, because the minutes are finally moving on their own.
 
