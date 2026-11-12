@@ -1,22 +1,50 @@
 <!--
-  PATH-2.MD: one teammate's part of the story.
+  PATH-2.MD: the cliff trail, the fog bell, and the cave.
 
-  Put your name after by: below. It's shown at the end of your endings.
+  PUT YOUR NAME AFTER by: BELOW. It is shown at the end of every ending
+  in this file.
 
-  Your first scene must be called path-2. The crossroads scene in start.md
-  links to #path-2, so that's how players get here. Everything else in this
-  file is yours: rewrite it, add scenes, add endings.
+  HOW THIS PATH IS BUILT (notes for my reviewer)
 
-  Cheat sheet:
-    ## scene-name                  starts a new scene (lowercase letters,
-                                   numbers and dashes, no spaces)
-    Any text you like.             a blank line starts a new paragraph
-    **bold**   *italic*
-    ![What the picture shows](images/my-picture.png)
-    get: lantern                   the player picks up a lantern
-    [Open the door](#hall)         a choice: leads to the scene called hall
-    [Unlock it](#vault) if key     a choice that only works if you have a key
-    THE END                        this scene is an ending
+  This path and path-3.md are two halves of one puzzle. They link straight
+  into each other, not only through the crossroads:
+     the-edge   -> #path-3    (you fall off the cliff onto the beach)
+     the-gift   -> #sea-stair (in path-3.md)
+     not-yet    -> #sea-stair (in path-3.md)
+     sea-stair  -> #bell-house (path-3.md links back up here)
+
+  ITEMS THIS FILE GIVES
+     the rota                      (bell-house)
+     white feather                 (the-gift)      used in path-3.md
+     a name you didn't give        (wet-paint)
+     a bruise shaped like the island (the-edge)    a joke, pays off at maren
+
+  ITEMS THIS FILE NEEDS FROM OTHER PEOPLE
+     lantern        from path-1.md  (Rosa the baker)
+     iron clapper   from path-3.md  (prised out of the wreck)
+     the same key twice from path-3.md (only exists if you dive the hold)
+
+  THE SECRET ENDING is "relieved". It is a chain of four locked choices:
+     the-ritual -> rite-light (lantern) -> rite-breath (white feather)
+                -> rite-name (the rota) -> relieved (the same key twice)
+  So it needs items from three different teammates' paths. Every step in the
+  chain has an unlocked way out, so nobody can get stuck in it.
+
+  THE OTHER SECRET ENDING is "the-twelfth-line", off the same last tumbler.
+  If you can't produce the key that is in two places, but you are carrying
+  "a name you didn't give" (from wet-paint, in the dark, without a lantern),
+  you can sign the register with that instead. It is the only use in the whole
+  story for the one item the player is meant to regret picking up.
+
+  PATH-4 HOOK: path-4.md gives no items yet, so the secret ending can't ask
+  for one. If whoever owns path-4 adds a line like "get: lamp oil" to a scene
+  up the tower, add a fifth tumbler between rite-name and relieved and the
+  ending will need all four paths.
+
+  JUMP STRAIGHT TO A SCENE WHILE TESTING (add this to the live link):
+     ?scene=the-register&items=lantern
+     ?scene=rite-name&items=lantern            (locked, should show a padlock)
+     ?scene=toll&items=iron clapper
 
   Lines inside these comment marks are notes. Players never see them.
 -->
@@ -24,42 +52,355 @@
 by:
 
 ## path-2
-The cliff trail is narrow, and the wind shoves at you like it wants you gone. Far below, waves smash white against the rocks.
+![A narrow trail along a cliff above a grey sea, with wind driving fog past and gulls wheeling](images/cliff-trail.svg)
 
-Halfway along, a dark cave opens into the cliff.
+The cliff trail is a ledge the width of a coffin lid, and the wind shoves at you the whole way, like something that has done this before and knows which shoulder to pick.
 
-[Look over the edge](#cliff-edge)
-[Step into the cave](#cave)
+Far below, the waves go at the rocks without stopping. Gulls hang in the air over the drop without moving at all, which is a thing gulls can do and people should not have to watch.
+
+Two things on this stretch of cliff. A little stone shelter squats on the high side of the trail with something heavy hanging in it. Further on, a cave opens in the rock, and the dark inside it is not the same colour as the night.
+
+[Shelter in the little stone building](#bell-house)
+[Keep going to the cave](#cave-mouth)
+[Lean out and look over the edge](#the-edge)
 [Go back to the crossroads](#crossroads)
 
-## cliff-edge
-You lean out for a better look. The ground at the edge is softer than it looked.
+## the-edge
+You lean out for a better look at the drop. This is the part of the night you will skip when you tell it later.
 
-It gives way. You slide, bounce, and land with a splash in a deep pool between the rocks: soaked, furious, and completely unhurt. By the time you've climbed out, the night is over.
+The edge is softer than it looks. It lets go of you politely, the way a handshake ends.
+
+You slide. You bounce twice. You land flat on your back in a pool between two rocks, in water that is exactly as cold as water gets before it stops being water, and you are not hurt at all, which somehow makes it worse.
+
+get: a bruise shaped like the island
+
+[Lie here a moment and let the sky happen](#star-count)
+[Crawl out onto the grey sand](#path-3)
+
+## star-count
+You lie in the pool with your ears underwater and look straight up.
+
+Gulls are crossing the sky. Not circling. Crossing, in a line, all of them going the same way, out over the water and back again, out and back, the way a lamp turns.
+
+They are doing it in shifts.
+
+[Crawl out onto the grey sand](#path-3)
+[Find the steps cut into the cliff and go back up](#sea-stair)
+
+## bell-house
+Four stone legs and a slate roof, and under it a bronze fog bell the size of a washtub, green at the shoulders and polished gold along the rim where two hundred years of hands have gone past it.
+
+The rope is rotted to a hank of fluff. The pin where the clapper hangs is empty. Somebody took the clapper out of this bell, and they took it carefully, because the pin isn't bent.
+
+On the back wall there is a slate in a wooden frame. The keeper's rota. You lift it off its nail.
+
+get: the rota
+
+[Read the names on the slate](#eleven-names)
+[Hang a clapper on the pin and ring for the ship](#toll) if iron clapper
+[Get out of the wind and wait for morning](#stone-coat)
+[Back out onto the trail](#path-2)
+
+## eleven-names
+Eleven names, in eleven different hands, each with two dates beside it. Started, and finished.
+
+*M. VELL, 1801.* The writing is beautiful and the ink is brown as tea.
+
+Nine more after her. Then, at the bottom, in pencil, pressed so hard it has cut the slate: *A. ABERNATHY, 1984.*
+
+Under that there is a twelfth line, ruled and empty, and a stub of chalk on the frame.
+
+You are fairly sure the old man in the village answered his own front door tonight.
+
+[Write your name on the twelfth line](#your-name)
+[Put the slate back on its nail](#bell-house)
+[Go and look at that cave](#cave-mouth)
+
+## your-name
+You write your name on the twelfth line. It is a stupid thing to do and you know it while you are doing it, the way you know about the second slice of cake.
+
+The chalk is damp. It drags.
+
+When you put it down and step back, the eleventh line is in your handwriting too.
+
+[Put the slate back on its nail, face in](#bell-house)
+
+## toll
+![A bronze fog bell hanging in a small stone shelter on a clifftop, swinging, with rings of sound spreading out into the fog](images/fog-bell.svg)
+
+The clapper goes on the pin like it has been wanting to. You take the bell by the rim with both hands, and you swing it.
+
+The first note goes through your teeth. The second one goes out over the water and keeps going, and the fog does not muffle it at all, because this bell was cast in a town that understood fog.
+
+You ring it for an hour. Your arms stop being arms. Somewhere out there a horn answers, and then the engine note changes, dropping and sliding, and you know before you know that she is coming round. Turning. Turning away from the rocks.
+
+The lighthouse stays dark the whole night. It does not matter. Nobody drowns.
+
+In the morning you go back in and look at the slate, and the twelfth line is still empty. You check it twice.
 
 THE END
 
-## cave
-A few steps in, the daylight gives up. You hear dripping water and, deeper in, something that might be wings.
+## stone-coat
+You sit down with your back to the stone and your knees up and you decide, reasonably, that this is a job for the morning.
 
-It's far too dark to go further without a light.
+The wind drops. That is the first thing. Then the gulls settle on the roof, one and one and one, until the slates are full, and they do not make a sound, which gulls do not do.
 
-[Light your lantern and go deeper](#deep-cave) if lantern
+You are not cold any more. You notice this and decide not to think about it.
+
+In the morning the ship is through and anchored and fine. You go in to put the rota back, and there are twelve names on it now. The twelfth is yours. Both dates are today.
+
+THE END
+
+## cave-mouth
+![A black cave mouth in a wet cliff face, with dust drifting in the air and faint points of light far inside](images/cave-mouth.svg)
+
+Three steps in, the night gives up and hands you over to something darker.
+
+You can hear water finding its way down, and further back, high up, a sound like a crowd in another room: thousands of small movements, all being very careful.
+
+There is a smell of old fish and new paint.
+
+[Light your lantern and walk in](#the-register) if lantern
+[Feel your way in, one hand on the wall](#blind-crawl)
 [Back out into the wind](#path-2)
 
-## deep-cave
-Your lantern shows painted walls: ships, waves, and a tall tower with a light at the top. Hundreds of gulls watch you from their nests.
+## blind-crawl
+You go in with your left hand on the rock, the way you were taught at some point by somebody, and the rock is wet, and then it is not.
 
-In the biggest nest sits a gull wearing a tiny golden crown. She looks at you. You look at her.
+It is ridged. Raised. Paint, laid on so thick and so long ago that it has turned into geography.
 
-[Bow to the Gull Queen](#gull-queen)
-[Back away slowly](#path-2)
+Your hand reads it without asking you first. A tower. Waves. A ship going down bow-first, which is a lot of detail for a hand.
 
-## gull-queen
-The Gull Queen nods once. Every gull in the cave rises together and pours out into the night.
+Then figures. People, standing in a row, each one about the size of your palm. You count them as you go, because that is what a hand does.
 
-They circle the dark tower, a thousand white wings shining in the fog, so bright that the ship's captain sees them and steers clear of the rocks.
+Ten. Eleven.
 
-Nobody in the village will ever believe you.
+The twelfth is wet.
+
+[Take your hand off the wall](#cave-mouth)
+[Keep your hand exactly where it is](#wet-paint)
+
+## wet-paint
+The paint is warm. Not cave-warm. Blood-warm. It comes away on your fingers in a curl, like skin after a sunburn.
+
+In the dark, very close to your ear, something says a name.
+
+It is said kindly. It is said the way a mother says it at the bottom of the stairs when it is time to come down. And it is your name, except that it is not the one you were given this morning, and you understand, standing there in the dark with your hand in wet paint, that this is the name you have always actually had, and that somebody up here has been holding it for you.
+
+get: a name you didn't give
+
+[Say yes](#answered)
+[Run](#path-2)
+
+## answered
+You answer. Of course you answer. Somebody called you by your real name in the dark and you are only a person.
+
+The cave fills with wings. Not noise, exactly. Pressure, like a held breath let out all at once, and then you are up, and the ceiling does not stop you.
+
+From up here the island is a lovely shape. The tower is a dark finger, the village is five orange windows, and out in the fog there is a ship about to make a mistake.
+
+All of you turn together and go to put a stop to it, and your new name is already on the wall, and your old name is already getting hard to hold on to, the way a dream is at the sink.
+
+THE END
+
+## the-register
+![A cave wall painted in ochre: a tall tower throwing a light, waves below, and a row of eleven human figures. A twelfth figure appears in wet paint at the end of the row](images/register-wall.svg)
+
+The lantern throws your shadow a hundred feet up the wall, and the wall is painted from the floor to as high as anyone could reach.
+
+A tower, taller than it is in life, throwing six straight rays. Waves. A ship on her beam ends. And across the whole wall, waist high, a row of little ochre people, holding nothing, facing out.
+
+Above you, in the dark, the nests. Hundreds of them. Nobody up there is asleep.
+
+[Count the people on the wall](#twelve)
+[Go to the big nest at the back](#maren)
+[Back out into the wind](#cave-mouth)
+
+## twelve
+You count the row twice, because the first count is the kind of answer you check.
+
+Eleven. Eleven little ochre people, and scratched under each one, two dates. The oldest is 1801 and the ink has gone the colour of tea. The newest is 1984 and it is scratched so hard the rock is pale in the grooves.
+
+At the end of the row there is a twelfth.
+
+It is not finished. It is being painted while you watch, which is a sentence you would like to take back. The ochre is running. Whoever is doing it has got the coat right, and the coat is yours, down to the way the left pocket hangs because of what you keep in it.
+
+[Put your hand flat against the wet one](#wet-paint)
+[Go to the big nest at the back, quickly](#maren)
+[Leave. Just leave](#path-2)
+
+## maren
+![A large white gull sitting in a nest of driftwood, wearing a tiny golden crown, with hundreds of pale eyes watching from the dark behind her](images/gull-queen.svg)
+
+The nest at the back is six feet across and built of driftwood, bootlaces, rope, one oar, and a brass porthole frame.
+
+In the middle of it sits a gull. She is enormous and she is white the way a plate is white, and on her head, pushed down over the feathers, is a crown about the size of a wedding ring.
+
+She looks at you. Not the way a bird looks at you, with one eye and then the other. Straight on, with both, the way a person does when they are deciding how much to tell you.
+
+On the wall above her is the first figure in the row, and under it, in that beautiful brown writing: *M. VELL, 1801.*
+
+[Bow](#the-gift)
+[Ask her how to light the lamp](#she-cannot)
+[Ask whether anyone has ever been let off](#the-ritual)
+[Show her your bruise](#bruise) if a bruise shaped like the island
+[Back away slowly](#the-register)
+
+## she-cannot
+"How do I light it," you say, out loud, to a bird.
+
+She comes up off the nest so fast you sit down. She lands on the rim, and she lifts one wing, and she holds it out to you, and she keeps holding it out, and she will not stop holding it out until you have understood.
+
+There is no hand on the end of it. There was never going to be.
+
+Two hundred years of knowing exactly what to do, in a building you can see from here, and nothing on the end of your arm to do it with.
+
+She folds the wing. She puts the side of her head against your palm and leaves it there a while.
+
+[Bow](#the-gift)
+[Back away slowly](#the-register)
+
+## bruise
+You push your sleeve up and show her the bruise you got falling off her cliff. It came up blue and green and it is, you have to admit, a very good likeness. There is the headland. There is the long bay. There is the hook at the south end where the sand is.
+
+She studies it for a long time, turning her head.
+
+Then she taps it, twice, with the tip of her beak, in the place where the cave is.
+
+Then she taps it again, lower down, where the sand is, and then she taps it a third time, in the water, well off the beach, where there is nothing at all except, presumably, something.
+
+[Bow](#the-gift)
+[Back away slowly](#the-register)
+
+## the-gift
+You bow, which feels enormously stupid for about a second and a half, and then does not.
+
+She gets up. She puts her head down into her own breast, right down, and pulls, and it must hurt because her whole body goes with it, and she comes up with one feather and she lays it across your palm.
+
+It is dry. Everything in this cave is wet and the feather is dry and faintly warm, and when you breathe in, the breath comes in easy and cold and tasting of outside, which is strange, because you are four hundred feet into a cliff.
+
+get: white feather
+
+[Ask her and her birds to go out for the ship tonight](#chorus-flight)
+[Ask whether she can be let off](#the-ritual)
+[Go and count the people on the wall](#twelve)
+[Take the feather down the cliff steps to the beach](#sea-stair)
+[Go back out to the trail](#path-2)
+
+## chorus-flight
+![Thousands of white gulls spiralling over the rocks at night, their wings so bright they light the water below, while a ship's lamp turns away from the shore](images/chorus.svg)
+
+You ask.
+
+She is already going. The nests go up like a field going up, and the cave empties past your face in one long shove of air that puts your lantern out and nearly puts you out with it, and you come stumbling onto the trail to watch.
+
+They go out over the rocks and they turn, all of them, into one slow wheel above the place where the water is wrong, and they lift their wings together on the upbeat, and there is so much white in one place that it makes a light. Not a bright light. A light the way a moon is a light. Enough.
+
+Out in the fog a horn goes, twice, and a ship that was about to die goes somewhere else instead.
+
+They have been doing this every foggy night since 1801. Nobody has ever thanked them. Nobody has ever known.
+
+In the morning you tell the village and the village is very kind about it.
+
+THE END
+
+## the-ritual
+You ask her whether anyone has ever been let off.
+
+She goes very still. Then she walks, which she does badly, all the way along the base of the wall to the far end, and waits for you to bring the light.
+
+There is a shelf cut into the rock. On it: a cracked saucer with ochre dried in it, a stub of chalk, and a shallow groove worn in the stone by something being set down in the same place about four thousand times.
+
+A register is only a register if somebody can read it, sign it, prove it, and burn out the old line. That is four things, and you can feel her counting them, and she is not hopeful, because she has watched eleven people stand on this exact piece of floor.
+
+[Set your lantern on the shelf](#rite-light) if lantern
+[Leave it. Two hundred years is not your mess](#the-register)
+
+## rite-light
+You set the lantern down in the worn place and it fits like a cup in a saucer.
+
+The flame stands up straight and then leans, all of it, sideways, towards the wall, and stays leaning. Under the first figure the old ochre goes soft and shines like it was put on this afternoon.
+
+That is the reading done.
+
+[Put the feather between your teeth and breathe through it](#rite-breath) if white feather
+[Pick your lantern back up and go](#the-register)
+
+## rite-breath
+You put the feather crossways in your teeth, which is undignified, and you breathe in through it.
+
+The cave opens by about an inch.
+
+You can smell tar, and wet wool, and a woman's wet hair, and lamp oil of a kind they stopped making before your grandmother was born. Somewhere just out of sight, at the other end of a very long room, somebody is climbing stairs in boots, in 1801, and being quick about it, and not being quick enough.
+
+That is the signing done.
+
+[Hold up the rota so she can see the empty line](#rite-name) if the rota
+[Spit out the feather](#the-register)
+
+## rite-name
+You hold the slate up in the lantern light and turn it so she can see.
+
+Eleven names. One empty line.
+
+She looks at the empty line for a long time. Then she looks at you, and you understand the problem exactly, because it is the same problem she has had since 1801: anybody can write a name. The line does not want a name. The line wants proof that the person writing it can actually do the job.
+
+The proof would have to be a thing that was in two centuries at once, and still worked.
+
+[Show her the key that is in two places](#relieved) if the same key twice
+[Offer the name they gave you in the dark](#the-twelfth-line) if a name you didn't give
+[Tell her the truth, which is that you can't prove anything](#not-yet)
+
+## not-yet
+"I can't prove it," you say. "I haven't got anything."
+
+She takes it better than you do. She has had practice. She settles down onto the stone with her feet tucked under her, which is a bird saying *fine, I'll wait*, and the waiting is the worst thing you have ever been forgiven with.
+
+Then she gets up again and walks to the cave mouth and stands looking down, south, at the beach, at the ribs of a boat sticking out of the sand, and she stands there until you have got it.
+
+[Go down the cliff steps to the beach](#sea-stair)
+[Go back out to the trail](#path-2)
+
+## the-twelfth-line
+You cannot prove you can do the job. You have not got two of anything. What you have got is a name that was handed to you in the dark by something that was already here, and you have been carrying it around all night in the pocket where you keep the things you are not ready to look at.
+
+You say it out loud.
+
+She goes very still, because she knows exactly what it costs and exactly what it buys, and they are not the same number and they never have been.
+
+The line will not strike her out for a name. But it will take one.
+
+You write it on the twelfth line yourself, in your own hand, with the damp chalk, and the chalk does not drag this time. She does not get to leave. Neither do you. But there is a difference between the eleven on that wall and what you just did, and the difference is that nobody asked you.
+
+She comes down off the nest and stands beside you, and that is the whole ceremony.
+
+You light the lamp that night at eleven minutes past nine, and the ship comes round the headland and gives you two on the horn, and you lift a hand, which is a thing you can still do.
+
+You light it the next night. And the one after. And for a long time after that.
+
+And then one foggy evening a long way from now, somebody young comes up the cliff trail with a borrowed lantern and their collar up, and stops at the mouth of the cave, and you are already awake, and you have had a feather ready for years.
+
+THE END
+
+## relieved
+![The painted register with the first name struck through, as the painted figures lift off the wall one by one and leave as birds of light](images/relieved.svg)
+
+You take both keys out and hold them up together in the lantern light. The rusty one from the tin box. The bright one out of a drowning man's fist. The same nicks. The same little bend where somebody dropped it on a stone floor in a year nobody here was alive for.
+
+She makes a sound. One sound. It is not a gull noise and you will hear it for the rest of your life.
+
+Then she puts her beak in the saucer and gives you the ochre, and you kneel down and you strike out *M. VELL, 1801*, one line, left to right, and you write your own name on the twelfth line of the slate, and under it, because it is true, you write *on duty*.
+
+The first figure comes off the wall.
+
+It does not fade. It stands up off the rock, the way a bird comes off a cliff, and it is a bird, and it is also a tall woman in a wet coat, and it goes up and out through the cave mouth and does not come back.
+
+Then the second. Then the third. Then all of them at once, two hundred years of people who were late, going out past your face into the open air, and the cave gets lighter and lighter as they leave until it is just a cave, painted a long time ago, by somebody.
+
+She goes last. She stops in the mouth of it, where the wind is, and the crown falls off her head and rings on the stone like a dropped coin, and then there is nothing up there but weather.
+
+You pick up the crown. You pick up your lantern. You have a key in each hand and three flights of stairs to climb and a light to get going, and you are, as of about a minute ago, the only person on this island whose job it is.
+
+You are not late.
 
 THE END

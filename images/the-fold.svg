@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>Looking up through deep green water at a fishing boat going down above you, its lamp still burning, with bubbles rising and a drowning man reaching out with a key in his fist</title>
+  <defs>
+    <linearGradient id="tf-water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f5f63"/><stop offset="0.45" stop-color="#17383f"/><stop offset="1" stop-color="#061217"/>
+    </linearGradient>
+    <radialGradient id="tf-lamp" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe6ae" stop-opacity="0.85"/><stop offset="0.3" stop-color="#ffcf7a" stop-opacity="0.3"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tf-shaft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8f3ee" stop-opacity="0.3"/><stop offset="1" stop-color="#d8f3ee" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      .caustic { animation: tf-caustic 7s ease-in-out infinite; }
+      .caustic.b { animation-duration: 9.5s; animation-delay: -2s; }
+      .caustic.c { animation-duration: 5.5s; animation-delay: -4s; }
+      .shaft   { animation: tf-shaft 8s ease-in-out infinite; transform-origin: top center; }
+      .shaft.b { animation-duration: 11s; animation-delay: -3s; }
+      .hull    { animation: tf-sink 16s ease-in infinite; }
+      .lamp    { animation: tf-lamp 3.8s ease-in-out infinite; }
+      .bub     { animation: tf-bub 6s linear infinite; }
+      .reach   { animation: tf-reach 5.5s ease-in-out infinite; transform-origin: 196px 214px; }
+      .glint   { animation: tf-glint 5.5s ease-in-out infinite; }
+      @keyframes tf-caustic { 0%,100% { transform: translateX(-14px) scaleY(1); opacity: 0.5; } 50% { transform: translateX(14px) scaleY(1.35); opacity: 0.9; } }
+      @keyframes tf-shaft   { 0%,100% { transform: skewX(-5deg) scaleX(1); opacity: 0.6; } 50% { transform: skewX(6deg) scaleX(1.15); opacity: 1; } }
+      @keyframes tf-sink    { 0% { transform: translateY(-16px) rotate(-7deg); } 100% { transform: translateY(26px) rotate(-16deg); } }
+      @keyframes tf-lamp    { 0%,100% { opacity: 0.75; transform: scale(0.97); } 50% { opacity: 1; transform: scale(1.06); } }
+      @keyframes tf-bub     { 0% { transform: translateY(0) translateX(0); opacity: 0; } 12% { opacity: 0.7; } 88% { opacity: 0.5; } 100% { transform: translateY(-230px) translateX(14px); opacity: 0; } }
+      @keyframes tf-reach   { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+      @keyframes tf-glint   { 0%,100% { opacity: 0.15; } 48%,56% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .caustic,.shaft,.hull,.lamp,.bub,.reach,.glint { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#tf-water)"/>
+
+  <!-- light shafts from the surface -->
+  <g>
+    <path class="shaft"   d="M180 0 L214 0 L286 300 L222 300 Z" fill="url(#tf-shaft)"/>
+    <path class="shaft b" d="M420 0 L446 0 L500 300 L452 300 Z" fill="url(#tf-shaft)"/>
+    <path class="shaft"   d="M60 0 L82 0 L126 300 L88 300 Z" fill="url(#tf-shaft)" style="animation-duration:13s;animation-delay:-6s"/>
+  </g>
+
+  <!-- the underside of the surface -->
+  <g fill="none" stroke="#bfeee6" stroke-linecap="round">
+    <path class="caustic"   d="M-20 22 q60 -16 120 0 t120 0 t120 0 t120 0 t120 0 t120 0" stroke-width="3" opacity="0.7"/>
+    <path class="caustic b" d="M-20 42 q70 -14 140 0 t140 0 t140 0 t140 0 t140 0" stroke-width="2.2" opacity="0.5"/>
+    <path class="caustic c" d="M-20 62 q50 -12 100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0" stroke-width="1.6" opacity="0.35"/>
+  </g>
+
+  <!-- the boat, going down, lamp still lit -->
+  <g class="hull" style="transform-origin: 400px 110px">
+    <path d="M318 104 L492 92 L478 130 L336 138 Z" fill="#0b1a1c"/>
+    <path d="M318 104 L492 92 L490 100 L320 112 Z" fill="#17302f"/>
+    <path d="M396 96 L400 40 L406 40 L404 95 Z" fill="#0b1a1c"/>
+    <path d="M402 48 q28 10 2 20" fill="#1d3a36" opacity="0.9"/>
+    <g stroke="#0b1a1c" stroke-width="2"><path d="M350 102 l-6 -20"/><path d="M448 96 l6 -18"/></g>
+    <circle class="lamp" cx="402" cy="38" r="5" fill="#ffe9bb"/>
+    <ellipse class="lamp" cx="402" cy="38" rx="100" ry="76" fill="url(#tf-lamp)"/>
+    <!-- her name on the bow -->
+    <g stroke="#9fb9b2" stroke-width="1.6" opacity="0.65">
+      <path d="M460 112 l4 0 M468 111 l3 0 M475 111 l5 0 M461 118 l6 0 M471 117 l5 0"/>
+    </g>
+  </g>
+
+  <!-- the man in the water -->
+  <g class="reach">
+    <!-- body -->
+    <path d="M186 246 q-16 -30 4 -44 q16 -12 30 2 q16 16 2 44 q-18 10 -36 -2 Z" fill="#16262a"/>
+    <!-- coat opening up like a wing -->
+    <path d="M190 206 q-32 10 -40 40 q22 -14 44 -16 Z" fill="#1b2f33" opacity="0.9"/>
+    <path d="M220 206 q30 12 36 42 q-22 -16 -42 -18 Z" fill="#1b2f33" opacity="0.9"/>
+    <!-- head, face turned up -->
+    <circle cx="204" cy="196" r="12" fill="#2c4247"/>
+    <path d="M196 190 q8 -6 16 0" stroke="#45646a" stroke-width="2" fill="none"/>
+    <!-- the arm reaching up, fist closed -->
+    <path d="M212 206 q24 -28 30 -58" stroke="#16262a" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <circle cx="243" cy="146" r="7.5" fill="#1a2c30"/>
+    <!-- the key, between his fingers -->
+    <g class="glint">
+      <path d="M243 140 l0 -16" stroke="#e8dcb0" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="243" cy="120" r="4.4" fill="none" stroke="#e8dcb0" stroke-width="3"/>
+      <path d="M243 134 l6 0 M243 128 l5 0" stroke="#e8dcb0" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="243" cy="120" r="11" fill="#fff6d4" opacity="0.18"/>
+    </g>
+  </g>
+
+  <!-- bubbles -->
+  <g fill="none" stroke="#d6f4ef" stroke-width="1.4" opacity="0.8">
+    <circle class="bub" cx="250" cy="292" r="4"/>
+    <circle class="bub" cx="268" cy="300" r="2.6" style="animation-delay:-1.4s"/>
+    <circle class="bub" cx="232" cy="296" r="3.2" style="animation-delay:-2.8s"/>
+    <circle class="bub" cx="300" cy="300" r="2"   style="animation-delay:-0.7s"/>
+    <circle class="bub" cx="208" cy="300" r="2.4" style="animation-delay:-4.2s"/>
+    <circle class="bub" cx="420" cy="300" r="3"   style="animation-delay:-3.3s"/>
+    <circle class="bub" cx="452" cy="296" r="2.2" style="animation-delay:-5.1s"/>
+    <circle class="bub" cx="392" cy="300" r="1.8" style="animation-delay:-2.2s"/>
+    <circle class="bub" cx="120" cy="300" r="2.8" style="animation-delay:-1.9s"/>
+    <circle class="bub" cx="540" cy="300" r="2.1" style="animation-delay:-4.7s"/>
+  </g>
+
+  <!-- the dark below -->
+  <path d="M0 268 q120 -22 260 -4 q140 18 380 -10 L640 300 L0 300 Z" fill="#030a0d" opacity="0.85"/>
+</svg>

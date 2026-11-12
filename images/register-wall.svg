@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>A cave wall painted in ochre: a tall tower throwing a light, waves below, and a row of eleven human figures. A twelfth figure appears in wet paint at the end of the row</title>
+  <defs>
+    <linearGradient id="rw-wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4b4433"/><stop offset="0.5" stop-color="#3b3527"/><stop offset="1" stop-color="#262117"/>
+    </linearGradient>
+    <radialGradient id="rw-lamp" cx="0.5" cy="0.5" r="0.58">
+      <stop offset="0" stop-color="#ffd79a" stop-opacity="0.34"/>
+      <stop offset="0.5" stop-color="#e8a861" stop-opacity="0.13"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.62"/>
+    </radialGradient>
+    <style>
+      .lamp  { animation: rw-flicker 3.1s ease-in-out infinite; transform-origin: 320px 150px; }
+      .beam  { animation: rw-pulse 4.2s ease-in-out infinite; }
+      .fresh { opacity: 0; animation: rw-paint 9s ease-in-out infinite; }
+      .run   { opacity: 0; animation: rw-run 9s ease-in-out infinite; }
+      @keyframes rw-flicker { 0%,100% { opacity: 1; transform: scale(1); } 22% { opacity: 0.86; transform: scale(1.03); } 48% { opacity: 1.0; transform: scale(0.985); } 71% { opacity: 0.9; transform: scale(1.02); } }
+      @keyframes rw-pulse   { 0%,100% { opacity: 0.35; } 50% { opacity: 0.7; } }
+      @keyframes rw-paint   { 0%,26% { opacity: 0; } 46%,86% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes rw-run     { 0%,44% { opacity: 0; transform: scaleY(0); } 62% { opacity: 0.95; transform: scaleY(1); } 88% { opacity: 0.8; transform: scaleY(1); } 100% { opacity: 0; transform: scaleY(1); } }
+      @media (prefers-reduced-motion: reduce) { .lamp,.beam { animation: none; } .fresh { animation: none; opacity: 1; } .run { animation: none; opacity: 0.9; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#rw-wall)"/>
+  <!-- rock -->
+  <g stroke="#564e3a" stroke-width="2" fill="none" opacity="0.45">
+    <path d="M0 26 q150 18 300 -8 t340 14"/><path d="M0 284 q170 -18 330 6 t310 -12"/>
+    <path d="M70 0 q18 150 -8 300"/><path d="M560 0 q-14 140 10 300"/>
+  </g>
+  <g fill="#2a2418" opacity="0.5">
+    <ellipse cx="132" cy="68" rx="30" ry="9"/><ellipse cx="470" cy="248" rx="38" ry="11"/><ellipse cx="258" cy="36" rx="22" ry="7"/>
+  </g>
+
+  <!-- the painting, in ochre and charcoal -->
+  <g>
+    <!-- the tower -->
+    <g fill="#b4622c">
+      <path d="M62 236 L78 112 L104 112 L118 236 Z"/>
+      <path d="M72 108 L110 108 L114 96 L68 96 Z"/>
+    </g>
+    <circle class="beam" cx="91" cy="84" r="13" fill="#e8b352"/>
+    <g class="beam" stroke="#e8b352" stroke-width="3" stroke-linecap="round" opacity="0.5">
+      <path d="M91 84 L150 60"/><path d="M91 84 L156 84"/><path d="M91 84 L150 108"/>
+      <path d="M91 84 L36 60"/><path d="M91 84 L30 84"/><path d="M91 84 L36 108"/>
+    </g>
+    <!-- waves along the bottom -->
+    <g stroke="#9a5527" stroke-width="3.5" fill="none" opacity="0.85" stroke-linecap="round">
+      <path d="M46 262 q18 -12 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+      <path d="M46 276 q18 -12 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0" opacity="0.55"/>
+    </g>
+    <!-- a painted ship, going down -->
+    <g stroke="#8c4d24" stroke-width="3" fill="none" opacity="0.8">
+      <path d="M470 60 L512 60 L504 78 L478 78 Z"/><path d="M491 60 L491 34"/><path d="M491 38 L510 48 L491 52"/>
+    </g>
+
+    <!-- the register: eleven old figures -->
+    <g fill="#a95f2d">
+      <g opacity="0.72"><circle cx="160" cy="150" r="7"/><path d="M160 158 L160 190 M160 166 L148 178 M160 166 L172 178 M160 190 L150 210 M160 190 L170 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.66"><circle cx="198" cy="150" r="7"/><path d="M198 158 L198 190 M198 166 L186 178 M198 166 L210 178 M198 190 L188 210 M198 190 L208 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.78"><circle cx="236" cy="150" r="7"/><path d="M236 158 L236 190 M236 166 L224 178 M236 166 L248 178 M236 190 L226 210 M236 190 L246 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.6"><circle cx="274" cy="150" r="7"/><path d="M274 158 L274 190 M274 166 L262 178 M274 166 L286 178 M274 190 L264 210 M274 190 L284 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.74"><circle cx="312" cy="150" r="7"/><path d="M312 158 L312 190 M312 166 L300 178 M312 166 L324 178 M312 190 L302 210 M312 190 L322 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.68"><circle cx="350" cy="150" r="7"/><path d="M350 158 L350 190 M350 166 L338 178 M350 166 L362 178 M350 190 L340 210 M350 190 L360 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.8"><circle cx="388" cy="150" r="7"/><path d="M388 158 L388 190 M388 166 L376 178 M388 166 L400 178 M388 190 L378 210 M388 190 L398 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.62"><circle cx="426" cy="150" r="7"/><path d="M426 158 L426 190 M426 166 L414 178 M426 166 L438 178 M426 190 L416 210 M426 190 L436 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.76"><circle cx="464" cy="150" r="7"/><path d="M464 158 L464 190 M464 166 L452 178 M464 166 L476 178 M464 190 L454 210 M464 190 L474 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.64"><circle cx="502" cy="150" r="7"/><path d="M502 158 L502 190 M502 166 L490 178 M502 166 L514 178 M502 190 L492 210 M502 190 L512 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      <g opacity="0.7"><circle cx="540" cy="150" r="7"/><path d="M540 158 L540 190 M540 166 L528 178 M540 166 L552 178 M540 190 L530 210 M540 190 L550 210" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    </g>
+    <!-- tally marks under the row -->
+    <g stroke="#7d4520" stroke-width="2.5" opacity="0.6" stroke-linecap="round">
+      <path d="M154 224 l0 10 M160 224 l0 10 M166 224 l0 10"/>
+      <path d="M230 224 l0 10 M236 224 l0 10 M242 224 l0 10"/>
+      <path d="M382 224 l0 10 M388 224 l0 10 M394 224 l0 10"/>
+      <path d="M534 224 l0 10 M540 224 l0 10 M546 224 l0 10"/>
+    </g>
+
+    <!-- the twelfth: wet paint, still appearing -->
+    <g class="fresh" fill="#d8762f">
+      <circle cx="578" cy="150" r="7.5"/>
+      <path d="M578 158 L578 190 M578 166 L565 178 M578 166 L591 178 M578 190 L567 210 M578 190 L589 210" stroke="#d8762f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <path d="M566 142 q12 -9 24 0" stroke="#d8762f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </g>
+    <g class="run" style="transform-origin: 578px 158px">
+      <path d="M578 158 L578 232" stroke="#d8762f" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="578" cy="234" r="2.6" fill="#d8762f"/>
+    </g>
+  </g>
+
+  <!-- lantern light -->
+  <rect class="lamp" width="640" height="300" fill="url(#rw-lamp)"/>
+</svg>

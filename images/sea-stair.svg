@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>A steep flight of steps cut into a wet cliff face, numbers carved beside them, with spray bursting below and one number scratched out</title>
+  <defs>
+    <linearGradient id="ss-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#262f45"/><stop offset="1" stop-color="#8b8b99"/>
+    </linearGradient>
+    <linearGradient id="ss-rock" x1="0" y1="0" x2="1" y2="0.6">
+      <stop offset="0" stop-color="#4c4738"/><stop offset="1" stop-color="#2b2821"/>
+    </linearGradient>
+    <linearGradient id="ss-face" x1="0" y1="0" x2="1" y2="0.5">
+      <stop offset="0" stop-color="#453f30"/><stop offset="0.6" stop-color="#2e2a20"/><stop offset="1" stop-color="#171510"/>
+    </linearGradient>
+    <linearGradient id="ss-wet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9aa3ae" stop-opacity="0"/><stop offset="1" stop-color="#9aa3ae" stop-opacity="0.45"/>
+    </linearGradient>
+    <style>
+      .spray { animation: ss-spray 4.4s ease-out infinite; transform-origin: center bottom; opacity: 0; }
+      .drip  { animation: ss-drip 2.9s cubic-bezier(.4,0,1,1) infinite; }
+      .scratch { animation: ss-scratch 7s ease-in-out infinite; }
+      @keyframes ss-spray   { 0% { transform: translateY(16px) scale(0.5); opacity: 0; } 25% { opacity: 0.85; } 100% { transform: translateY(-58px) scale(1.5); opacity: 0; } }
+      @keyframes ss-drip    { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(60px); opacity: 0; } }
+      @keyframes ss-scratch { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .spray,.drip,.scratch { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#ss-sky)"/>
+  <!-- far sea, bottom left -->
+  <rect y="248" width="300" height="52" fill="#3c4a60"/>
+  <path d="M0 254 Q50 249 100 254 T200 254 T300 254" stroke="#93a4ba" stroke-width="2" fill="none" opacity="0.4"/>
+
+  <!-- the cliff: a great diagonal face -->
+  <path d="M120 300 L250 0 L640 0 L640 300 Z" fill="url(#ss-face)"/>
+  <path d="M250 0 L640 0 L640 40 L268 40 Z" fill="#605a46" opacity="0.5"/>
+  <g stroke="#6b6450" stroke-width="2.5" fill="none" opacity="0.5">
+    <path d="M270 40 q120 20 240 -6 t130 14"/><path d="M212 150 q140 22 280 -8 t148 16"/><path d="M160 254 q160 20 320 -10 t160 18"/>
+  </g>
+  <rect x="120" y="150" width="520" height="150" fill="url(#ss-wet)"/>
+
+  <!-- the steps, climbing right -->
+  <g>
+    <path d="M152 300 L200 188 L236 188 L236 176 L268 176 L268 164 L300 164 L300 152 L332 152 L332 140 L364 140 L364 128 L396 128 L396 116 L428 116 L428 104 L460 104 L460 92 L492 92 L492 80 L524 80 L524 68 L556 68 L556 56 L600 56 L600 300 Z" fill="#5f5844"/>
+    <g stroke="#9c947b" stroke-width="3" stroke-linecap="square">
+      <path d="M200 188 h36"/><path d="M236 176 h32"/><path d="M268 164 h32"/><path d="M300 152 h32"/><path d="M332 140 h32"/>
+      <path d="M364 128 h32"/><path d="M396 116 h32"/><path d="M428 104 h32"/><path d="M460 92 h32"/><path d="M492 80 h32"/><path d="M524 68 h32"/><path d="M556 56 h44"/>
+    </g>
+    <g stroke="#2a261d" stroke-width="2" opacity="0.7">
+      <path d="M236 176 v12"/><path d="M268 164 v12"/><path d="M300 152 v12"/><path d="M332 140 v12"/><path d="M364 128 v12"/>
+      <path d="M396 116 v12"/><path d="M428 104 v12"/><path d="M460 92 v12"/><path d="M492 80 v12"/><path d="M524 68 v12"/><path d="M556 56 v12"/>
+    </g>
+  </g>
+
+  <!-- carved numbers beside the steps -->
+  <g fill="#cdc4a8" font-family="Georgia, 'Times New Roman', serif" font-size="13" opacity="0.8">
+    <text x="243" y="172">9</text><text x="275" y="160">10</text>
+    <text x="339" y="136">12</text><text x="371" y="124">13</text><text x="403" y="112">14</text>
+  </g>
+  <!-- the eleventh, scratched out -->
+  <g class="scratch">
+    <text x="307" y="148" fill="#cdc4a8" font-family="Georgia, 'Times New Roman', serif" font-size="13" opacity="0.35">11</text>
+    <g stroke="#e4dcc0" stroke-width="2.4" stroke-linecap="round">
+      <path d="M303 150 l22 -12"/><path d="M304 138 l20 13"/>
+    </g>
+  </g>
+
+  <!-- water running down the face -->
+  <g stroke="#b7c3cd" stroke-width="2" stroke-linecap="round" opacity="0.8">
+    <path class="drip" d="M420 60 l0 10"/>
+    <path class="drip" d="M520 30 l0 10" style="animation-delay:-1.2s"/>
+    <path class="drip" d="M330 110 l0 10" style="animation-delay:-2.1s"/>
+  </g>
+
+  <!-- spray from below -->
+  <g fill="#eef2f6">
+    <g transform="translate(140 300)"><g class="spray"><ellipse cx="0" cy="0" rx="20" ry="12"/><circle cx="-16" cy="-8" r="5"/><circle cx="14" cy="-12" r="6"/></g></g>
+    <g transform="translate(196 300)"><g class="spray" style="animation-delay:-1.8s"><ellipse cx="0" cy="0" rx="16" ry="10"/><circle cx="12" cy="-10" r="5"/></g></g>
+    <g transform="translate(96 300)"><g class="spray" style="animation-delay:-3.1s"><ellipse cx="0" cy="0" rx="22" ry="11"/><circle cx="-14" cy="-12" r="6"/></g></g>
+  </g>
+</svg>

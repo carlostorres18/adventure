@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>A bronze fog bell hanging in a small stone shelter on a clifftop, swinging, with rings of sound spreading out into the fog</title>
+  <defs>
+    <linearGradient id="fb-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b3246"/><stop offset="1" stop-color="#8e8e9c"/>
+    </linearGradient>
+    <linearGradient id="fb-bronze" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0" stop-color="#4e3c18"/><stop offset="0.38" stop-color="#b08d35"/><stop offset="0.6" stop-color="#e3c96f"/><stop offset="1" stop-color="#5c4719"/>
+    </linearGradient>
+    <linearGradient id="fb-stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7d7a6c"/><stop offset="1" stop-color="#44423a"/>
+    </linearGradient>
+    <style>
+      .bell { animation: fb-swing 2.4s ease-in-out infinite; transform-origin: 320px 96px; }
+      .clap { animation: fb-clap 2.4s ease-in-out infinite; transform-origin: 320px 112px; }
+      .ring { animation: fb-ring 2.4s ease-out infinite; transform-origin: 320px 170px; opacity: 0; }
+      .fog  { animation: fb-fog 18s linear infinite; }
+      @keyframes fb-swing { 0%,100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+      @keyframes fb-clap  { 0%,100% { transform: rotate(13deg); } 46% { transform: rotate(-13deg); } }
+      @keyframes fb-ring  { 0% { transform: scale(0.3); opacity: 0.8; } 70% { opacity: 0.12; } 100% { transform: scale(2.3); opacity: 0; } }
+      @keyframes fb-fog   { from { transform: translateX(-200px); } to { transform: translateX(640px); } }
+      @media (prefers-reduced-motion: reduce) { .bell,.clap,.ring,.fog { animation: none; } .ring { opacity: 0.22; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#fb-sky)"/>
+  <g fill="#d9dbe4" opacity="0.2">
+    <ellipse class="fog" cx="0" cy="118" rx="170" ry="16"/>
+    <ellipse class="fog" cx="0" cy="172" rx="230" ry="12" style="animation-duration:26s;animation-delay:-9s"/>
+    <ellipse class="fog" cx="0" cy="70"  rx="130" ry="10" style="animation-duration:13s;animation-delay:-4s"/>
+  </g>
+
+  <!-- clifftop -->
+  <path d="M0 252 Q160 236 320 244 T640 238 L640 300 L0 300 Z" fill="#4f5340"/>
+  <path d="M0 252 Q160 236 320 244 T640 238 L640 250 Q320 258 0 264 Z" fill="#6c7152"/>
+
+  <!-- rings of sound -->
+  <g class="ring-wrap" fill="none" stroke="#f3f1e4" stroke-width="2">
+    <circle class="ring" cx="320" cy="170" r="54"/>
+    <circle class="ring" cx="320" cy="170" r="54" style="animation-delay:-0.8s"/>
+    <circle class="ring" cx="320" cy="170" r="54" style="animation-delay:-1.6s"/>
+  </g>
+
+  <!-- the shelter -->
+  <g>
+    <path d="M196 96 L320 40 L444 96 L436 104 L320 52 L204 104 Z" fill="#8a8574"/>
+    <rect x="200" y="96" width="24" height="156" fill="url(#fb-stone)"/>
+    <rect x="416" y="96" width="24" height="156" fill="url(#fb-stone)"/>
+    <rect x="196" y="90" width="248" height="12" rx="3" fill="#6f6b5c"/>
+    <g stroke="#3a382f" stroke-width="1.5" opacity="0.5">
+      <path d="M200 128 h24 M200 160 h24 M200 192 h24 M200 224 h24"/>
+      <path d="M416 128 h24 M416 160 h24 M416 192 h24 M416 224 h24"/>
+    </g>
+    <rect x="312" y="86" width="16" height="14" rx="3" fill="#4a4538"/>
+  </g>
+
+  <!-- the bell -->
+  <g class="bell">
+    <path d="M316 94 q4 -10 8 0" stroke="#6b5a2a" stroke-width="5" fill="none"/>
+    <g class="clap"><rect x="316" y="112" width="8" height="58" rx="3" fill="#443e2d"/><circle cx="320" cy="174" r="8.5" fill="#564e3a"/></g>
+    <path d="M320 98 q-40 6 -44 58 l-6 10 l100 0 l-6 -10 q-4 -52 -44 -58 Z" fill="url(#fb-bronze)"/>
+    <path d="M270 166 l100 0 l0 8 l-100 0 Z" fill="#8f742c"/>
+    <path d="M300 104 q-18 16 -20 56" stroke="#f0e2a8" stroke-width="2.5" fill="none" opacity="0.5"/>
+    <path d="M340 106 q14 18 16 54" stroke="#3f3113" stroke-width="2.5" fill="none" opacity="0.45"/>
+  </g>
+
+  <!-- a rotted rope end, hanging -->
+  <path d="M452 96 q10 40 -4 72 q-4 10 2 16" stroke="#9b8c6a" stroke-width="3" fill="none" opacity="0.8"/>
+  <g stroke="#9b8c6a" stroke-width="1.5" opacity="0.7">
+    <path d="M450 184 l-6 10"/><path d="M450 184 l2 12"/><path d="M450 184 l7 9"/>
+  </g>
+</svg>

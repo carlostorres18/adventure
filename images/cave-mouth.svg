@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>A black cave mouth in a wet cliff face, with dust drifting in the air and faint points of light far inside</title>
+  <defs>
+    <radialGradient id="cm-dark" cx="0.5" cy="0.62" r="0.62">
+      <stop offset="0" stop-color="#000000"/><stop offset="0.72" stop-color="#05060a"/><stop offset="1" stop-color="#121521"/>
+    </radialGradient>
+    <linearGradient id="cm-rock" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a5342"/><stop offset="1" stop-color="#2c2820"/>
+    </linearGradient>
+    <linearGradient id="cm-wet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d8a74" stop-opacity="0.5"/><stop offset="1" stop-color="#8d8a74" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      .mote { animation: cm-rise 9s linear infinite; }
+      .eye  { animation: cm-blink 6s steps(1,end) infinite; }
+      .drip { animation: cm-drip 3.4s cubic-bezier(.4,0,1,1) infinite; }
+      @keyframes cm-rise  { from { transform: translateY(26px); opacity: 0; } 25% { opacity: 0.5; } 75% { opacity: 0.4; } to { transform: translateY(-48px); opacity: 0; } }
+      @keyframes cm-blink { 0%,92% { opacity: 0.75; } 93%,97% { opacity: 0.04; } 98%,100% { opacity: 0.75; } }
+      @keyframes cm-drip  { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(74px); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .mote,.eye,.drip { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#cm-rock)"/>
+  <!-- strata -->
+  <g stroke="#3b3629" stroke-width="3" opacity="0.6" fill="none">
+    <path d="M0 40 q160 -14 320 4 t320 -6"/><path d="M0 92 q150 16 300 -6 t340 8"/>
+    <path d="M0 214 q180 -16 340 8 t300 -10"/><path d="M0 266 q140 14 280 -4 t360 10"/>
+  </g>
+  <rect width="640" height="300" fill="url(#cm-wet)"/>
+
+  <!-- the mouth -->
+  <path d="M196 300 Q190 150 268 96 Q320 62 376 98 Q452 152 446 300 Z" fill="url(#cm-dark)"/>
+  <path d="M196 300 Q190 150 268 96 Q320 62 376 98 Q452 152 446 300" fill="none" stroke="#0a0b10" stroke-width="7"/>
+  <path d="M206 300 Q202 156 272 106 Q320 76 372 108 Q438 158 436 300" fill="none" stroke="#6e6752" stroke-width="2.5" opacity="0.55"/>
+
+  <!-- teeth of rock at the lip -->
+  <g fill="#231f18">
+    <path d="M230 300 L242 262 L256 300 Z"/><path d="M296 300 L306 268 L318 300 Z"/>
+    <path d="M378 300 L390 266 L402 300 Z"/><path d="M414 300 L422 276 L432 300 Z"/>
+  </g>
+
+  <!-- eyes, far inside -->
+  <g fill="#e9e4cf">
+    <circle class="eye" cx="296" cy="208" r="2.1"/>
+    <circle class="eye" cx="312" cy="200" r="1.8" style="animation-delay:-1.3s"/>
+    <circle class="eye" cx="330" cy="214" r="2.3" style="animation-delay:-2.9s"/>
+    <circle class="eye" cx="346" cy="196" r="1.7" style="animation-delay:-4.1s"/>
+    <circle class="eye" cx="278" cy="226" r="1.9" style="animation-delay:-0.6s"/>
+    <circle class="eye" cx="358" cy="226" r="2"   style="animation-delay:-3.5s"/>
+    <circle class="eye" cx="320" cy="238" r="1.6" style="animation-delay:-5.2s"/>
+  </g>
+
+  <!-- dust -->
+  <g fill="#cfc9ae">
+    <circle class="mote" cx="252" cy="250" r="1.4"/>
+    <circle class="mote" cx="404" cy="236" r="1.1" style="animation-delay:-2.5s"/>
+    <circle class="mote" cx="470" cy="206" r="1.3" style="animation-delay:-5s"/>
+    <circle class="mote" cx="150" cy="222" r="1.2" style="animation-delay:-7s"/>
+    <circle class="mote" cx="548" cy="168" r="1"   style="animation-delay:-3.8s"/>
+    <circle class="mote" cx="88"  cy="150" r="1.2" style="animation-delay:-6.2s"/>
+  </g>
+
+  <!-- water off the lip -->
+  <g stroke="#b9c6cf" stroke-width="2" stroke-linecap="round">
+    <path class="drip" d="M268 104 l0 8"/>
+    <path class="drip" d="M352 110 l0 8" style="animation-delay:-1.7s"/>
+    <path class="drip" d="M424 170 l0 8" style="animation-delay:-2.6s"/>
+  </g>
+</svg>

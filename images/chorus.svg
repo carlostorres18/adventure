@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>Thousands of white gulls spiralling over the rocks at night, their wings so bright they light the water below, while a ship's lamp turns away from the shore</title>
+  <defs>
+    <linearGradient id="ch-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#05080f"/><stop offset="0.65" stop-color="#121a2c"/><stop offset="1" stop-color="#25304a"/>
+    </linearGradient>
+    <linearGradient id="ch-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3a56"/><stop offset="1" stop-color="#080d16"/>
+    </linearGradient>
+    <radialGradient id="ch-bloom" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.52"/>
+      <stop offset="0.3" stop-color="#dcebff" stop-opacity="0.26"/>
+      <stop offset="0.68" stop-color="#bcd6ff" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#bcd6ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ch-water" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#cfe2ff" stop-opacity="0.3"/><stop offset="1" stop-color="#cfe2ff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .bloom { animation: ch-bloom 3.6s ease-in-out infinite; transform-origin: 300px 120px; }
+      .pool  { animation: ch-pool  3.6s ease-in-out infinite; transform-origin: 300px 228px; }
+      .foam  { animation: ch-foam  3.6s ease-in-out infinite; }
+      .lampd { animation: ch-lampd 5s ease-in-out infinite; }
+      .lampc { animation: ch-lampc 5s ease-in-out infinite; }
+      .ring  { animation: ch-turn 16s linear infinite; transform-origin: 300px 120px; }
+      .ring.b{ animation-duration: 11s; animation-direction: reverse; }
+      .ring.c{ animation-duration: 23s; }
+      .w     { animation: ch-flap 0.8s ease-in-out infinite; transform-origin: center; }
+      .swell { animation: ch-swell 7s ease-in-out infinite; }
+      @keyframes ch-bloom { 0%,100% { transform: scale(0.9);  opacity: 0.7; } 50% { transform: scale(1.08); opacity: 1; } }
+      @keyframes ch-pool  { 0%,100% { transform: scaleX(0.92); opacity: 0.55; } 50% { transform: scaleX(1.06); opacity: 1; } }
+      @keyframes ch-foam  { 0%,100% { opacity: 0.4; } 50% { opacity: 0.75; } }
+      @keyframes ch-lampd { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+      @keyframes ch-lampc { 0%,100% { opacity: 0.09; } 50% { opacity: 0.2; } }
+      @keyframes ch-turn  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      @keyframes ch-flap  { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.3); } }
+      @keyframes ch-swell { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+      @media (prefers-reduced-motion: reduce) { .bloom,.pool,.foam,.lampd,.lampc,.ring,.w,.swell { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#ch-sky)"/>
+  <g fill="#f6f4e8" opacity="0.5">
+    <circle cx="70" cy="40" r="1.1"/><circle cx="150" cy="22" r="0.9"/><circle cx="560" cy="34" r="1.2"/>
+    <circle cx="610" cy="76" r="0.9"/><circle cx="470" cy="18" r="1"/><circle cx="36" cy="88" r="0.8"/>
+  </g>
+
+  <!-- the headland, and the tower on it, unlit -->
+  <path d="M470 206 L512 150 L556 128 L600 138 L640 170 L640 206 Z" fill="#0a0e16"/>
+  <g transform="translate(548 56)">
+    <path d="M0 0 L20 0 L26 74 L-6 74 Z" fill="#131a26"/>
+    <path d="M-3 -13 L23 -13 L21 0 L-1 0 Z" fill="#070a10"/>
+    <path d="M-6 -13 L10 -25 L26 -13 Z" fill="#1a2434"/>
+    <rect x="2" y="-10" width="16" height="7" fill="#0b1119"/>
+  </g>
+
+  <!-- sea -->
+  <g class="swell">
+    <rect y="196" width="640" height="110" fill="url(#ch-sea)"/>
+    <path d="M0 204 Q80 198 160 204 T320 204 T480 204 T640 204" stroke="#7e95bb" stroke-width="2" fill="none" opacity="0.35"/>
+    <path d="M0 238 Q90 231 180 238 T360 238 T540 238 T720 238" stroke="#7e95bb" stroke-width="2" fill="none" opacity="0.22"/>
+    <path d="M0 272 Q70 266 140 272 T280 272 T420 272 T560 272 T700 272" stroke="#7e95bb" stroke-width="2" fill="none" opacity="0.15"/>
+  </g>
+
+  <!-- the light the birds throw down onto the water -->
+  <ellipse class="pool" cx="300" cy="228" rx="250" ry="34" fill="url(#ch-water)"/>
+
+  <!-- the rocks they are showing him -->
+  <g fill="#05080e">
+    <path d="M196 254 L226 202 L258 254 Z"/><path d="M264 262 L288 224 L314 262 Z"/><path d="M148 268 L172 238 L198 268 Z"/>
+  </g>
+  <g fill="#dfeaf6" class="foam">
+    <ellipse cx="226" cy="254" rx="34" ry="6"/><ellipse cx="288" cy="262" rx="28" ry="5"/><ellipse cx="172" cy="268" rx="26" ry="5"/>
+  </g>
+
+  <!-- the chorus -->
+  <ellipse class="bloom" cx="300" cy="120" rx="265" ry="125" fill="url(#ch-bloom)"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round">
+    <g class="ring" stroke-width="2.6">
+      <g class="w"><path d="M300 30 q10 -9 20 0 q10 -9 20 0"/></g>
+      <g class="w" style="animation-delay:-.1s"><path d="M392 66 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.2s"><path d="M418 152 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.3s"><path d="M330 204 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.4s"><path d="M222 188 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.5s"><path d="M164 108 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.6s"><path d="M212 46 q9 -8 18 0 q9 -8 18 0"/></g>
+      <g class="w" style="animation-delay:-.7s"><path d="M262 16 q8 -7 16 0 q8 -7 16 0"/></g>
+    </g>
+    <g class="ring b" stroke-width="2.2" opacity="0.9">
+      <g class="w" style="animation-duration:.95s"><path d="M300 62 q8 -7 16 0 q8 -7 16 0"/></g>
+      <g class="w" style="animation-duration:.95s;animation-delay:-.2s"><path d="M366 94 q8 -7 16 0 q8 -7 16 0"/></g>
+      <g class="w" style="animation-duration:.95s;animation-delay:-.4s"><path d="M372 156 q8 -7 16 0 q8 -7 16 0"/></g>
+      <g class="w" style="animation-duration:.95s;animation-delay:-.6s"><path d="M284 180 q8 -7 16 0 q8 -7 16 0"/></g>
+      <g class="w" style="animation-duration:.95s;animation-delay:-.8s"><path d="M216 132 q8 -7 16 0 q8 -7 16 0"/></g>
+      <g class="w" style="animation-duration:.95s;animation-delay:-.3s"><path d="M234 74 q8 -7 16 0 q8 -7 16 0"/></g>
+    </g>
+    <g class="ring c" stroke-width="3" opacity="0.75">
+      <g class="w" style="animation-duration:1.1s"><path d="M298 4 q11 -10 22 0 q11 -10 22 0"/></g>
+      <g class="w" style="animation-duration:1.1s;animation-delay:-.3s"><path d="M474 110 q11 -10 22 0 q11 -10 22 0"/></g>
+      <g class="w" style="animation-duration:1.1s;animation-delay:-.6s"><path d="M356 236 q11 -10 22 0 q11 -10 22 0"/></g>
+      <g class="w" style="animation-duration:1.1s;animation-delay:-.9s"><path d="M104 142 q11 -10 22 0 q11 -10 22 0"/></g>
+      <g class="w" style="animation-duration:1.1s;animation-delay:-.45s"><path d="M152 38 q11 -10 22 0 q11 -10 22 0"/></g>
+      <g class="w" style="animation-duration:1.1s;animation-delay:-.75s"><path d="M470 196 q10 -9 20 0 q10 -9 20 0"/></g>
+    </g>
+  </g>
+
+  <!-- the ship, hauling round -->
+  <g transform="translate(44 182)">
+    <path class="lampc" d="M34 -6 L-44 10 L-44 -22 Z" fill="#ffd98a"/>
+    <path d="M0 26 L78 26 L68 42 L10 42 Z" fill="#070b12"/>
+    <path d="M12 26 L12 16 L58 16 L58 26 Z" fill="#0d141e"/>
+    <path d="M32 16 L32 -8 L37 -8 L37 16 Z" fill="#070b12"/>
+    <circle class="lampd" cx="34" cy="-8" r="4.2" fill="#ffe3a6"/>
+    <path d="M0 26 q39 8 78 0" stroke="#1b2838" stroke-width="2" fill="none"/>
+  </g>
+</svg>

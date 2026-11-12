@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>An enormous pale shape standing in the fog beyond the rocks, which slowly resolves into the shadow of the lighthouse thrown onto the fog</title>
+  <defs>
+    <linearGradient id="tg-fog" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a5261"/><stop offset="0.55" stop-color="#8d94a1"/><stop offset="1" stop-color="#b9bec7"/>
+    </linearGradient>
+    <linearGradient id="tg-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6a717f"/><stop offset="1" stop-color="#2d333d"/>
+    </linearGradient>
+    <radialGradient id="tg-eye" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fdf6de" stop-opacity="0.9"/><stop offset="0.6" stop-color="#fdf6de" stop-opacity="0.2"/><stop offset="1" stop-color="#fdf6de" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .shape  { animation: tg-loom 12s ease-in-out infinite; transform-origin: 320px 300px; }
+      .eye    { animation: tg-open 12s ease-in-out infinite; }
+      .truth  { animation: tg-truth 12s ease-in-out infinite; opacity: 0; }
+      .fog    { animation: tg-fog 20s linear infinite; }
+      .swell  { animation: tg-swell 6s ease-in-out infinite; }
+      @keyframes tg-loom  { 0%,100% { transform: scale(0.96) translateY(6px); opacity: 0.5; } 40%,60% { transform: scale(1.02) translateY(0); opacity: 0.9; } }
+      @keyframes tg-open  { 0%,22% { transform: scaleY(0.04); opacity: 0; } 42%,58% { transform: scaleY(1); opacity: 1; } 78%,100% { transform: scaleY(0.04); opacity: 0; } }
+      @keyframes tg-truth { 0%,56% { opacity: 0; } 72%,86% { opacity: 0.85; } 100% { opacity: 0; } }
+      @keyframes tg-fog   { from { transform: translateX(-240px); } to { transform: translateX(660px); } }
+      @keyframes tg-swell { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+      @media (prefers-reduced-motion: reduce) { .shape,.eye,.truth,.fog,.swell { animation: none; } .truth { opacity: 0.7; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#tg-fog)"/>
+
+  <!-- the shape in the fog -->
+  <g class="shape">
+    <path d="M160 300 Q168 150 232 92 Q286 42 320 44 Q356 42 410 94 Q474 152 482 300 Z" fill="#5e6673" opacity="0.6"/>
+    <path d="M196 300 Q204 166 254 114 Q298 70 320 70 Q344 70 388 116 Q438 168 446 300 Z" fill="#525a68" opacity="0.5"/>
+    <!-- the eye, which is not an eye -->
+    <g class="eye" style="transform-origin: 320px 128px">
+      <ellipse cx="320" cy="128" rx="54" ry="22" fill="url(#tg-eye)"/>
+      <ellipse cx="320" cy="128" rx="18" ry="18" fill="#2b2f38" opacity="0.75"/>
+      <ellipse cx="320" cy="128" rx="6" ry="16" fill="#0d1014"/>
+      <circle cx="312" cy="120" r="3.4" fill="#ffffff" opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- what it actually is: the tower's own shadow, cast on the fog -->
+  <g class="truth">
+    <path d="M296 300 L302 112 L338 112 L344 300 Z" fill="#454c58"/>
+    <path d="M298 104 L342 104 L338 112 L302 112 Z" fill="#3b414c"/>
+    <path d="M296 92 L320 76 L344 92 Z" fill="#3b414c"/>
+    <g stroke="#f6f1dd" stroke-width="2.5" opacity="0.5" stroke-linecap="round">
+      <path d="M320 96 L392 74"/><path d="M320 96 L398 98"/><path d="M320 96 L390 122"/>
+      <path d="M320 96 L248 74"/><path d="M320 96 L242 98"/><path d="M320 96 L250 122"/>
+    </g>
+    <circle cx="320" cy="96" r="7" fill="#fdf3cf" opacity="0.85"/>
+  </g>
+
+  <!-- fog bands crossing it -->
+  <g fill="#e2e5ea" opacity="0.3">
+    <ellipse class="fog" cx="0" cy="150" rx="240" ry="20"/>
+    <ellipse class="fog" cx="0" cy="206" rx="300" ry="16" style="animation-duration:28s;animation-delay:-11s"/>
+    <ellipse class="fog" cx="0" cy="104" rx="180" ry="12" style="animation-duration:15s;animation-delay:-5s"/>
+  </g>
+
+  <!-- sea and the rocks that do the actual killing -->
+  <g class="swell">
+    <rect y="246" width="640" height="60" fill="url(#tg-sea)"/>
+    <path d="M0 252 Q80 246 160 252 T320 252 T480 252 T640 252" stroke="#aeb5c0" stroke-width="2" fill="none" opacity="0.45"/>
+    <path d="M0 278 Q90 271 180 278 T360 278 T540 278 T720 278" stroke="#aeb5c0" stroke-width="2" fill="none" opacity="0.3"/>
+  </g>
+  <g fill="#1f242c">
+    <path d="M70 282 L104 236 L140 282 Z"/><path d="M148 290 L172 254 L198 290 Z"/><path d="M482 286 L512 244 L544 286 Z"/><path d="M556 294 L578 262 L602 294 Z"/>
+  </g>
+  <g fill="#f1f3f6" opacity="0.55">
+    <ellipse cx="104" cy="282" rx="38" ry="6"/><ellipse cx="512" cy="286" rx="34" ry="6"/><ellipse cx="172" cy="290" rx="28" ry="5"/>
+  </g>
+</svg>

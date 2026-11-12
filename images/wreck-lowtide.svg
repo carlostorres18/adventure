@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>The ribs of a wrecked boat standing out of wet grey sand at low tide, with the sea creeping back in and a cliff stair in the distance</title>
+  <defs>
+    <linearGradient id="wl-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#303a52"/><stop offset="0.6" stop-color="#737a90"/><stop offset="1" stop-color="#c0aeae"/>
+    </linearGradient>
+    <linearGradient id="wl-sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8e8b7f"/><stop offset="1" stop-color="#b6b2a3"/>
+    </linearGradient>
+    <linearGradient id="wl-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4e5f78"/><stop offset="1" stop-color="#6b7a90"/>
+    </linearGradient>
+    <linearGradient id="wl-wet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6f7686" stop-opacity="0.55"/><stop offset="1" stop-color="#6f7686" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      .tide  { animation: wl-tide 11s ease-in-out infinite; }
+      .foam  { animation: wl-foam 11s ease-in-out infinite; }
+      .fog   { animation: wl-fog 24s linear infinite; }
+      .gull  { animation: wl-hop 4.2s ease-in-out infinite; transform-origin: center bottom; }
+      .glint { animation: wl-glint 5.5s ease-in-out infinite; }
+      @keyframes wl-tide  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
+      @keyframes wl-foam  { 0%,100% { transform: translateY(0); opacity: 0.75; } 50% { transform: translateY(-22px); opacity: 1; } }
+      @keyframes wl-fog   { from { transform: translateX(-220px); } to { transform: translateX(660px); } }
+      @keyframes wl-hop   { 0%,70%,100% { transform: translateY(0) ; } 80% { transform: translateY(-5px); } }
+      @keyframes wl-glint { 0%,100% { opacity: 0; } 46%,54% { opacity: 0.9; } }
+      @media (prefers-reduced-motion: reduce) { .tide,.foam,.fog,.gull,.glint { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#wl-sky)"/>
+  <g fill="#d6d8e0" opacity="0.2">
+    <ellipse class="fog" cx="0" cy="92" rx="200" ry="14"/>
+    <ellipse class="fog" cx="0" cy="124" rx="260" ry="10" style="animation-duration:33s;animation-delay:-12s"/>
+  </g>
+
+  <!-- the cliff on the right, with the stair cut into it -->
+  <path d="M470 300 L482 118 L540 86 L640 70 L640 300 Z" fill="#413c2e"/>
+  <path d="M482 118 L540 86 L640 70 L640 90 L546 104 L492 134 Z" fill="#5c5542"/>
+  <g stroke="#9a927a" stroke-width="3" opacity="0.75">
+    <path d="M500 290 l16 0 M506 274 l16 0 M512 258 l16 0 M518 242 l16 0 M524 226 l16 0 M530 210 l16 0 M536 194 l16 0 M542 178 l16 0 M548 162 l16 0 M554 146 l16 0 M560 130 l16 0 M566 114 l16 0"/>
+  </g>
+
+  <!-- the sea, coming back -->
+  <g class="tide">
+    <rect y="176" width="640" height="60" fill="url(#wl-sea)"/>
+    <path d="M0 182 Q70 177 140 182 T280 182 T420 182 T560 182 T700 182" stroke="#9fb0c6" stroke-width="2" fill="none" opacity="0.45"/>
+  </g>
+  <!-- sand -->
+  <rect y="230" width="640" height="70" fill="url(#wl-sand)"/>
+  <rect y="230" width="640" height="34" fill="url(#wl-wet)"/>
+  <!-- foam line, where the water reaches -->
+  <g class="foam">
+    <path d="M0 232 q40 -7 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke="#f2f4f6" stroke-width="3" fill="none" opacity="0.9"/>
+    <path d="M0 238 q50 -6 100 0 t100 0 t100 0 t100 0 t100 0 t100 0" stroke="#f2f4f6" stroke-width="1.6" fill="none" opacity="0.5"/>
+  </g>
+  <!-- ripples and runnels in the sand -->
+  <g stroke="#7f7c70" stroke-width="1.4" opacity="0.45" fill="none">
+    <path d="M0 256 q60 -5 120 0 t120 0 t120 0 t120 0 t160 0"/>
+    <path d="M0 272 q70 -5 140 0 t140 0 t140 0 t220 0"/>
+    <path d="M0 288 q80 -5 160 0 t160 0 t320 0"/>
+  </g>
+
+  <!-- the wreck: ribs of a boat -->
+  <g>
+    <path d="M150 262 q96 -22 198 2" stroke="#4b3a28" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g stroke="#5e4931" stroke-width="8" stroke-linecap="round" fill="none">
+      <path d="M168 258 q-10 -40 2 -62"/>
+      <path d="M198 250 q-10 -50 4 -78"/>
+      <path d="M232 245 q-9 -56 6 -86"/>
+      <path d="M268 245 q-6 -56 10 -84"/>
+      <path d="M302 250 q-2 -48 16 -72"/>
+      <path d="M332 258 q2 -36 20 -54"/>
+    </g>
+    <g stroke="#3b2d1e" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.8">
+      <path d="M170 212 q86 -24 176 6"/>
+      <path d="M176 186 q80 -24 164 10"/>
+    </g>
+    <!-- the stern board, name almost gone -->
+    <path d="M336 240 q24 -4 30 14 l-32 6 Z" fill="#6b5338"/>
+    <g stroke="#cdc3ab" stroke-width="1.8" opacity="0.6">
+      <path d="M340 250 l4 0 M347 249 l3 0 M353 250 l5 0 M341 256 l6 0 M351 255 l4 0"/>
+    </g>
+    <!-- something metal in the sand, catching the last light -->
+    <g class="glint"><circle cx="258" cy="268" r="3.2" fill="#f6ecc9"/><path d="M258 262 l0 -5 M258 274 l0 5 M252 268 l-5 0 M264 268 l5 0" stroke="#f6ecc9" stroke-width="1.4"/></g>
+  </g>
+
+  <!-- gulls on the sand -->
+  <g>
+    <g transform="translate(96 268)"><g class="gull">
+      <ellipse cx="0" cy="-6" rx="9" ry="6" fill="#f0eee3"/><circle cx="7" cy="-12" r="3.6" fill="#faf8f0"/>
+      <path d="M10 -12 l6 2 l-6 2 Z" fill="#dd9b36"/><path d="M-3 0 l0 6 M2 0 l0 6" stroke="#c98b2e" stroke-width="1.6"/>
+      <circle cx="8" cy="-13" r="1" fill="#1a1a1a"/>
+    </g></g>
+    <g transform="translate(412 276)"><g class="gull" style="animation-delay:-2.1s">
+      <ellipse cx="0" cy="-6" rx="10" ry="6.5" fill="#eceadf"/><circle cx="-8" cy="-13" r="3.8" fill="#faf8f0"/>
+      <path d="M-11 -13 l-7 2 l7 2 Z" fill="#dd9b36"/><path d="M-2 0 l0 6 M3 0 l0 6" stroke="#c98b2e" stroke-width="1.6"/>
+      <circle cx="-9" cy="-14" r="1" fill="#1a1a1a"/>
+    </g></g>
+  </g>
+</svg>
