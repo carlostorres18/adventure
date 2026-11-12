@@ -7,6 +7,7 @@ const Play = (() => {
   const S = {
     story: null, live: [], files: [], draft: null,
     scene: null, home: null, items: new Set(), history: [], imageProblems: [],
+    game: null, revealing: null,
   };
   const ENDINGS_KEY = "adventure-endings:" + location.pathname;
 
@@ -70,12 +71,18 @@ const Play = (() => {
     if (S.scene && how !== "fresh") S.history.push({ scene: S.scene, items: new Set(S.items) });
     S.scene = name;
     const got = [];
-    for (const it of s.gets) if (!S.items.has(it)) { S.items.add(it); got.push(it); }
-    if (s.ending) noteEnding(name);
-    render(got);
+    for (const it of s.gets) if (!S.items.has(it)) { S.items.add(it); got.push(it); Memory.gotItem(it); }
+    const dropped = [];
+    for (const it of s.loses) if (S.items.delete(it)) dropped.push(it);
+    const newlyKept = [];
+    for (const k of s.keeps) if (Memory.keep(k)) newlyKept.push(k);
+    Memory.sawScene(name);
+    if (s.ending) { noteEnding(name); Memory.reachedEnding(name); }
+    render(got, dropped, newlyKept);
   }
 
   function back() {
+    stopGame();
     const prev = S.history.pop();
     if (!prev) return;
     S.scene = prev.scene;
@@ -84,9 +91,11 @@ const Play = (() => {
   }
 
   function restart(at) {
+    stopGame();
     S.history = [];
     S.items = new Set();
     S.scene = null;
+    Memory.startRun();
     const first = at || S.home || S.story.start;
     if (first) go(first, "fresh");
     else render([]);
@@ -142,21 +151,33 @@ const Play = (() => {
     return fig;
   }
 
-  function render(got) {
+  function render(got, dropped, newlyKept) {
+    got = got || []; dropped = dropped || []; newlyKept = newlyKept || [];
     const box = $("scene"), list = $("choices");
+    if (box._fxStop) { box._fxStop = null; }
+    Effects.unhaunt(list);
     box.innerHTML = "";
     list.innerHTML = "";
     const s = S.story.scenes[S.scene];
     if (!s) {
       box.innerHTML = "<p>This story doesn't have a first scene yet. Open <strong>Problems</strong> below to see why.</p>";
+      Effects.clear();
       showBadge();
       return;
     }
 
+    Effects.apply(s.effects);
+    // Hide the choices before they are built, so a slow scene doesn't flash
+    // them up and then fade them out again.
+    list.classList.toggle("waiting", s.effects.includes("slow") && !Effects.calm);
+    for (const snd of s.sounds) Effects.Sound.play(snd);
+
     for (const b of s.blocks) {
       if (b.type === "text") {
+        if (!Memory.test(b.cond, S.items)) continue;
         const p = document.createElement("p");
-        p.innerHTML = inline(b.text);
+        p.innerHTML = inline(Memory.fill(b.text, S.story, foundEndings()));
+        if (b.cond) p.className = "remembered";
         box.appendChild(p);
       } else if (b.type === "image") {
         box.appendChild(picture(b));
@@ -164,6 +185,16 @@ const Play = (() => {
         const p = document.createElement("p");
         p.className = "got";
         p.innerHTML = "You picked up: <strong>" + esc(b.item) + "</strong>";
+        box.appendChild(p);
+      } else if (b.type === "lose" && dropped.includes(b.item)) {
+        const p = document.createElement("p");
+        p.className = "got lost";
+        p.innerHTML = "You no longer have: <strong>" + esc(b.item) + "</strong>";
+        box.appendChild(p);
+      } else if (b.type === "keep" && newlyKept.includes(b.thing)) {
+        const p = document.createElement("p");
+        p.className = "got kept";
+        p.innerHTML = "This one sticks: <strong>" + esc(b.thing) + "</strong>. It will still be true the next time you start over.";
         box.appendChild(p);
       }
     }
@@ -181,15 +212,30 @@ const Play = (() => {
       addChoice(list, "Play again", () => restart(), "again");
     }
 
-    let n = 0;
-    for (const c of s.choices) {
-      if (c.broken || !S.story.scenes[c.to]) {
-        addChoice(list, "🚧 " + c.text, null, "broken", "This choice is broken. Open Problems to see why.");
-      } else if (c.need && !S.items.has(c.need)) {
-        addChoice(list, "🔒 " + c.text, null, "locked", "You need: " + c.need);
-      } else {
-        n++;
-        addChoice(list, c.text, () => go(c.to), "", "", n);
+    if (s.game) {
+      startGame(s, box, list);
+    } else {
+      let n = 0;
+      for (const c of s.choices) {
+        if (c.broken || !S.story.scenes[c.to]) {
+          addChoice(list, "🚧 " + c.text, null, "broken", "This choice is broken. Open Problems to see why.");
+        } else if (!Memory.test(c.cond, S.items)) {
+          const mark = c.cond.kind === "item" ? "🔒 " : "🕯 ";
+          addChoice(list, mark + c.text, null, "locked", Memory.why(c.cond));
+        } else {
+          const haunted = c.haunted;
+          n++;
+          const btn = addChoice(list, c.text, () => go(c.to), haunted ? "haunted" : "", "",
+                                haunted === "gone" ? 0 : n, haunted ? c.text : "");
+          if (haunted) {
+            if (haunted === "gone") n--;
+            if (haunted === "lies") {
+              const others = s.choices.filter((o) => o !== c && o.text && !o.outcome).map((o) => o.text);
+              if (others.length) c.lie = others[(s.name.length + c.line) % others.length];
+            }
+            Effects.haunt(btn, c, list);
+          }
+        }
       }
     }
 
@@ -201,9 +247,42 @@ const Play = (() => {
     showBadge();
     box.focus({ preventScroll: true });
     window.scrollTo(0, 0);
+    if (list.classList.contains("waiting")) Effects.reveal(box, () => list.classList.remove("waiting"));
   }
 
-  function addChoice(list, text, onClick, cls, note, number) {
+  // ---------- scenes you play instead of read ----------
+
+  function stopGame() {
+    if (S.game) { const g = S.game; S.game = null; g.stop(); }
+    const old = document.querySelector(".arcade");
+    if (old) old.remove();
+  }
+
+  function startGame(scene, box, list) {
+    stopGame();
+    const win = scene.choices.find((c) => c.outcome === "win");
+    const lose = scene.choices.find((c) => c.outcome === "lose");
+    if (!win || !lose || typeof Arcade === "undefined" || !Arcade.has(scene.game)) {
+      // Something is wrong with the game. Never trap the player: show the
+      // choices as ordinary buttons and let them pick.
+      let n = 0;
+      for (const c of scene.choices) if (S.story.scenes[c.to]) addChoice(list, c.text, () => go(c.to), "", "", ++n);
+      return;
+    }
+    S.game = Arcade.play(scene.game, {
+      mount: box,
+      items: S.items,
+      frames: Play.testFrames || 0,
+      drive: Play.testDrive || null,
+      onDone: (won, how) => {
+        S.game = null;
+        if (how === "left") return;
+        go((won ? win : lose).to);
+      },
+    });
+  }
+
+  function addChoice(list, text, onClick, cls, note, number, haunting) {
     const li = document.createElement("li");
     const btn = document.createElement("button");
     btn.type = "button";
@@ -215,15 +294,19 @@ const Play = (() => {
       k.textContent = number;
       btn.appendChild(k);
     }
-    btn.appendChild(document.createTextNode(text));
-    if (note) {
+    const label = document.createElement("span");
+    label.className = "label";
+    label.textContent = text;
+    btn.appendChild(label);
+    if (note || arguments.length > 6) {
       const small = document.createElement("small");
-      small.textContent = note;
+      small.textContent = note || "";
       btn.appendChild(small);
     }
     if (onClick) btn.onclick = onClick; else btn.disabled = true;
     li.appendChild(btn);
     list.appendChild(li);
+    return btn;
   }
 
   // ---------- problems ----------
@@ -282,6 +365,61 @@ const Play = (() => {
     openPanel("Story map", body, true);
   }
 
+  function showMemory() {
+    const m = Memory.state;
+    const body = document.createElement("div");
+    const row = (k, v) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`;
+    const names = (o, only) => {
+      const ks = Object.keys(o).filter((k) => !only || only(k));
+      return ks.length ? ks.sort().map((k) => `<code>${esc(k)}</code>`).join(", ") : "<i>nothing yet</i>";
+    };
+    const games = Object.keys(m.games).map((g) => {
+      const x = m.games[g];
+      return `<code>${esc(g)}</code>: won ${x.won}, lost ${x.lost}`;
+    }).join("<br>") || "<i>none played</i>";
+
+    body.innerHTML = `
+      <p>This is kept in <strong>this browser, on this computer</strong>. It is not sent
+      anywhere and nobody else can see it. The story reads it to decide what to show you.</p>
+      <table class="memory-table">
+        ${row("Goes at the story", m.runs)}
+        ${row("First opened", m.firstPlayed ? Memory.ago(m.firstPlayed) : "just now")}
+        ${row("Last ending", m.lastEnding ? `<code>${esc(m.lastEnding)}</code>` : "<i>none</i>")}
+        ${row("Endings reached", names(m.endings))}
+        ${row("Scenes seen", `${Object.keys(m.scenes).length} of ${S.story.order.length}`)}
+        ${row("Items ever carried", names(m.items))}
+        ${row("Games", games)}
+        ${row("Remembered for good", names(m.kept))}
+      </table>`;
+
+    const buttons = document.createElement("div");
+    buttons.className = "memory-buttons";
+
+    const forget = document.createElement("button");
+    forget.type = "button"; forget.className = "small";
+    forget.textContent = "Forget all of it";
+    forget.onclick = () => {
+      if (!confirm("Wipe everything this browser remembers about the story? This can't be undone.")) return;
+      Memory.forget(); forgetEndings(); closePanel();
+    };
+
+    const stop = document.createElement("button");
+    stop.type = "button"; stop.className = "small";
+    stop.textContent = Memory.on ? "Stop remembering" : "Start remembering again";
+    stop.onclick = () => { Memory.setOn(!Memory.on); showMemory(); };
+
+    buttons.appendChild(forget);
+    buttons.appendChild(stop);
+    body.appendChild(buttons);
+    if (!Memory.on) {
+      const p = document.createElement("p");
+      p.className = "memory-off";
+      p.textContent = "Remembering is off. Nothing new is being written down, and scenes that depend on earlier goes will stay shut.";
+      body.appendChild(p);
+    }
+    openPanel("What this browser remembers", body);
+  }
+
   // A developer shortcut: start partway through, carrying nothing.
   function jump(name, from) {
     restart(name);
@@ -299,6 +437,7 @@ const Play = (() => {
   // ---------- testing a draft ----------
 
   function testDraft(draft, from) {
+    stopGame();
     S.draft = draft;
     const files = S.live.filter((f) => f.name !== draft.as);
     files.push({ name: draft.as, text: draft.text });
@@ -322,6 +461,7 @@ const Play = (() => {
   }
 
   function stopDraft() {
+    stopGame();
     S.draft = null;
     S.home = null;
     $("notice").className = "";
@@ -338,12 +478,21 @@ const Play = (() => {
     $("btn-map").onclick = showMap;
     $("btn-draft").onclick = () => Draft.open(S.draft);
     $("btn-problems").onclick = () => openPanel("Problems", problemList(problems()));
+    $("btn-memory").onclick = showMemory;
+    const soundBtn = $("btn-sound");
+    const drawSound = () => {
+      soundBtn.textContent = Effects.Sound.on ? "🔊 Sound on" : "🔇 Sound off";
+      soundBtn.setAttribute("aria-pressed", Effects.Sound.on ? "true" : "false");
+    };
+    soundBtn.onclick = () => { Effects.Sound.set(!Effects.Sound.on); drawSound(); };
+    drawSound();
     $("panel-close").onclick = closePanel;
     $("panel").onclick = (e) => { if (e.target.id === "panel") closePanel(); };
     addEventListener("keydown", (e) => {
       if (e.key === "Escape") return closePanel();
       if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
       if (!$("panel").hidden) return;
+      if (S.game) return;              // the game is using the keyboard
       const btn = document.querySelector(`#choices button[data-key="${e.key}"]`);
       if (btn) { btn.click(); return; }
       if (e.key === "b" || e.key === "B") back();
@@ -373,7 +522,17 @@ const Play = (() => {
     }
   }
 
-  return { start, state: S, testDraft, stopDraft, openPanel, closePanel, problemList, problems };
+  // Used by test.html. Sets the story up from files already in hand, so a
+  // test can drive the page without waiting for the network.
+  function bootWith(files, at) {
+    bind();
+    S.live = files;
+    rebuild(files);
+    restart(at);
+  }
+
+  return { start, bootWith, go, back, restart, render: () => render([]), state: S, testFrames: 0, testDrive: null,
+           testDraft, stopDraft, openPanel, closePanel, problemList, problems };
 })();
 
 window.addEventListener("load", Play.start);

@@ -99,12 +99,20 @@ const StoryMap = (() => {
                           : `M${x1},${y1} C${x1 + 70},${y1 + 50} ${x2 - 70},${y2 + 50} ${x2},${y2}`;
         const path = el("path", { d, fill: "none", stroke: bad ? "#d93025" : "#8a94a6", "stroke-width": 1.6,
           "marker-end": `url(#${bad ? "arrow-bad" : "arrow"})` });
-        if (c.need) path.setAttribute("stroke-dasharray", "5 4");
-        path.appendChild(el("title", {}, `"${c.text}"${c.need ? " (needs " + c.need + ")" : ""}`));
+        // Dashed for a choice with an if on it, dotted for a win/lose.
+        if (c.cond) path.setAttribute("stroke-dasharray", "5 4");
+        if (c.outcome) { path.setAttribute("stroke-dasharray", "2 4"); path.setAttribute("stroke", c.outcome === "win" ? "#1e7a3c" : "#b3261e"); }
+        const says = c.cond ? " (needs " + Story.describe(c.cond) + ")"
+                   : c.outcome ? " (what happens when you " + c.outcome + ")"
+                   : c.haunted ? " (haunted: " + c.haunted + ")" : "";
+        path.appendChild(el("title", {}, `"${c.text}"${says}`));
         edges.appendChild(path);
-        if (c.need) {
+        const tag = c.cond ? (c.cond.kind === "item" ? "🔒 " + c.cond.value : "🕯 " + Story.describe(c.cond))
+                  : c.outcome ? (c.outcome === "win" ? "✓ win" : "✗ lose")
+                  : c.haunted ? "👻 " + c.haunted : "";
+        if (tag) {
           const mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + (x2 > x1 ? 0 : 38);
-          labels.appendChild(el("text", { x: mx, y: my - 4, class: "map-lock", "text-anchor": "middle" }, "🔒 " + c.need));
+          labels.appendChild(el("text", { x: mx, y: my - 4, class: "map-lock", "text-anchor": "middle" }, tag));
         }
       }
     }
@@ -126,10 +134,13 @@ const StoryMap = (() => {
       g.appendChild(el("rect", { width: W, height: H, rx: 8, fill: "#ffffff", stroke: stuck ? "#d93025" : here ? "#111" : color(s.file),
         "stroke-width": here || stuck ? 3 : 1.5 }));
       g.appendChild(el("rect", { width: 7, height: H, rx: 3, fill: color(s.file) }));
+      if (s.game) g.appendChild(el("rect", { x: 2, y: 2, width: W - 4, height: H - 4, rx: 6, fill: "none",
+        stroke: "#1f2933", "stroke-width": 1, "stroke-dasharray": "3 3" }));
       const name = id.replace(/~\d+$/, "");
       g.appendChild(el("text", { x: 15, y: 20, class: "map-name" }, name.length > 19 ? name.slice(0, 18) + "…" : name));
       const backs = s.choices.filter((c) => goesBack(id, c)).map((c) => c.to);
       let sub = stuck ? "stuck: no way out" : s.ending ? (opts.found.has(id) ? "★ ending (found)" : "☆ ending")
+        : s.game ? "🎮 " + s.game
         : backs.length && !opts.showBack ? "↩ " + backs.join(", ") : s.file;
       if (here) sub = "▶ you are here";
       if (sub.length > 25) sub = sub.slice(0, 24) + "…";
@@ -153,7 +164,7 @@ const StoryMap = (() => {
     }
     const tip = document.createElement("p");
     tip.className = "map-tip";
-    tip.textContent = "Arrows are choices. Dashed arrows need an item. ↩ marks a choice that goes back to an earlier scene. Click any scene to jump there and test it.";
+    tip.textContent = "Arrows are choices. Dashed arrows have an if on them. Green and red dotted arrows are the two ways a game can end. ↩ marks a choice that goes back to an earlier scene. Click any scene to jump there and test it.";
     const toggle = document.createElement("label");
     toggle.className = "map-toggle";
     const box = document.createElement("input");

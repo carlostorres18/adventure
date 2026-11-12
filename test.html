@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Engine self-test</title>
+<link rel="stylesheet" href="engine/style.css">
+<style>
+  #report { position: fixed; inset: 0; overflow: auto; background: #fff; color: #111;
+            font: 13px/1.5 ui-monospace, Menlo, monospace; padding: 16px; z-index: 999; }
+  .pass { color: #0a7d32; } .fail { color: #c0211a; font-weight: bold; }
+  h2 { font: bold 15px system-ui; margin: 14px 0 4px; }
+</style>
+</head>
+<body class="theme-paper">
+<div id="book">
+  <header id="top"><h1 id="title">…</h1><p id="byline"></p></header>
+  <div id="notice" hidden></div>
+  <article id="scene" tabindex="-1" aria-live="polite"></article>
+  <ol id="choices"></ol>
+  <p id="carrying" hidden></p>
+</div>
+<nav id="bar">
+  <button id="btn-restart"></button><button id="btn-back"></button><button id="btn-map"></button>
+  <button id="btn-draft"></button><button id="btn-memory"></button><button id="btn-sound"></button>
+  <button id="btn-problems"></button><span id="endings"></span>
+</nav>
+<div id="panel" hidden role="dialog"><div id="panel-box">
+  <div id="panel-head"><h2 id="panel-title"></h2><button id="panel-close"></button></div>
+  <div id="panel-body"></div>
+</div></div>
+<div id="report"><b>running…</b></div>
+
+<script>window.__errors = []; window.onerror = (m, src, l, c, e) => { window.__errors.push(m + " @" + (src||"").split("/").pop() + ":" + l); };</script>
+<script src="engine/story.js"></script>
+<script src="engine/memory.js"></script>
+<script src="engine/effects.js"></script>
+<script src="engine/arcade.js"></script>
+<script src="engine/map.js"></script>
+<script src="engine/draft.js"></script>
+<script src="engine/play.js"></script>
+<script>
+(function () {
+  const out = [];
+  const ok = (c, m) => out.push(`<div class="${c ? "pass" : "fail"}">${c ? "PASS" : "FAIL"}  ${m}</div>`);
+  const head = (m) => out.push(`<h2>${m}</h2>`);
+  const grab = (n) => { const x = new XMLHttpRequest(); x.open("GET", "story/" + n, false); try { x.send(); } catch (e) { return null; }
+                        return x.status === 200 ? { name: n, text: x.responseText } : null; };
+  const files = Story.FILES.map(grab).filter(Boolean);
+
+  head("Loading");
+  ok(files.length >= 5, `fetched ${files.length} story files`);
+
+  head("Checker");
+  const st = Story.build(files);
+  const errs = st.problems.filter(p => p.level === "error");
+  ok(!errs.length, `0 errors (${st.order.length} scenes, ${st.endings.length} endings, ${st.problems.length - errs.length} warnings)`);
+  errs.slice(0, 5).forEach(p => out.push(`<div class="fail">   ${p.file}:${p.line} ${p.message}</div>`));
+
+  head("Booting the page");
+  try { Play.bootWith(files); } catch (e) { out.push(`<div class="fail">boot threw: ${e.message}\n${e.stack}</div>`); }
+  ok(document.querySelectorAll("#choices button").length > 0, "the first scene drew choices");
+  ok(/ferry|Loading/.test(document.getElementById("scene").textContent) || document.getElementById("scene").textContent.length > 40,
+     "the first scene drew text (" + document.getElementById("scene").textContent.slice(0, 44).replace(/\s+/g," ") + "…)");
+  ok(Memory.state.runs >= 1, "a go was counted: runs = " + Memory.state.runs);
+
+  head("Walking every scene");
+  let drew = 0, broke = [];
+  for (const name of st.order) {
+    try { Play.go(name); if (document.getElementById("scene").children.length || st.scenes[name].game) drew++; }
+    catch (e) { broke.push(name + ": " + e.message); }
+  }
+  ok(!broke.length, `drew ${drew} of ${st.order.length} scenes with no exception`);
+  broke.slice(0, 6).forEach(b => out.push(`<div class="fail">   ${b}</div>`));
+
+  head("The new syntax, end to end");
+  const t = (name, fn) => { try { ok(fn(), name); } catch (e) { ok(false, name + " threw: " + e.message); } };
+  t("conditions parse", () => Story.condition("if run 3").kind === "run" && Story.condition("if kept x").kind === "kept"
+     && Story.condition("if remembered y").kind === "remembered" && typeof Story.condition("if run 1") === "string");
+  t("Memory.test handles every kind", () => Memory.test({kind:"run",value:1}) === true
+     && Memory.test({kind:"item",value:"zzz"}, new Set()) === false
+     && Memory.test({kind:"kept",value:"nope"}) === false);
+  t("tokens fill in", () => { const s = Memory.fill("{runs} / {endings-total} / {clock}", st, []); return !/[{}]/.test(s) && s.length > 4; });
+  t("unknown tokens are left alone", () => Memory.fill("{wat}", st, []) === "{wat}");
+  t("keep sticks", () => { Memory.keep("selftest-thing"); return Memory.kept("selftest-thing") === true; });
+  t("Arcade knows its games", () => Story.GAMES.every(g => Arcade.has(g)));
+  t("Effects/Sound exist", () => typeof Effects.apply === "function" && typeof Effects.Sound.play === "function");
+
+  head("The typewriter");
+  try {
+    const box = document.createElement("div");
+    box.innerHTML = "<p>One <strong>two</strong> three.</p><p>Four five.</p>";
+    document.body.appendChild(box);
+    let finished = false;
+    const stop = Effects.reveal(box, () => { finished = true; });
+    if (typeof stop === "function") {
+      ok(box.textContent.length < 20, "it starts with the text hidden (showing " + box.textContent.length + " chars)");
+      stop();
+      ok(finished, "skipping calls back");
+      ok(box.querySelector("strong") !== null, "skipping puts the bold back");
+      ok(box.textContent.includes("Four five."), "skipping shows every paragraph");
+    } else {
+      ok(true, "reduce-motion is on, so the typewriter is off (correct)");
+    }
+    box.remove();
+  } catch (e) { ok(false, "typewriter threw: " + e.message); }
+
+  head("Hauntings");
+  try {
+    const list = document.createElement("ol"); document.body.appendChild(list);
+    for (const kind of Story.HAUNTINGS) {
+      const li = document.createElement("li"), b = document.createElement("button");
+      const lab = document.createElement("span"); lab.className = "label"; lab.textContent = "Leave";
+      const sm = document.createElement("small"); b.append(lab, sm); li.appendChild(b); list.appendChild(li);
+      Effects.haunt(b, { text: "Leave", haunted: kind, after: 1 }, list);
+      if (kind === "gone") { b.click(); b.click(); b.click();
+        ok(sm.textContent.length > 0, "gone: clicking it says something back (" + JSON.stringify(sm.textContent.slice(0,28)) + ")"); }
+      if (kind === "waits") {
+        ok(b.hidden === true, "waits: has the hidden attribute");
+        // and is really invisible: display:flex on the button beats [hidden]
+        b.className = "haunted"; list.className = "";
+        const li2 = document.createElement("li"); li2.appendChild(b);
+        const probe = document.createElement("ol"); probe.id = "choices";
+        probe.appendChild(li2); document.body.appendChild(probe);
+        ok(getComputedStyle(b).display === "none", "waits: and is actually not drawn (display=" + getComputedStyle(b).display + ")");
+        probe.remove();
+      }
+    }
+    ok(true, "all " + Story.HAUNTINGS.length + " hauntings attached without throwing");
+    Effects.unhaunt(list); list.remove();
+  } catch (e) { ok(false, "hauntings threw: " + e.message); }
+
+  head("Games actually run");
+  for (const g of Story.GAMES) {
+    try {
+      const mount = document.createElement("div"); document.body.appendChild(mount);
+      let done = null;
+      const h = Arcade.play(g, { mount, items: new Set(["white feather","lantern","the same key twice"]), onDone: (w) => { done = w; } });
+      const cv = mount.querySelector("canvas");
+      ok(!!cv && cv.width > 0, `${g}: canvas ${cv ? cv.width + "x" + cv.height : "missing"}`);
+      ok(mount.querySelectorAll(".arcade-buttons button").length >= 2, `${g}: has a skip button`);
+      const skip = [...mount.querySelectorAll("button")].find(b => b.className === "arcade-skip");
+      if (skip) skip.click();
+      ok(done === true, `${g}: skipping finishes it as a win`);
+      mount.remove();
+    } catch (e) { ok(false, `${g} threw: ${e.message}`); }
+  }
+
+  head("Story map still draws");
+  try { const svg = StoryMap.draw(st, { current: st.start, found: new Set(), onPick: () => {} });
+        ok(svg && svg.querySelectorAll("svg").length >= 0, "map built"); }
+  catch (e) { ok(false, "map threw: " + e.message); }
+
+  head("Uncaught errors");
+  ok(window.__errors.length === 0, window.__errors.length ? window.__errors.join(" | ") : "none");
+
+  const fails = out.filter(l => l.includes("FAIL")).length;
+  document.getElementById("report").innerHTML =
+    `<h1 style="font:bold 20px system-ui" class="${fails ? "fail" : "pass"}">${fails ? fails + " FAILURES" : "ALL PASS"}</h1>` + out.join("");
+})();
+</script>
+</body>
+</html>

@@ -42,27 +42,25 @@ AI assistant can help, as long as **you stay in charge of checking its work**.
 
 You're responsible for every line in your repository, whoever typed it.
 
-### Ideas
+### Already built
 
-**Losing items** · easier
-A `lose: lantern` line, for when the player drops or uses something up.
-> Check it: the item disappears from "You're carrying" · locked choices that
-> needed it lock again · **Back** gives it back · the checker accepts the new line.
+Four of the ideas that used to be on this page are now part of the engine, and
+are written up in **[ENGINE.md](ENGINE.md)**:
+
+- **Losing items** — `lose: lantern`
+- **Typewriter text** — `effect: slow`
+- **Sound** — `sound: bell`, off until the player turns it on
+- and some that weren't on the list: memories of earlier goes, scenes that are
+  played instead of read, and choices that refuse to be picked.
+
+Two ideas below are still open.
+
+### Ideas
 
 **Counters** · medium
 Numbers instead of things: `add: gold 5`, and choices like `if gold 10`.
 > Check it: the count shows on screen · it can't go below zero · **Start
 > over** resets it · the map labels choices that need a number.
-
-**Typewriter text** · medium
-Scene text appears letter by letter. Pressing a key shows it all at once.
-> Check it: choices only appear after the text finishes · the number keys
-> still work · screen readers still read the whole scene.
-
-**Sound** · medium
-A short sound for picking up an item, and another for reaching an ending.
-> Check it: there's a way to turn it off · it doesn't play twice when you
-> press **Back** · it works on a phone.
 
 **Random choices** · harder
 A choice like `[Roll the dice](#win|#lose)` that picks one of several scenes at random.
