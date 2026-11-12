@@ -64,7 +64,7 @@
   Lines inside these comment marks are notes. Players never see them.
 -->
 
-by:
+by: Nistopher Chrolan
 
 ## path-2
 ![A narrow trail along a cliff above a grey sea, with wind driving fog past and gulls wheeling](images/cliff-trail.svg)

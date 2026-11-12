@@ -50,7 +50,7 @@
   Lines inside these comment marks are notes. Players never see them.
 -->
 
-by:
+by: Nistopher Chrolan
 
 ## path-3
 ![The ribs of a wrecked boat standing out of wet grey sand at low tide, with the sea creeping back in and a cliff stair in the distance](images/wreck-lowtide.svg)
