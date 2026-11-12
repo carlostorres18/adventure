@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>Sunrise over calm water off Gull Island, the fog burning off, with the lighthouse standing on the cliff and a ferry coming in</title>
+  <defs>
+    <linearGradient id="dw-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c3d63"/><stop offset="0.45" stop-color="#b0738a"/><stop offset="0.8" stop-color="#f0b183"/><stop offset="1" stop-color="#ffdcae"/>
+    </linearGradient>
+    <linearGradient id="dw-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7b48c"/><stop offset="0.25" stop-color="#8e8bab"/><stop offset="1" stop-color="#3c4566"/>
+    </linearGradient>
+    <radialGradient id="dw-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff6d8" stop-opacity="0.95"/><stop offset="0.35" stop-color="#ffd79a" stop-opacity="0.5"/><stop offset="1" stop-color="#ffd79a" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .sun   { animation: dw-rise 18s ease-out infinite; }
+      .glow  { animation: dw-glow 6s ease-in-out infinite; transform-origin: 196px 196px; }
+      .fog   { animation: dw-burn 18s ease-out infinite; }
+      .path  { animation: dw-path 5s ease-in-out infinite; }
+      .gull  { animation: dw-cross 22s linear infinite; }
+      .wing  { animation: dw-flap 1s ease-in-out infinite; transform-origin: center; }
+      .ferry { animation: dw-ferry 26s linear infinite; }
+      .smoke { animation: dw-smoke 5s ease-out infinite; }
+      @keyframes dw-rise  { 0% { transform: translateY(30px); } 100% { transform: translateY(-6px); } }
+      @keyframes dw-glow  { 0%,100% { transform: scale(0.96); opacity: 0.85; } 50% { transform: scale(1.05); opacity: 1; } }
+      @keyframes dw-burn  { 0% { opacity: 0.35; } 100% { opacity: 0.05; } }
+      @keyframes dw-path  { 0%,100% { opacity: 0.45; } 50% { opacity: 0.8; } }
+      @keyframes dw-cross { from { transform: translateX(-60px) translateY(0); } 50% { transform: translateX(320px) translateY(-18px); } to { transform: translateX(700px) translateY(6px); } }
+      @keyframes dw-flap  { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.3); } }
+      @keyframes dw-ferry { from { transform: translateX(-120px); } to { transform: translateX(520px); } }
+      @keyframes dw-smoke { 0% { transform: translateY(0) scale(0.6); opacity: 0.5; } 100% { transform: translateY(-34px) scale(1.5); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .sun,.glow,.fog,.path,.gull,.wing,.ferry,.smoke { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#dw-sky)"/>
+
+  <g class="sun">
+    <ellipse class="glow" cx="196" cy="196" rx="190" ry="140" fill="url(#dw-sun)"/>
+    <circle cx="196" cy="196" r="26" fill="#fff4d2"/>
+  </g>
+
+  <!-- fog, burning off -->
+  <g fill="#f3ece6" class="fog">
+    <ellipse cx="420" cy="166" rx="210" ry="18"/><ellipse cx="140" cy="150" rx="160" ry="12"/><ellipse cx="560" cy="136" rx="140" ry="10"/>
+  </g>
+
+  <!-- island and tower, on the right -->
+  <path d="M430 196 L470 142 L520 124 L566 132 L604 160 L640 196 Z" fill="#3f4458"/>
+  <path d="M470 142 L520 124 L566 132 L560 142 L512 136 Z" fill="#59604f"/>
+  <g transform="translate(508 76)">
+    <path d="M0 0 L18 0 L23 54 L-5 54 Z" fill="#f0e9db"/>
+    <path d="M-2 18 L20 18 L21 26 L-3 26 Z" fill="#9b3b3b"/>
+    <path d="M-4 38 L22 38 L23 46 L-5 46 Z" fill="#9b3b3b"/>
+    <rect x="-3" y="-11" width="24" height="11" fill="#2f3340"/>
+    <path d="M-6 -11 L9 -22 L24 -11 Z" fill="#7a2f2f"/>
+    <circle cx="9" cy="-6" r="4" fill="#fff0bc" opacity="0.5"/>
+  </g>
+
+  <!-- sea -->
+  <rect y="196" width="640" height="104" fill="url(#dw-sea)"/>
+  <!-- the sun's road on the water -->
+  <g class="path" fill="#ffe9bd">
+    <ellipse cx="196" cy="206" rx="54" ry="3"/><ellipse cx="196" cy="218" rx="42" ry="2.6"/><ellipse cx="196" cy="230" rx="60" ry="3"/>
+    <ellipse cx="196" cy="244" rx="38" ry="2.4"/><ellipse cx="196" cy="258" rx="66" ry="3.2"/><ellipse cx="196" cy="274" rx="46" ry="2.6"/><ellipse cx="196" cy="290" rx="72" ry="3"/>
+  </g>
+  <g stroke="#cdd3e2" stroke-width="2" fill="none" opacity="0.3">
+    <path d="M0 212 Q80 207 160 212 T320 212 T480 212 T640 212"/>
+    <path d="M0 250 Q90 244 180 250 T360 250 T540 250 T720 250"/>
+  </g>
+
+  <!-- the ferry, coming in -->
+  <g class="ferry">
+    <g transform="translate(60 196)">
+      <path d="M0 14 L58 14 L52 26 L6 26 Z" fill="#2a3042"/>
+      <rect x="16" y="2" width="22" height="12" fill="#e8e3d6"/>
+      <rect x="40" y="-2" width="5" height="16" fill="#6e4a3a"/>
+      <g class="smoke" fill="#dcd7ce"><circle cx="42" cy="-6" r="4"/></g>
+      <g class="smoke" fill="#dcd7ce" style="animation-delay:-2.5s"><circle cx="42" cy="-6" r="3"/></g>
+    </g>
+  </g>
+
+  <!-- one gull, crossing the whole sky -->
+  <g class="gull" fill="none" stroke="#fffaf0" stroke-width="2.6" stroke-linecap="round">
+    <g class="wing"><path d="M40 96 q11 -10 22 0 q11 -10 22 0"/></g>
+  </g>
+  <g class="gull" style="animation-delay:-9s;animation-duration:26s" fill="none" stroke="#fffaf0" stroke-width="2" stroke-linecap="round" opacity="0.8">
+    <g class="wing" style="animation-duration:1.3s"><path d="M20 64 q8 -7 16 0 q8 -7 16 0"/></g>
+  </g>
+</svg>

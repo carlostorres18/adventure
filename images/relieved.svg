@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img">
+  <title>The painted register with the first name struck through, as the painted figures lift off the wall one by one and leave as birds of light</title>
+  <defs>
+    <linearGradient id="rl-wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#443d2d"/><stop offset="0.5" stop-color="#342f22"/><stop offset="1" stop-color="#211d14"/>
+    </linearGradient>
+    <radialGradient id="rl-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff3cf" stop-opacity="0.5"/><stop offset="0.5" stop-color="#ffd98a" stop-opacity="0.15"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .leave  { animation: rl-leave 7s ease-in-out infinite; }
+      .strike { animation: rl-strike 7s ease-in-out infinite; opacity: 0; transform-origin: left center; }
+      .bird   { animation: rl-fly 7s ease-in-out infinite; opacity: 0; }
+      .wing   { animation: rl-flap 0.7s ease-in-out infinite; transform-origin: center; }
+      .halo   { animation: rl-halo 4s ease-in-out infinite; transform-origin: 320px 150px; }
+      .mine   { animation: rl-mine 7s ease-in-out infinite; opacity: 0; }
+      @keyframes rl-leave  { 0%,22% { opacity: 0.8; } 46%,100% { opacity: 0.06; } }
+      @keyframes rl-strike { 0%,10% { opacity: 0; transform: scaleX(0); } 26%,100% { opacity: 0.95; transform: scaleX(1); } }
+      @keyframes rl-fly    { 0%,24% { opacity: 0; transform: translate(0,0) scale(0.7); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(60px,-150px) scale(1.1); } }
+      @keyframes rl-flap   { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.32); } }
+      @keyframes rl-halo   { 0%,100% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+      @keyframes rl-mine   { 0%,54% { opacity: 0; } 76%,100% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .leave,.strike,.bird,.wing,.halo,.mine { animation: none; } .leave { opacity: 0.2; } .strike,.mine { opacity: 1; transform: none; } .bird { opacity: 0; } }
+    </style>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#rl-wall)"/>
+  <g stroke="#514936" stroke-width="2" fill="none" opacity="0.45">
+    <path d="M0 30 q160 16 320 -8 t320 14"/><path d="M0 276 q170 -16 330 6 t310 -12"/>
+  </g>
+  <ellipse class="halo" cx="320" cy="150" rx="280" ry="140" fill="url(#rl-glow)"/>
+
+  <!-- the first name: MAREN VELL, 1801, struck through -->
+  <g>
+    <g class="leave" fill="#a95f2d">
+      <circle cx="96" cy="142" r="8"/>
+      <path d="M96 150 L96 186 M96 158 L82 172 M96 158 L110 172 M96 186 L84 208 M96 186 L108 208" stroke="#a95f2d" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    </g>
+    <text x="62" y="232" fill="#c2884d" font-family="Georgia, 'Times New Roman', serif" font-size="12" opacity="0.8">M. VELL</text>
+    <text x="68" y="246" fill="#c2884d" font-family="Georgia, 'Times New Roman', serif" font-size="11" opacity="0.6">1801</text>
+    <g class="strike"><path d="M60 198 L136 126" stroke="#e8e2cf" stroke-width="4" stroke-linecap="round"/></g>
+    <g class="bird" style="animation-delay:0s" stroke="#fff6dd" stroke-width="2.6" fill="none" stroke-linecap="round">
+      <g class="wing"><path d="M88 140 q10 -9 20 0 q10 -9 20 0"/></g>
+    </g>
+  </g>
+
+  <!-- the other ten, lifting off one after another -->
+  <g fill="#a95f2d">
+    <g class="leave" style="animation-delay:-0.3s"><circle cx="152" cy="146" r="7"/><path d="M152 154 L152 188 M152 162 L140 174 M152 162 L164 174 M152 188 L142 208 M152 188 L162 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-0.6s"><circle cx="196" cy="146" r="7"/><path d="M196 154 L196 188 M196 162 L184 174 M196 162 L208 174 M196 188 L186 208 M196 188 L206 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-0.9s"><circle cx="240" cy="146" r="7"/><path d="M240 154 L240 188 M240 162 L228 174 M240 162 L252 174 M240 188 L230 208 M240 188 L250 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-1.2s"><circle cx="284" cy="146" r="7"/><path d="M284 154 L284 188 M284 162 L272 174 M284 162 L296 174 M284 188 L274 208 M284 188 L294 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-1.5s"><circle cx="328" cy="146" r="7"/><path d="M328 154 L328 188 M328 162 L316 174 M328 162 L340 174 M328 188 L318 208 M328 188 L338 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-1.8s"><circle cx="372" cy="146" r="7"/><path d="M372 154 L372 188 M372 162 L360 174 M372 162 L384 174 M372 188 L362 208 M372 188 L382 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-2.1s"><circle cx="416" cy="146" r="7"/><path d="M416 154 L416 188 M416 162 L404 174 M416 162 L428 174 M416 188 L406 208 M416 188 L426 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-2.4s"><circle cx="460" cy="146" r="7"/><path d="M460 154 L460 188 M460 162 L448 174 M460 162 L472 174 M460 188 L450 208 M460 188 L470 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-2.7s"><circle cx="504" cy="146" r="7"/><path d="M504 154 L504 188 M504 162 L492 174 M504 162 L516 174 M504 188 L494 208 M504 188 L514 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="leave" style="animation-delay:-3s"><circle cx="548" cy="146" r="7"/><path d="M548 154 L548 188 M548 162 L536 174 M548 162 L560 174 M548 188 L538 208 M548 188 L558 208" stroke="#a95f2d" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+  </g>
+
+  <!-- they go up as light -->
+  <g stroke="#fff6dd" stroke-width="2.4" fill="none" stroke-linecap="round">
+    <g class="bird" style="animation-delay:-0.3s"><g class="wing"><path d="M146 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-0.7s"><g class="wing" style="animation-delay:-.2s"><path d="M190 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-1.1s"><g class="wing" style="animation-delay:-.4s"><path d="M234 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-1.5s"><g class="wing" style="animation-delay:-.1s"><path d="M278 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-1.9s"><g class="wing" style="animation-delay:-.3s"><path d="M322 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-2.3s"><g class="wing" style="animation-delay:-.5s"><path d="M366 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-2.7s"><g class="wing" style="animation-delay:-.2s"><path d="M410 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-3.1s"><g class="wing" style="animation-delay:-.4s"><path d="M454 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-3.5s"><g class="wing" style="animation-delay:-.6s"><path d="M498 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+    <g class="bird" style="animation-delay:-3.9s"><g class="wing" style="animation-delay:-.1s"><path d="M542 144 q9 -8 18 0 q9 -8 18 0"/></g></g>
+  </g>
+
+  <!-- and one new name, in wet paint, at the end: KEEPER ON DUTY -->
+  <g class="mine">
+    <g fill="#d8762f">
+      <circle cx="590" cy="146" r="7.5"/>
+      <path d="M590 154 L590 188 M590 162 L578 174 M590 162 L602 174 M590 188 L580 208 M590 188 L600 208" stroke="#d8762f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    </g>
+    <circle cx="590" cy="120" r="9" fill="none" stroke="#ffd98a" stroke-width="2.5"/>
+    <path d="M582 126 q8 8 16 0" stroke="#ffd98a" stroke-width="2" fill="none"/>
+    <text x="556" y="232" fill="#e9b96a" font-family="Georgia, 'Times New Roman', serif" font-size="11">ON DUTY</text>
+  </g>
+</svg>
