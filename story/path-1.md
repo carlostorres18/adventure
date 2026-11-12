@@ -21,7 +21,7 @@
   Lines inside these comment marks are notes. Players never see them.
 -->
 
-by:
+by: Carlos Torres 
 
 ## path-1
 The village is five crooked houses and a bakery. Every window is dark except the bakery's, where warm light spills onto the cobblestones.
@@ -55,5 +55,45 @@ THE END
 An old man opens the door just a crack. "Abernathy," he says. "I kept that light for forty years."
 
 "The tower door is locked, and the only key went down with my boat when she sank off the south beach. If you want that light lit, the key is in the wreck."
+
+"Unless if you want to hear more about the urban legend going around..."
+
+[Go back to the crossroads](#crossroads)
+[Hear Abernathy out](#urban-legend)
+
+## urban-legend
+The old man opens the door for you, and let's you in. Inside you would see the usual stuff a fisherman would own. A couple of fishing rods, fishing memorabilia, a couple of photos that look like they were from the 1920's.
+
+"Sit down please"
+
+[Sit down in the old chair](#sit-down-old-chair)
+[Remain standing](#remain-standing)
+
+## sit-down-old-chair
+As soon as you sit down, the chair break. It was a really old chair. So you decide to remain standing.
+
+get: piece of wood
+
+"Sorry son, that was a really old chair."
+You then see the fisher man smile as he sits down on his chair. That made him laugh.
+
+[Continue](#continue)
+
+## remain-standing
+You decide to not sit down. A gust of wind makes the chair crumble and then break. Both of you look at the chair.
+
+get: piece of wood
+
+"Good thing you didn't sit down."
+You then see the fisher man say under his breath. "So close, oh well"
+
+[Continue](#continue)
+
+## continue
+
+He then proceeds. "You are not the first one coming to ask for the key. Last week ago, a couple went missing because they were looking for the key to access the tower. You could hear some weird noises around the time that they disappeared. I believe it was mermaids"
+
+"So better be careful now." He then pushes you out and hands you a lantern.
+get: lantern
 
 [Go back to the crossroads](#crossroads)
