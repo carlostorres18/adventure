@@ -7,7 +7,7 @@ const Play = (() => {
   const S = {
     story: null, live: [], files: [], draft: null,
     scene: null, home: null, items: new Set(), history: [], imageProblems: [],
-    game: null, revealing: null,
+    game: null, revealing: null, creatures: [], theme: "paper", showing: "", themeTimer: 0,
   };
   const ENDINGS_KEY = "adventure-endings:" + location.pathname;
 
@@ -30,13 +30,26 @@ const Play = (() => {
     S.files = files;
     S.story = Story.build(files);
     S.imageProblems = [];
-    document.body.className = "theme-" + S.story.theme;
+    S.theme = S.story.theme;
+    setTheme(S.story.theme);
     $("title").textContent = S.story.title || "Untitled story";
     document.title = S.story.title || "Adventure";
     $("byline").textContent = S.story.by ? "by " + S.story.by : "";
     $("byline").hidden = !S.story.by;
     checkImages();
     showBadge();
+  }
+
+  // The story picks a theme, and any scene can change it from there on.
+  // The page cross-fades rather than snapping, so a scene can genuinely
+  // change the weather.
+  function setTheme(name) {
+    if (!name || S.showing === name) return;
+    S.showing = name;
+    const keep = [...document.body.classList].filter((c) => c.startsWith("fx-"));
+    document.body.className = ["theme-" + name, "theme-turning"].concat(keep).join(" ");
+    clearTimeout(S.themeTimer);
+    S.themeTimer = setTimeout(() => document.body.classList.remove("theme-turning"), 700);
   }
 
   // Pictures can only be checked by trying to load them.
@@ -76,9 +89,11 @@ const Play = (() => {
     for (const it of s.loses) if (S.items.delete(it)) dropped.push(it);
     const newlyKept = [];
     for (const k of s.keeps) if (Memory.keep(k)) newlyKept.push(k);
+    const newlyCaught = [];
+    for (const c of s.catches) { if (Memory.caught(c)) newlyCaught.push(c); if (!S.creatures.includes(c)) S.creatures.push(c); }
     Memory.sawScene(name);
     if (s.ending) { noteEnding(name); Memory.reachedEnding(name); }
-    render(got, dropped, newlyKept);
+    render(got, dropped, newlyKept, newlyCaught);
   }
 
   function back() {
@@ -95,6 +110,8 @@ const Play = (() => {
     S.history = [];
     S.items = new Set();
     S.scene = null;
+    // Creatures are not items: once caught they stay caught, across every go.
+    S.creatures = Memory.creatureList();
     Memory.startRun();
     const first = at || S.home || S.story.start;
     if (first) go(first, "fresh");
@@ -151,8 +168,8 @@ const Play = (() => {
     return fig;
   }
 
-  function render(got, dropped, newlyKept) {
-    got = got || []; dropped = dropped || []; newlyKept = newlyKept || [];
+  function render(got, dropped, newlyKept, newlyCaught) {
+    got = got || []; dropped = dropped || []; newlyKept = newlyKept || []; newlyCaught = newlyCaught || [];
     const box = $("scene"), list = $("choices");
     if (box._fxStop) { box._fxStop = null; }
     Effects.unhaunt(list);
@@ -166,6 +183,7 @@ const Play = (() => {
       return;
     }
 
+    setTheme(s.theme || S.theme);
     Effects.apply(s.effects);
     // Hide the choices before they are built, so a slow scene doesn't flash
     // them up and then fade them out again.
@@ -190,6 +208,12 @@ const Play = (() => {
         const p = document.createElement("p");
         p.className = "got lost";
         p.innerHTML = "You no longer have: <strong>" + esc(b.item) + "</strong>";
+        box.appendChild(p);
+      } else if (b.type === "catch") {
+        if (!newlyCaught.includes(b.who)) continue;
+        const p = document.createElement("p");
+        p.className = "got caught";
+        p.innerHTML = "You have caught: <strong>" + esc(b.who) + "</strong>. It comes with you now, and it will still be with you the next time you start over.";
         box.appendChild(p);
       } else if (b.type === "keep" && newlyKept.includes(b.thing)) {
         const p = document.createElement("p");
@@ -242,6 +266,18 @@ const Play = (() => {
     const carrying = [...S.items];
     $("carrying").hidden = !carrying.length;
     $("carrying").innerHTML = "You're carrying: " + carrying.map((i) => "<strong>" + esc(i) + "</strong>").join(", ");
+    // A page that doesn't have the companions line is still a page: don't
+    // let one missing element take the whole scene down with it.
+    const pals = S.creatures.filter((c) => Memory.creature(c));
+    const palLine = $("companions");
+    if (palLine) {
+    palLine.hidden = !pals.length;
+    palLine.innerHTML = pals.map((c) => {
+      const r = Memory.creature(c);
+      return `<span class="pal"><b>${esc(c)}</b> level ${r.level}` +
+             (r.wins || r.losses ? ` · ${r.wins} won, ${r.losses} lost` : "") + "</span>";
+    }).join(" ");
+    }
     $("btn-back").disabled = !S.history.length;
     $("endings").textContent = endingsLine();
     showBadge();
@@ -272,6 +308,8 @@ const Play = (() => {
     S.game = Arcade.play(scene.game, {
       mount: box,
       items: S.items,
+      scene: scene,
+      creatures: S.creatures,
       frames: Play.testFrames || 0,
       drive: Play.testDrive || null,
       onDone: (won, how) => {

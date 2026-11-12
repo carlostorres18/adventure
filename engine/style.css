@@ -1,15 +1,140 @@
 /* Engine: how the page looks. The four themes are at the top. */
 
-.theme-paper  { --page: #efe6d2; --card: #fffaf0; --ink: #2b2118; --muted: #6f604f; --line: #d9ccb0; --accent: #8a4b14; --font: Georgia, "Times New Roman", serif; }
-.theme-night  { --page: #0e1322; --card: #171e33; --ink: #e6e9f2; --muted: #9aa3b8; --line: #2c3552; --accent: #ffcc66; --font: Georgia, "Times New Roman", serif; }
-.theme-forest { --page: #dfe8da; --card: #f6faf3; --ink: #1d2a1e; --muted: #546455; --line: #bfcfba; --accent: #2f6b3a; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.theme-ocean  { --page: #d6e8f2; --card: #f3f9fc; --ink: #12293a; --muted: #4c6474; --line: #b5d0de; --accent: #0b6e99; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+/* ---------------------------------------------------------------
+   THEMES. Nine of them. A story picks one in start.md, and any scene
+   can change it with its own "theme:" line, which the page cross-fades.
+
+   Each theme sets the usual five colours, and then as much else as it
+   can get away with: the paper the page is printed on, the edge of the
+   card, how a choice looks when you hover it, and what is happening in
+   the air behind all of it.
+   --------------------------------------------------------------- */
+
+:root {
+  --grain: none;
+  --sky: none;
+  --card-edge: 1px solid var(--line);
+  --card-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  --choice-bg: var(--page);
+  --choice-hover: var(--card);
+  --rule: var(--line);
+  --title-shadow: none;
+  --air: none;
+  --air-speed: 90s;
+}
+
+.theme-paper {
+  --page: #efe6d2; --card: #fffaf0; --ink: #2b2118; --muted: #6f604f;
+  --line: #d9ccb0; --accent: #8a4b14; --font: Georgia, "Times New Roman", serif;
+  --grain: radial-gradient(rgba(139,116,80,0.09) 1px, transparent 1px);
+  --sky: linear-gradient(180deg, #f3ecda 0%, #e8dcc2 100%);
+  --card-shadow: 0 10px 34px rgba(90,70,40,0.16);
+}
+.theme-night {
+  --page: #0e1322; --card: #171e33; --ink: #e6e9f2; --muted: #9aa3b8;
+  --line: #2c3552; --accent: #ffcc66; --font: Georgia, "Times New Roman", serif;
+  --sky: radial-gradient(1200px 700px at 72% -12%, #27304f 0%, #0b1020 62%, #070a14 100%);
+  --grain: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+  --card-shadow: 0 14px 44px rgba(0,0,0,0.6);
+  --title-shadow: 0 0 22px rgba(255,204,102,0.28);
+}
+.theme-forest {
+  --page: #dfe8da; --card: #f6faf3; --ink: #1d2a1e; --muted: #546455;
+  --line: #bfcfba; --accent: #2f6b3a; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sky: linear-gradient(170deg, #cfe0c8 0%, #e6efe1 55%, #d6e3cf 100%);
+  --grain: radial-gradient(rgba(47,107,58,0.07) 1px, transparent 1px);
+}
+.theme-ocean {
+  --page: #d6e8f2; --card: #f3f9fc; --ink: #12293a; --muted: #4c6474;
+  --line: #b5d0de; --accent: #0b6e99; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sky: linear-gradient(180deg, #c8e2ef 0%, #e3f1f7 60%, #cfe6f1 100%);
+  --grain: radial-gradient(rgba(11,110,153,0.06) 1px, transparent 1px);
+}
+
+/* ---- the five new ones ---- */
+
+/* wet rock, and whatever you brought to see by */
+.theme-cave {
+  --page: #171410; --card: #241f18; --ink: #e8e0cd; --muted: #9c8f76;
+  --line: #3b332660; --accent: #d8762f; --font: Georgia, "Times New Roman", serif;
+  --sky: radial-gradient(760px 520px at 50% 34%, #3a3024 0%, #1a1611 58%, #0c0a08 100%);
+  --grain: radial-gradient(rgba(216,118,47,0.07) 1px, transparent 1px);
+  --card-edge: 1px solid #3f3528;
+  --card-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 18px 60px rgba(0,0,0,0.75);
+  --choice-bg: #1d1913; --choice-hover: #2c2419;
+  --title-shadow: 0 0 26px rgba(216,118,47,0.35);
+  --air: radial-gradient(circle at 50% 42%, rgba(255,205,140,0.10), transparent 62%);
+}
+/* a long way down, and getting further */
+.theme-deep {
+  --page: #04100f; --card: #0c1f22; --ink: #d9efe9; --muted: #78a39c;
+  --line: #16383a; --accent: #6fe3cf; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sky: linear-gradient(180deg, #1d5058 0%, #0c2b30 44%, #030c0e 100%);
+  --grain: radial-gradient(rgba(111,227,207,0.07) 1px, transparent 1px);
+  --card-edge: 1px solid #16454a;
+  --card-shadow: 0 0 60px rgba(0,60,60,0.55), 0 16px 50px rgba(0,0,0,0.6);
+  --choice-bg: #0a1a1d; --choice-hover: #11292d;
+  --title-shadow: 0 0 24px rgba(111,227,207,0.3);
+  --air: linear-gradient(180deg, rgba(190,240,230,0.10), transparent 46%);
+}
+/* lamplight, and a wall of paint */
+.theme-ember {
+  --page: #140d08; --card: #221610; --ink: #f2e3cd; --muted: #a88a6a;
+  --line: #40281a; --accent: #ff9a3c; --font: Georgia, "Times New Roman", serif;
+  --sky: radial-gradient(700px 480px at 50% 72%, #4a2a13 0%, #1c1009 56%, #0a0603 100%);
+  --grain: radial-gradient(rgba(255,154,60,0.08) 1px, transparent 1px);
+  --card-edge: 1px solid #4a2f1c;
+  --card-shadow: 0 0 80px rgba(190,90,20,0.22), 0 18px 56px rgba(0,0,0,0.7);
+  --choice-bg: #1b110b; --choice-hover: #2c1b10;
+  --title-shadow: 0 0 30px rgba(255,154,60,0.4);
+  --air: radial-gradient(circle at 50% 96%, rgba(255,150,60,0.16), transparent 58%);
+}
+/* weather with an opinion */
+.theme-storm {
+  --page: #1b2028; --card: #262d38; --ink: #e2e8f0; --muted: #94a2b4;
+  --line: #3a4455; --accent: #9fd0ff; --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sky: linear-gradient(195deg, #313a47 0%, #1d232c 52%, #11151b 100%);
+  --grain: radial-gradient(rgba(220,234,250,0.06) 1px, transparent 1px);
+  --card-edge: 1px solid #3f4a5c;
+  --card-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  --choice-bg: #202731; --choice-hover: #2d3745;
+  --air: linear-gradient(100deg, transparent 30%, rgba(200,225,255,0.05) 50%, transparent 70%);
+}
+/* it was over hours ago and nobody told you */
+.theme-dawn {
+  --page: #f6e3d8; --card: #fffaf4; --ink: #3a2b2a; --muted: #8a6f68;
+  --line: #e8cdbd; --accent: #c2543f; --font: Georgia, "Times New Roman", serif;
+  --sky: linear-gradient(185deg, #b9c6e4 0%, #f0c9b4 46%, #fae3cf 100%);
+  --grain: radial-gradient(rgba(194,84,63,0.06) 1px, transparent 1px);
+  --card-shadow: 0 14px 44px rgba(150,90,70,0.2);
+  --title-shadow: 0 0 24px rgba(255,190,140,0.5);
+  --air: radial-gradient(circle at 24% 86%, rgba(255,215,160,0.22), transparent 56%);
+}
+
+/* The page itself: paper, then grain, then whatever is in the air. */
+body::before, body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+}
+body::before { background: var(--grain); background-size: 4px 4px; opacity: 0.85; }
+body::after  { background: var(--air); }
+body > * { position: relative; z-index: 1; }
+
+/* Changing theme is a change in the weather, not a flash. */
+body, #book, #choices button, #bar button, #panel-box {
+  transition: background 600ms ease, background-color 600ms ease, color 600ms ease,
+              border-color 600ms ease, box-shadow 600ms ease;
+}
+body.theme-turning #book { transition-duration: 700ms; }
+@media (prefers-reduced-motion: reduce) {
+  body, #book, #choices button, #bar button, #panel-box { transition: none; }
+  body::after { display: none; }
+}
 
 * { box-sizing: border-box; }
 html { background: var(--page, #efe6d2); }
 body {
   margin: 0; padding: 24px 16px 40px; min-height: 100vh;
-  background: var(--page); color: var(--ink);
+  background: var(--sky), var(--page); background-attachment: fixed; color: var(--ink);
   font: 18px/1.6 var(--font);
   display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
@@ -22,11 +147,11 @@ kbd {
 code { font: 0.9em ui-monospace, Menlo, Consolas, monospace; }
 
 #book {
-  width: 100%; max-width: 680px; background: var(--card); border: 1px solid var(--line);
-  border-radius: 12px; padding: 28px 32px 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  width: 100%; max-width: 680px; background: var(--card); border: var(--card-edge);
+  border-radius: 12px; padding: 28px 32px 22px; box-shadow: var(--card-shadow);
 }
 #top { border-bottom: 1px solid var(--line); margin-bottom: 18px; padding-bottom: 10px; }
-#title { margin: 0; font-size: 1.6em; line-height: 1.2; color: var(--accent); }
+#title { margin: 0; font-size: 1.6em; line-height: 1.2; color: var(--accent); text-shadow: var(--title-shadow); }
 #byline { margin: 4px 0 0; color: var(--muted); font-style: italic; }
 #scene { outline: none; }
 #scene p { margin: 0 0 0.9em; }
@@ -43,9 +168,10 @@ code { font: 0.9em ui-monospace, Menlo, Consolas, monospace; }
 #choices { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 #choices button {
   width: 100%; text-align: left; padding: 11px 14px; cursor: pointer;
-  background: var(--page); border: 1px solid var(--line); border-radius: 8px;
+  background: var(--choice-bg); border: 1px solid var(--line); border-radius: 8px;
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
+#choices button:hover:not(:disabled) { background: var(--choice-hover); }
 #choices button:hover:not(:disabled), #choices button:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: -1px; }
 #choices button:disabled { cursor: not-allowed; opacity: 0.7; }
 #choices button.broken { border: 2px dashed #d93025; }
@@ -240,3 +366,22 @@ button.small { margin-top: 10px; font-size: 13px; padding: 4px 10px; border-radi
   #choices button.haunted { transition: none; }
   #choices { transition: none; }
 }
+
+/* ---------- creatures you caught, and the two new games ---------- */
+#companions { margin: 6px 0 0; color: var(--muted); font-size: 0.85em; display: flex; gap: 14px; flex-wrap: wrap; }
+#companions .pal { display: inline-flex; gap: 6px; align-items: baseline; }
+#companions .pal b { color: var(--accent); font-variant: small-caps; letter-spacing: 0.04em; }
+.got.caught { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+
+.arcade-duel { display: inline-flex; gap: 6px; align-items: baseline; }
+.arcade-duel.foe { color: #ffc9b4; }
+.arcade-buttons .arcade-move {
+  background: var(--accent); color: var(--card); border-color: var(--accent); font-weight: 600;
+}
+.arcade-buttons .arcade-move:hover:not(:disabled) { filter: brightness(1.12); }
+.arcade-buttons .arcade-move:disabled { opacity: 0.4; }
+.arcade-buttons .arcade-buy {
+  font: 13px ui-monospace, Menlo, Consolas, monospace; padding: 6px 10px;
+}
+.arcade-buttons .arcade-buy:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.arcade-sand { display: inline-flex; gap: 6px; align-items: baseline; }

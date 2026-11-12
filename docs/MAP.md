@@ -16,6 +16,7 @@ adventure/
 ├── test.html               a self-test for the engine (players never see it)
 ├── look.html               jump straight to one scene, to look at it closely
 ├── balance.html            plays the games with a bot, to check they're fair
+├── themes.html             every theme at once, on one sheet
 ├── engine/                 ← the machinery
 │   ├── story.js            reads the story files and checks them for mistakes
 │   ├── play.js             shows scenes, tracks items, remembers endings

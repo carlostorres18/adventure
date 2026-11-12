@@ -11,10 +11,13 @@ const Story = (() => {
   const IMAGE = /^!\[([^\]]*)\]\(([^)\s]*)\)\s*$/;
   const ENDING = /^[*_]*the end[*_.!]*$/i;
   const SETTINGS = ["by", "theme"];
-  const THEMES = ["paper", "night", "forest", "ocean"];
+  const THEMES = ["paper", "night", "forest", "ocean",
+                  "cave", "deep", "ember", "storm", "dawn"];
 
   // Scenes that are played instead of read. See docs/ENGINE.md.
-  const GAMES = ["undertow", "bell"];
+  const GAMES = ["undertow", "bell", "duel", "clicker"];
+  // Creatures you can catch and take with you. See docs/ENGINE.md.
+  const CREATURES = ["clackers", "squib", "pib"];
   // What the page does while a scene is on screen.
   const EFFECTS = ["underwater", "fog", "flicker", "shake", "slow", "dark",
                    "dread", "static", "wrong"];
@@ -29,7 +32,8 @@ const Story = (() => {
   const SOUNDS = ["bell", "gull", "splash", "tick", "lamp", "heartbeat", "wind"];
   // {things in curly brackets} that the engine fills in when it draws a scene.
   const TOKENS = ["runs", "endings-found", "endings-total", "endings-list",
-                  "drownings", "clock", "first-played", "last-ending"];
+                  "drownings", "clock", "first-played", "last-ending",
+                  "creature-level", "sand"];
 
   const clean = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
 
@@ -165,6 +169,26 @@ const Story = (() => {
         for (const c of s.choices) if (c.outcome) problem("error", s.file, c.line,
           `The choice "${c.text}" says "on ${c.outcome}", but ${name} has no game on it.`,
           `Add a line like game: ${GAMES[0]} to this scene, or take the "on ${c.outcome}" off the choice.`);
+      }
+    }
+
+    // A duel needs somebody to duel, and somebody to duel them with.
+    const caught = new Set();
+    for (const name of names) for (const c of scenes[name].catches) caught.add(c);
+    for (const name of names) {
+      const s = scenes[name];
+      if (s.game === "duel" && !s.against) {
+        problem("error", s.file, s.gameLine || s.line, `${name} is a duel, but there's nobody to fight.`,
+          "Add a line like: against: Old Molly, 3");
+      }
+      if (s.against && s.game !== "duel") {
+        problem("error", s.file, s.againstLine || s.line, `${name} says who to fight, but it isn't a duel.`,
+          `Add the line game: duel to this scene, or take the against: line off.`);
+      }
+      if (s.game === "duel" && !caught.size) {
+        problem("warning", s.file, s.gameLine || s.line,
+          `${name} is a duel, but no scene anywhere does catch:, so the player has nothing to fight with.`,
+          `Add a line like catch: ${CREATURES[0]} to the scene where they find one. They can still run away.`);
       }
     }
 
@@ -338,6 +362,7 @@ const Story = (() => {
           name = name + "~" + line;
         }
         scene = { name, file: f.name, line, blocks: [], choices: [], gets: [], loses: [], keeps: [],
+                  catches: [], against: null, theme: "",
                   ending: false, game: "", effects: [], sounds: [], tokens: [] };
         story.scenes[name] = scene;
         story.order.push(name);
@@ -369,6 +394,46 @@ const Story = (() => {
       if (!scene) {
         if (!loose++) problem("warning", f.name, line, "This text is above the first scene, so players will never see it.",
           "Move it below a ## scene-name line, or delete it.");
+        return;
+      }
+
+      // theme: inside a scene changes the look from here on
+      m = t.match(/^theme\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const value = clean(m[1]);
+        if (THEMES.includes(value)) scene.theme = value;
+        else problem("warning", f.name, line, `There's no theme called "${m[1].trim()}".`,
+          `Choose one of: ${THEMES.join(", ")}.`);
+        return;
+      }
+
+      // catch: creature
+      m = t.match(/^catch\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const who = clean(m[1]);
+        if (!who) problem("error", f.name, line, "catch: needs the name of a creature.", `For example: catch: ${CREATURES[0]}`);
+        else if (!CREATURES.includes(who)) {
+          const near = closest(who, CREATURES);
+          problem("error", f.name, line, `There's no creature called "${m[1].trim()}".`,
+            near ? `Did you mean catch: ${near}?` : `The ones the engine knows are: ${CREATURES.join(", ")}. See docs/ENGINE.md.`);
+        } else { scene.catches.push(who); scene.blocks.push({ type: "catch", who, line }); }
+        return;
+      }
+
+      // against: a name, and how tough they are
+      m = t.match(/^against\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const parts = m[1].split(",");
+        const who = parts[0].trim();
+        const level = parts.length > 1 ? Number(parts[1].trim()) : 2;
+        if (!who) problem("error", f.name, line, "against: needs somebody to fight.", "For example: against: Old Molly, 3");
+        else if (!(level >= 1 && level <= 9)) problem("error", f.name, line,
+          `"${parts[1] ? parts[1].trim() : ""}" isn't a level between 1 and 9.`, "For example: against: Old Molly, 3");
+        else scene.against = { who, level };
+        scene.againstLine = line;
         return;
       }
 
@@ -549,7 +614,7 @@ const Story = (() => {
     flush();
   }
 
-  return { FILES, THEMES, GAMES, EFFECTS, SOUNDS, TOKENS, HAUNTINGS, build, closest, describe, condition };
+  return { FILES, THEMES, GAMES, EFFECTS, SOUNDS, TOKENS, HAUNTINGS, CREATURES, build, closest, describe, condition };
 })();
 
 if (typeof module !== "undefined") module.exports = Story;

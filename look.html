@@ -11,6 +11,7 @@
   <article id="scene" tabindex="-1" aria-live="polite"></article>
   <ol id="choices"></ol>
   <p id="carrying" hidden></p>
+  <p id="companions" hidden></p>
 </div>
 <nav id="bar">
   <button id="btn-restart">Start over</button><button id="btn-back">Back</button>
@@ -22,13 +23,10 @@
 <div id="panel" hidden role="dialog"><div id="panel-box">
   <div id="panel-head"><h2 id="panel-title"></h2><button id="panel-close">×</button></div>
   <div id="panel-body"></div></div></div>
-<script src="engine/story.js"></script>
-<script src="engine/memory.js"></script>
-<script src="engine/effects.js"></script>
-<script src="engine/arcade.js"></script>
-<script src="engine/map.js"></script>
-<script src="engine/draft.js"></script>
-<script src="engine/play.js"></script>
+<!-- A dev page always wants the engine as it is on disk, never the copy the
+     browser kept from five minutes ago. -->
+<script>document.write(["story", "memory", "effects", "arcade", "map", "draft", "play"]
+  .map(n => "<scr" + "ipt src=\"engine/" + n + ".js?dev=" + Date.now() + "\"></scr" + "ipt>").join(""));</script>
 <script>
 (function () {
   const q = new URLSearchParams(location.search);
@@ -56,6 +54,9 @@
   }
   if (q.get("runs")) { for (let i = 1; i < Number(q.get("runs")); i++) Memory.startRun(); }
   if (q.get("forget")) Memory.forget();
+  for (const c of (q.get("creatures") || "").split(",").map(x => x.trim()).filter(Boolean)) Memory.caught(c);
+  if (q.get("level")) { const c = Memory.creatureList()[0];
+    if (c) { Memory.state.creatures[c].level = Number(q.get("level")); } }
   Play.bootWith(files, q.get("scene") || undefined);
   for (const it of (q.get("items") || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean)) Play.state.items.add(it);
   if (q.get("scene")) Play.go(q.get("scene"));
@@ -65,6 +66,11 @@
     if (sc) sc.effects = sc.effects.filter(e => e !== "slow");
     Play.go(q.get("scene"));
     document.getElementById("choices").style.transition = "none";   // no fade, for the shot
+    // settle the theme cross-fade too, so a screenshot isn't caught mid-weather
+    const kill = document.createElement("style");
+    kill.textContent = "body,#book,#choices button,#bar button,#panel-box{transition:none!important}";
+    document.head.appendChild(kill);
+    document.body.classList.remove("theme-turning");
   }
   if (q.get("panel") === "map") document.getElementById("btn-map").click();
   if (q.get("panel") === "memory") document.getElementById("btn-memory").click();
@@ -78,7 +84,12 @@
       + "\nitems=" + [...Play.state.items].join("|")
       + "\nchoices.className=" + document.getElementById("choices").className
       + "\nchoices.count=" + document.getElementById("choices").children.length
-      + "\nchoicesHTML=" + document.getElementById("choices").innerHTML.replace(/</g,"<").slice(0,420);
+      + "\nbody.class=" + document.body.className
+      + "\nscene.theme=" + ((Play.state.story.scenes[q.get("scene")]||{}).theme || "(none)")
+      + "\n--card=" + getComputedStyle(document.body).getPropertyValue("--card")
+      + "\n--ink=" + getComputedStyle(document.body).getPropertyValue("--ink")
+      + "\nbook bg=" + getComputedStyle(document.getElementById("book")).backgroundColor
+      + "\nbook color=" + getComputedStyle(document.getElementById("book")).color;
     document.body.appendChild(d);
   }
 })();

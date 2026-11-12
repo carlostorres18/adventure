@@ -118,6 +118,7 @@ const Arcade = (() => {
       removeEventListener("mouseup", onUp);
       removeEventListener("touchend", onUp);
       removeEventListener("resize", fit);
+      live.delete(opts.mount);
       if (how !== "skipped") Memory.playedGame(name, won);
       opts.onDone(won, how);
     }
@@ -125,6 +126,8 @@ const Arcade = (() => {
     const state = {
       W, H, ctx, keys, pointer, calm,
       items: opts.items || new Set(),
+      scene: opts.scene || null,
+      creatures: opts.creatures || [],
       t: 0, say: (s) => { if (tell.textContent !== s) tell.textContent = s; },
       hud: (html) => { if (hud.innerHTML !== html) hud.innerHTML = html; },
       shake: 0,
@@ -133,6 +136,7 @@ const Arcade = (() => {
     };
 
     game.setup(state, { button, finish });
+    live.set(opts.mount, { state, game, over: () => over });
 
     // ---- the loop ----
     const onBlur = () => { paused = true; };
@@ -176,6 +180,20 @@ const Arcade = (() => {
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
+  // A hash of a name, so a foe nobody has drawn still looks like itself every
+  // time anyone meets it.
+  function seed(text) {
+    let h = 2166136261;
+    for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return () => { h = Math.imul(h ^ (h >>> 15), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; };
+  }
+
+  function bar(value, max, w, colour, ctx, x, y) {
+    ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.fillRect(x, y, w, 8);
+    ctx.fillStyle = colour; ctx.fillRect(x + 1, y + 1, Math.max(0, (w - 2) * clamp(value / max, 0, 1)), 6);
+    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, 7);
+  }
 
   function meter(label, value, max, colour) {
     const pips = [];
@@ -613,7 +631,558 @@ const Arcade = (() => {
     },
   };
 
-  const GAMES = { undertow, bell };
 
-  return { play, has: (n) => !!GAMES[n] };
+  // =====================================================================
+  //  THE DUEL. Turn by turn, with whatever you caught and brought.
+  // =====================================================================
+
+  // The three creatures the engine knows. A writer adds one to the story with
+  // "catch: clackers". Moves marked with needs: only appear if the player is
+  // carrying that item, which is the whole point of them.
+  const CREATURES = {
+    clackers: {
+      title: "Clackers", kind: "a pocket crab",
+      hp: 30, blurb: "A crab the size of a dinner plate. Holds grudges. Holds everything.",
+      moves: [
+        { name: "Pinch",        dmg: [5, 8],   say: "Clackers pinches. It is not subtle." },
+        { name: "Sidle",        dmg: [0, 0],   guard: 0.65, say: "Clackers goes sideways, which is the whole trick." },
+        { name: "Bubble Rasp",  dmg: [3, 5],   wobble: 0.5, say: "A sheet of bubbles. Nobody can see anything." },
+        { name: "Button Flash", dmg: [11, 16], needs: "a brass button",
+          say: "Clackers turns the brass button to the light, and the light does the rest." },
+      ],
+    },
+    squib: {
+      title: "Squib", kind: "a very small squid",
+      hp: 24, blurb: "Eight arms, no plan, tremendous commitment.",
+      moves: [
+        { name: "Tug",      dmg: [4, 7],  say: "Squib pulls, with all eight, in eight directions." },
+        { name: "Ink",      dmg: [2, 4],  wobble: 0.8, say: "Ink. Everywhere. Mostly on you." },
+        { name: "Jet",      dmg: [0, 0],  guard: 0.7,  say: "Squib is suddenly four feet to the left." },
+        { name: "Lamplight", dmg: [10, 15], needs: "lantern", say: "Squib holds the lantern up and goes a colour nobody has a name for." },
+      ],
+    },
+    pib: {
+      title: "Pib", kind: "one gull chick",
+      hp: 26, blurb: "Cannot fly. Will not be told.",
+      moves: [
+        { name: "Peck",    dmg: [4, 7],  say: "Pib pecks, repeatedly, at about knee height." },
+        { name: "Shriek",  dmg: [3, 6],  wobble: 0.6, say: "The noise is genuinely unbelievable." },
+        { name: "Fluff",   dmg: [0, 0],  guard: 0.6,  say: "Pib doubles in size and is still a chick." },
+        { name: "The Chorus", dmg: [12, 17], needs: "white feather",
+          say: "Pib holds up the feather and something very old answers." },
+      ],
+    },
+  };
+
+  // A foe is made up from its name and level, so a writer can put anybody in
+  // a duel with one line and the engine will still draw them the same way twice.
+  function makeFoe(name, level) {
+    const r = seed(name.toLowerCase());
+    const shape = Math.floor(r() * 3);
+    const hue = Math.floor(r() * 360);
+    const spikes = 3 + Math.floor(r() * 5);
+    return {
+      title: name, level,
+      hp: 16 + level * 7, max: 16 + level * 7,
+      hit: [2 + level, 4 + level * 2],
+      shape, hue, spikes, r,
+      moves: ["lunges", "sets itself", "comes in low", "feints, then doesn't", "takes its time"],
+    };
+  }
+
+  const duel = {
+    describe: "A game. You and the creature you caught take turns fighting somebody, by picking a move from a list of buttons. There is a button to run away.",
+
+    setup(s, ui) {
+      const which = s.creatures.find((c) => CREATURES[c]) || null;
+      const spec = which ? CREATURES[which] : null;
+      const level = which ? (Memory.creature(which) || { level: 1 }).level : 1;
+      const against = (s.scene && s.scene.against) || { who: "something", level: 2 };
+
+      s.g = {
+        which, spec, level,
+        me: spec ? { hp: spec.hp + level * 6, max: spec.hp + level * 6, guard: 0, wobble: 0 } : null,
+        foe: makeFoe(against.who, against.level),
+        turn: "you", busy: 0, lunge: 0, foeLunge: 0, flash: 0, foeFlash: 0,
+        bits: [], log: "", done: 0, round: 0,
+      };
+      s.g.foe.wobble = 0;
+
+      if (!spec) {
+        s.say("You have not caught anything, and you are not going to win this with your hands.");
+        ui.button("Back away", "arcade-give", () => s.lose());
+        ui.button("Skip this and keep reading", "arcade-skip", () => ui.finish(true, "skipped"));
+        return;
+      }
+
+      const rec = Memory.creature(which) || { wins: 0, losses: 0 };
+      s.say(`${spec.title}, level ${level}. ${rec.wins ? rec.wins + " won, " + rec.losses + " lost." : spec.blurb}`);
+
+      s.g.moveButtons = [];
+      for (const mv of spec.moves) {
+        if (mv.needs && !s.items.has(mv.needs)) continue;
+        const b = ui.button(mv.name, "arcade-move", () => useMove(s, mv));
+        s.g.moveButtons.push(b);
+      }
+      ui.button("Run away", "arcade-give", () => { s.say(`${spec.title} is already halfway up the beach.`); s.lose(); });
+      ui.button("Skip this and keep reading", "arcade-skip", () => ui.finish(true, "skipped"));
+    },
+
+    step(s, dt) {
+      const g = s.g;
+      if (g.done) { g.done -= dt; if (g.done <= 0) (g.won ? s.win() : s.lose()); return; }
+      g.lunge = Math.max(0, g.lunge - dt * 3);
+      g.foeLunge = Math.max(0, g.foeLunge - dt * 3);
+      g.flash = Math.max(0, g.flash - dt * 3);
+      g.foeFlash = Math.max(0, g.foeFlash - dt * 3);
+      for (let i = g.bits.length - 1; i >= 0; i--) {
+        const b = g.bits[i];
+        b.x += b.vx * dt; b.y += b.vy * dt; b.vy += 320 * dt; b.life -= dt;
+        if (b.life <= 0) g.bits.splice(i, 1);
+      }
+      if (g.busy > 0) {
+        g.busy -= dt;
+        if (g.busy <= 0 && g.turn === "foe") foeTurn(s);
+      }
+      if (!g.me) return;
+      s.hud(`<span class="arcade-duel"><b>${g.spec.title}</b> ${Math.max(0, Math.ceil(g.me.hp))}</span>` +
+            `<span class="arcade-duel foe"><b>${g.foe.title}</b> ${Math.max(0, Math.ceil(g.foe.hp))}</span>`);
+      for (const b of g.moveButtons || []) b.disabled = g.turn !== "you" || g.busy > 0 || !!g.done;
+    },
+
+    draw(s) {
+      const { ctx } = s, g = s.g;
+      const sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, "#1b2433"); sky.addColorStop(1, "#4b4a44");
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#6f6a58"; ctx.fillRect(0, 262, W, H - 262);
+      ctx.fillStyle = "rgba(0,0,0,0.25)";
+      ctx.beginPath(); ctx.ellipse(120, 276, 56, 11, 0, 0, 6.3); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(348, 252, 62, 12, 0, 0, 6.3); ctx.fill();
+
+      if (g.me) {
+        ctx.save();
+        ctx.translate(120 + g.lunge * 44, 240);
+        if (g.flash > 0) ctx.globalAlpha = 0.4 + 0.6 * Math.abs(Math.sin(s.t * 26));
+        drawCreature(ctx, g.which, s.t, g.me.guard > 0);
+        ctx.restore();
+        bar(g.me.hp, g.me.max, 120, "#7dd48a", ctx, 60, 300);
+        ctx.fillStyle = "#e9e6dc"; ctx.font = "12px ui-monospace, Menlo, monospace";
+        ctx.fillText(g.spec.title + "  lv " + g.level, 60, 296);
+      }
+
+      ctx.save();
+      ctx.translate(348 - g.foeLunge * 44, 212);
+      if (g.foeFlash > 0) ctx.globalAlpha = 0.4 + 0.6 * Math.abs(Math.sin(s.t * 26));
+      drawFoe(ctx, g.foe, s.t);
+      ctx.restore();
+      bar(g.foe.hp, g.foe.max, 120, "#e0795f", ctx, 288, 300);
+      ctx.fillStyle = "#e9e6dc"; ctx.font = "12px ui-monospace, Menlo, monospace";
+      ctx.fillText(g.foe.title + "  lv " + g.foe.level, 288, 296);
+
+      for (const b of g.bits) {
+        ctx.globalAlpha = clamp(b.life * 2, 0, 1);
+        ctx.fillStyle = b.c;
+        ctx.fillRect(b.x, b.y, b.s, b.s);
+        ctx.globalAlpha = 1;
+      }
+
+      if (g.log) {
+        ctx.fillStyle = "rgba(10,12,16,0.78)";
+        ctx.fillRect(14, 16, W - 28, 40);
+        ctx.strokeStyle = "rgba(255,255,255,0.18)"; ctx.strokeRect(14.5, 16.5, W - 29, 39);
+        ctx.fillStyle = "#f1eee4"; ctx.font = "13px Georgia, serif";
+        wrap(ctx, g.log, 24, 34, W - 48, 16);
+      }
+
+      if (g.done) {
+        ctx.save();
+        ctx.globalAlpha = clamp(1 - g.done / 1.4, 0, 1);
+        ctx.fillStyle = g.won ? "rgba(255,250,236,0.88)" : "rgba(10,10,14,0.88)";
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+    },
+  };
+
+  function wrap(ctx, text, x, y, maxw, lh) {
+    const words = String(text).split(" ");
+    let line = "", yy = y;
+    for (const w of words) {
+      const test = line ? line + " " + w : w;
+      if (ctx.measureText(test).width > maxw && line) { ctx.fillText(line, x, yy); line = w; yy += lh; }
+      else line = test;
+    }
+    ctx.fillText(line, x, yy);
+  }
+
+  function spray(g, x, y, colour, n) {
+    for (let i = 0; i < n; i++)
+      g.bits.push({ x, y, vx: rnd(-130, 130), vy: rnd(-200, -40), s: rnd(2, 5), c: colour, life: rnd(0.3, 0.7) });
+  }
+
+  function useMove(s, mv) {
+    const g = s.g;
+    if (g.turn !== "you" || g.busy > 0 || g.done) return;
+    g.round++;
+    g.lunge = 1; g.busy = 0.85;
+    const hit = Math.round(rnd(mv.dmg[0], mv.dmg[1]) * (1 + g.level * 0.12));
+    if (hit > 0) {
+      g.foe.hp -= hit;
+      g.foeFlash = 1;
+      s.shake = 9;
+      spray(g, 348, 212, "#ffd9a0", 12);
+      g.log = mv.say + "  (" + hit + ")";
+    } else {
+      g.log = mv.say;
+    }
+    g.me.guard = mv.guard || 0;
+    if (mv.wobble) g.foe.wobble = mv.wobble;
+    if (g.foe.hp <= 0 && !g.done) {
+      g.foe.hp = 0; g.won = true; g.done = 1.4;
+      g.log = g.foe.title + " has had enough and says so.";
+      const c = Memory.duelOver(g.which, true);
+      s.say(c && c.level > g.level ? `${g.spec.title} is level ${c.level} now.` : `${g.spec.title} wins.`);
+      return;
+    }
+    g.turn = "foe";
+  }
+
+  function foeTurn(s) {
+    const g = s.g;
+    if (g.done) return;
+    const miss = Math.random() < (g.me.guard + (g.foe.wobble || 0)) * 0.8;
+    g.foeLunge = 1; g.busy = 0.85;
+    g.me.guard = 0; g.foe.wobble = 0;
+    if (miss) {
+      g.log = g.foe.title + " " + g.foe.moves[Math.floor(Math.random() * g.foe.moves.length)] + ", and misses.";
+    } else {
+      const hit = Math.round(rnd(g.foe.hit[0], g.foe.hit[1]));
+      g.me.hp -= hit;
+      g.flash = 1; s.shake = 11;
+      spray(g, 120, 240, "#9fe8ff", 10);
+      g.log = g.foe.title + " " + g.foe.moves[Math.floor(Math.random() * g.foe.moves.length)] + ".  (" + hit + ")";
+    }
+    if (g.me.hp <= 0 && !g.done) {
+      g.me.hp = 0; g.won = false; g.done = 1.3;
+      g.log = g.spec.title + " sits down and will not get up.";
+      Memory.duelOver(g.which, false);
+      return;
+    }
+    g.turn = "you";
+  }
+
+  function drawCreature(ctx, which, t, guarding) {
+    const bob = Math.sin(t * 2.4) * 3;
+    if (which === "clackers") {
+      ctx.save(); ctx.translate(0, bob);
+      ctx.fillStyle = "#b9502f";
+      ctx.beginPath(); ctx.ellipse(0, 0, 34, 24, 0, 0, 6.3); ctx.fill();
+      ctx.fillStyle = "#8e3a20";
+      ctx.beginPath(); ctx.ellipse(0, 6, 34, 18, 0, 0, 6.3); ctx.fill();
+      ctx.strokeStyle = "#8e3a20"; ctx.lineWidth = 5; ctx.lineCap = "round";
+      for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) {
+        const a = 0.5 + i * 0.45;
+        ctx.beginPath(); ctx.moveTo(sx * 24, 10);
+        ctx.lineTo(sx * (36 + i * 7), 10 + Math.sin(t * 6 + i) * 4 + i * 6); ctx.stroke();
+      }
+      const claw = guarding ? 0.5 : Math.sin(t * 5) * 0.25;
+      for (const sx of [-1, 1]) {
+        ctx.save(); ctx.translate(sx * 30, -10); ctx.rotate(sx * claw);
+        ctx.fillStyle = "#c95c35";
+        ctx.beginPath(); ctx.ellipse(0, 0, 15, 10, 0, 0, 6.3); ctx.fill();
+        ctx.fillStyle = "#8e3a20";
+        ctx.beginPath(); ctx.moveTo(sx * 6, -6); ctx.lineTo(sx * 20, -2); ctx.lineTo(sx * 6, 2); ctx.fill();
+        ctx.restore();
+      }
+      for (const sx of [-1, 1]) {
+        ctx.strokeStyle = "#8e3a20"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(sx * 9, -18); ctx.lineTo(sx * 11, -30); ctx.stroke();
+        ctx.fillStyle = "#17181c"; ctx.beginPath(); ctx.arc(sx * 11, -32, 4.5, 0, 6.3); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(sx * 12, -33.5, 1.6, 0, 6.3); ctx.fill();
+      }
+      ctx.restore(); return;
+    }
+    if (which === "squib") {
+      ctx.save(); ctx.translate(0, bob);
+      ctx.fillStyle = "#9c5fa8";
+      ctx.beginPath(); ctx.ellipse(0, -8, 22, 28, 0, 0, 6.3); ctx.fill();
+      ctx.strokeStyle = "#7d4788"; ctx.lineWidth = 5; ctx.lineCap = "round";
+      for (let i = 0; i < 8; i++) {
+        const a = -2.6 + i * 0.37;
+        ctx.beginPath(); ctx.moveTo(Math.cos(a) * 14, 16);
+        ctx.quadraticCurveTo(Math.cos(a) * 26, 34 + Math.sin(t * 5 + i) * 6, Math.cos(a) * 34, 48);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#17181c";
+      ctx.beginPath(); ctx.arc(-8, -12, 5, 0, 6.3); ctx.fill();
+      ctx.beginPath(); ctx.arc(9, -12, 5, 0, 6.3); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(-6.5, -13.5, 1.8, 0, 6.3); ctx.fill();
+      ctx.beginPath(); ctx.arc(10.5, -13.5, 1.8, 0, 6.3); ctx.fill();
+      ctx.restore(); return;
+    }
+    ctx.save(); ctx.translate(0, bob);
+    ctx.fillStyle = "#e8e4d6";
+    ctx.beginPath(); ctx.ellipse(0, 4, 26, 22, 0, 0, 6.3); ctx.fill();
+    ctx.beginPath(); ctx.arc(10, -18, 14, 0, 6.3); ctx.fill();
+    ctx.fillStyle = "#cfc9b6";
+    ctx.beginPath(); ctx.ellipse(-14, 2, 14, 11, guarding ? -0.5 : 0.2, 0, 6.3); ctx.fill();
+    ctx.fillStyle = "#e0922f";
+    ctx.beginPath(); ctx.moveTo(22, -18); ctx.lineTo(36, -14); ctx.lineTo(22, -10); ctx.fill();
+    ctx.strokeStyle = "#c98b2e"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(-4, 24); ctx.lineTo(-4, 34); ctx.moveTo(6, 24); ctx.lineTo(6, 34); ctx.stroke();
+    ctx.fillStyle = "#17181c"; ctx.beginPath(); ctx.arc(15, -21, 3.6, 0, 6.3); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFoe(ctx, foe, t) {
+    const bob = Math.sin(t * 1.8 + 1) * 4;
+    const base = `hsl(${foe.hue} 32% 34%)`, edge = `hsl(${foe.hue} 36% 22%)`, eye = `hsl(${foe.hue} 70% 76%)`;
+    ctx.save(); ctx.translate(0, bob);
+    ctx.fillStyle = base;
+    if (foe.shape === 0) {
+      ctx.beginPath(); ctx.ellipse(0, 0, 44, 34, 0, 0, 6.3); ctx.fill();
+    } else if (foe.shape === 1) {
+      ctx.beginPath(); ctx.moveTo(-46, 30); ctx.lineTo(0, -38); ctx.lineTo(46, 30); ctx.closePath(); ctx.fill();
+    } else {
+      ctx.beginPath();
+      for (let i = 0; i < 9; i++) {
+        const a = (i / 9) * 6.283, rr = 30 + (i % 2 ? 16 : 0);
+        i ? ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
+      }
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.strokeStyle = edge; ctx.lineWidth = 5; ctx.lineCap = "round";
+    for (let i = 0; i < foe.spikes; i++) {
+      const a = -2.4 + (i / Math.max(1, foe.spikes - 1)) * 4.8;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * 30, Math.sin(a) * 24);
+      ctx.lineTo(Math.cos(a) * (50 + Math.sin(t * 4 + i) * 5), Math.sin(a) * (40 + Math.sin(t * 4 + i) * 4));
+      ctx.stroke();
+    }
+    ctx.fillStyle = eye;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.arc(-16 + i * 16, -8 + (i % 2) * 7, 4.2, 0, 6.3); ctx.fill();
+    }
+    ctx.fillStyle = "#0d0f13";
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.arc(-16 + i * 16, -8 + (i % 2) * 7, 1.9, 0, 6.3); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+
+  // =====================================================================
+  //  THE CLICKER. A sand lighthouse, one handful at a time.
+  // =====================================================================
+
+  const SHOP = [
+    { id: "bucket",  name: "A bucket",            cost: 25,   per: 0,   click: 2,
+      say: "It has a hole in it. Two handfuls at a time anyway." },
+    { id: "spade",   name: "A child's spade",     cost: 140,  per: 0,   click: 5,
+      say: "Red plastic. Left on this beach in about 1986." },
+    { id: "gull",    name: "A gull who owes you", cost: 90,   per: 2,
+      say: "It brings one beakful at a time and looks at you the whole while." },
+    { id: "chorus",  name: "Three more gulls",    cost: 600,  per: 9,
+      say: "Word gets round." },
+    { id: "moat",    name: "Dig the moat first",  cost: 1800, per: 34,
+      say: "The sea does half the work if you let it in on purpose." },
+    { id: "tide",    name: "Time it with the tide", cost: 7000, per: 120,
+      say: "Every seventh wave brings more than it takes." },
+  ];
+  const SAND_TARGET = 16000;
+
+  const clicker = {
+    describe: "A game. Click or tap the sand to pile it up, and spend it on things that pile it up faster, until the tower is finished. There is a button to skip it.",
+
+    setup(s, ui) {
+      s.g = {
+        sand: 0, total: 0, per: 0, click: 1, owned: {},
+        pop: [], grains: [], was: false, done: 0, shown: "",
+        lamp: s.items.has("lantern"), crab: s.creatures.includes("clackers"),
+      };
+      if (s.g.lamp) s.g.click += 1;
+      if (s.g.crab) s.g.per += 3;
+
+      s.say("Click the sand. " + (s.g.crab ? "Clackers is already digging. " : "") +
+            (s.g.lamp ? "The lantern helps you see what you are doing. " : "") +
+            "You need " + SAND_TARGET.toLocaleString() + " handfuls for a tower.");
+
+      s.g.shopButtons = SHOP.map((u) => {
+        const b = ui.button("", "arcade-buy", () => buy(s, u));
+        b.dataset.id = u.id;
+        return b;
+      });
+      ui.button("Give up and go back", "arcade-give", () => s.lose());
+      ui.button("Skip this and keep reading", "arcade-skip", () => { s.say("It gets built."); ui.finish(true, "skipped"); });
+    },
+
+    step(s, dt) {
+      const g = s.g;
+      if (g.done) { g.done -= dt; if (g.done <= 0) (g.won ? s.win() : s.lose()); return; }
+
+      const down = s.pointer.down || s.keys[" "];
+      if (down && !g.was) {
+        g.sand += g.click; g.total += g.click;
+        g.pop.push({ x: s.pointer.x, y: s.pointer.y, n: g.click, life: 0.9 });
+        for (let i = 0; i < 4; i++)
+          g.grains.push({ x: s.pointer.x, y: s.pointer.y, vx: rnd(-70, 70), vy: rnd(-150, -40), life: rnd(0.4, 0.9) });
+        s.shake = 2;
+      }
+      g.was = down;
+
+      g.sand += g.per * dt; g.total += g.per * dt;
+
+      for (let i = g.pop.length - 1; i >= 0; i--) { g.pop[i].life -= dt; g.pop[i].y -= dt * 34; if (g.pop[i].life <= 0) g.pop.splice(i, 1); }
+      for (let i = g.grains.length - 1; i >= 0; i--) {
+        const b = g.grains[i]; b.x += b.vx * dt; b.y += b.vy * dt; b.vy += 420 * dt; b.life -= dt;
+        if (b.life <= 0) g.grains.splice(i, 1);
+      }
+
+      for (const b of g.shopButtons) {
+        const u = SHOP.find((x) => x.id === b.dataset.id);
+        const have = g.owned[u.id] || 0;
+        const cost = Math.round(u.cost * Math.pow(1.7, have));
+        const label = `${u.name}${have ? " ×" + have : ""} — ${cost.toLocaleString()}`;
+        if (b.textContent !== label) b.textContent = label;
+        b.disabled = g.sand < cost;
+        b.title = u.say;
+      }
+
+      if (g.total >= SAND_TARGET && !g.done) {
+        g.won = true; g.done = 1.6;
+        Memory.sandRecord(Math.round(g.total));
+        s.say("It is finished, and it is better than the real one.");
+      }
+
+      s.hud(`<span class="arcade-sand"><b>sand</b> ${Math.floor(g.sand).toLocaleString()}</span>` +
+            `<span class="arcade-sand"><b>a second</b> ${g.per}</span>` +
+            `<span class="arcade-sand"><b>tower</b> ${Math.min(100, Math.floor(g.total / SAND_TARGET * 100))}%</span>`);
+    },
+
+    draw(s) {
+      const { ctx } = s, g = s.g;
+      const sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, "#2d3a52"); sky.addColorStop(0.62, "#7f7f93"); sky.addColorStop(1, "#c7a78f");
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = "#4b5a72"; ctx.fillRect(0, 214, W, 34);
+      ctx.strokeStyle = "rgba(200,214,230,0.4)"; ctx.lineWidth = 2;
+      for (let r = 0; r < 2; r++) {
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 14) {
+          const y = 220 + r * 14 + Math.sin(x * 0.05 + s.t * (1 + r)) * 3;
+          x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.stroke();
+      }
+      const sand = ctx.createLinearGradient(0, 248, 0, H);
+      sand.addColorStop(0, "#b3a68c"); sand.addColorStop(1, "#8d8168");
+      ctx.fillStyle = sand; ctx.fillRect(0, 248, W, H - 248);
+
+      // the tower, going up as the sand comes in
+      const p = clamp(g.total / SAND_TARGET, 0, 1);
+      const h = 10 + p * 170;
+      const cx = 240, base = 300;
+      ctx.fillStyle = "#9a8c6e";
+      ctx.beginPath();
+      ctx.moveTo(cx - 44, base); ctx.lineTo(cx - 44 + 16 * p, base - h);
+      ctx.lineTo(cx + 44 - 16 * p, base - h); ctx.lineTo(cx + 44, base); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.14)";
+      ctx.beginPath();
+      ctx.moveTo(cx - 44, base); ctx.lineTo(cx - 44 + 16 * p, base - h);
+      ctx.lineTo(cx - 14, base - h); ctx.lineTo(cx - 10, base); ctx.closePath(); ctx.fill();
+      for (let b2 = 0; b2 < Math.floor(p * 7); b2++) {
+        const y = base - (b2 + 1) * (h / 7);
+        ctx.strokeStyle = "rgba(90,78,58,0.5)"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx - 42 + 15 * p * ((b2 + 1) / 7), y); ctx.lineTo(cx + 42 - 15 * p * ((b2 + 1) / 7), y); ctx.stroke();
+      }
+      if (p > 0.72) {
+        ctx.fillStyle = "#6f6450";
+        ctx.fillRect(cx - 24, base - h - 12, 48, 12);
+        if (p > 0.9) {
+          const glow = ctx.createRadialGradient(cx, base - h - 22, 2, cx, base - h - 22, 46);
+          glow.addColorStop(0, "rgba(180,235,170,0.95)"); glow.addColorStop(1, "rgba(180,235,170,0)");
+          ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, base - h - 22, 46, 0, 6.3); ctx.fill();
+          ctx.fillStyle = "#cdf0bd"; ctx.beginPath(); ctx.arc(cx, base - h - 22, 6, 0, 6.3); ctx.fill();
+        }
+      }
+      if (g.owned.moat) {
+        ctx.strokeStyle = "#5d6f86"; ctx.lineWidth = 7;
+        ctx.beginPath(); ctx.ellipse(cx, base + 4, 86, 17, 0, 0, 6.3); ctx.stroke();
+      }
+
+      // the gulls you bought, bringing it in
+      const birds = (g.owned.gull || 0) + (g.owned.chorus || 0) * 3;
+      for (let i = 0; i < Math.min(12, birds); i++) {
+        const a = s.t * 0.7 + i * 1.3;
+        const x = cx + Math.cos(a) * (120 + i * 9), y = 150 + Math.sin(a * 1.3) * 34 + i * 3;
+        ctx.strokeStyle = "#f2f0e6"; ctx.lineWidth = 2; ctx.lineCap = "round";
+        const f = Math.sin(s.t * 9 + i) * 0.5 + 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x - 9, y); ctx.quadraticCurveTo(x - 4, y - 7 * f, x, y);
+        ctx.quadraticCurveTo(x + 4, y - 7 * f, x + 9, y); ctx.stroke();
+      }
+      if (g.crab) {
+        const cxx = 86 + Math.sin(s.t * 1.4) * 22;
+        ctx.save(); ctx.translate(cxx, 286); ctx.scale(0.42, 0.42);
+        drawCreature(ctx, "clackers", s.t, false);
+        ctx.restore();
+      }
+
+      ctx.fillStyle = "#cfc3a4";
+      for (const b of g.grains) { ctx.globalAlpha = clamp(b.life * 1.6, 0, 1); ctx.fillRect(b.x, b.y, 2.5, 2.5); }
+      ctx.globalAlpha = 1;
+      ctx.font = "bold 13px ui-monospace, Menlo, monospace";
+      for (const b of g.pop) {
+        ctx.globalAlpha = clamp(b.life, 0, 1);
+        ctx.fillStyle = "#fff6d8";
+        ctx.fillText("+" + b.n, b.x - 6, b.y);
+      }
+      ctx.globalAlpha = 1;
+
+      if (!g.total) {
+        ctx.fillStyle = "rgba(10,12,16,0.6)";
+        ctx.fillRect(W / 2 - 110, 70, 220, 30);
+        ctx.fillStyle = "#f3f0e6"; ctx.font = "14px Georgia, serif"; ctx.textAlign = "center";
+        ctx.fillText("click the sand", W / 2, 90);
+        ctx.textAlign = "left";
+      }
+
+      if (g.done) {
+        ctx.save();
+        ctx.globalAlpha = clamp(1 - g.done / 1.6, 0, 1);
+        ctx.fillStyle = g.won ? "rgba(255,246,222,0.9)" : "rgba(14,16,22,0.86)";
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+    },
+  };
+
+  function buy(s, u) {
+    const g = s.g;
+    const have = g.owned[u.id] || 0;
+    const cost = Math.round(u.cost * Math.pow(1.7, have));
+    if (g.sand < cost) return;
+    g.sand -= cost;
+    g.owned[u.id] = have + 1;
+    if (u.per) g.per += u.per;
+    if (u.click) g.click += u.click;
+    s.say(u.say);
+    s.shake = 5;
+  }
+
+  const GAMES = { undertow, bell, duel, clicker };
+
+  // balance.html uses this to step a turn-based game on by hand between
+  // button presses. Nothing in the real page calls it.
+  const live = new Map();
+  function _tick(mount, dt) {
+    const e = live.get(mount);
+    if (!e || e.over()) return;
+    e.state.t += dt;
+    e.game.step(e.state, dt);
+  }
+
+  return { play, has: (n) => !!GAMES[n], _tick, _live: live };
 })();

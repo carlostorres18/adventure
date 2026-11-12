@@ -53,6 +53,7 @@
 by: Nistopher Chrolan
 
 ## path-3
+theme: storm
 ![The ribs of a wrecked boat standing out of wet grey sand at low tide, with the sea creeping back in and a cliff stair in the distance](images/wreck-lowtide.svg)
 effect: fog
 sound: wind
@@ -69,17 +70,53 @@ Out in the fog, a long way off, a ship's horn goes. Then, a bit closer, it goes 
 
 [Wade out to the ribs](#the-ribs)
 [Walk down to the steps in the cliff](#sea-stair)
-[Build a sandcastle](#sandcastle)
+[Build a sandcastle](#the-build)
 [Go back to the crossroads](#crossroads)
 
+## the-build
+theme: storm
+game: clicker
+sound: wind
+
+There is an entire beach of it and you are one person with two hands.
+
+You start anyway, because the tower up on the cliff is dark and this is the
+only lighthouse you know how to build tonight.
+
+(if run 2) Your best so far is {sand} handfuls. Nobody is counting but the sand.
+
+[The tide comes in and takes it](#sandcastle) on win
+[You stop, a long way short](#gave-up) on lose
+
+## gave-up
+theme: storm
+
+Somewhere around the fourth course your hands stop working the way hands
+should, and you sit back on your heels and look at a knee-high lump of wet
+sand with a hole in the top.
+
+The tide takes it in one go, without ceremony, the way it takes everything.
+
+You walk back up the beach. Out in the fog the horn is still going. It will go
+all night, and then it will stop, and in the morning somebody will tell you
+what the stopping meant.
+
+THE END
+
 ## sandcastle
+theme: dawn
 ![Sunrise over calm water off Gull Island, the fog burning off, with the lighthouse standing on the cliff and a ferry coming in](images/dawn.svg)
 
-You are a grown adult with a job, and you build a sandcastle, and you are not going to apologise for it.
+You finish it at some hour that does not have a name, and it is a lighthouse,
+and it is better than the real one.
 
-It is a lighthouse. You build it to scale, because you have been looking at the real one all evening and your hands have opinions. Four courses of wet sand, tapering. A gallery of flat pebbles. A moat, which the real one lacks. A flag made out of a gull feather, which the real one also lacks and should have.
+Four courses of wet sand, tapering, on a base you dug down to the cold layer
+for. A gallery of flat pebbles. A moat, which the real one lacks. A flag made
+out of a gull feather, which the real one also lacks and should have.
 
-At the top you scoop out a little room and set a chip of green bottle glass in it, so that when you lie down with your cheek on the sand and squint, there is a light up there.
+At the top you scoop out a little room and set a chip of green bottle glass in
+it, so that when you lie down with your cheek on the sand and squint, there is
+a light up there.
 
 The tide comes in and takes it tower first, the way the sea takes everything, politely and completely.
 
@@ -90,6 +127,7 @@ Nobody lit the light last night. Something else saw to it, and you were on the b
 THE END
 
 ## sea-stair
+theme: storm
 ![A steep flight of steps cut into a wet cliff face, numbers carved beside them, with spray bursting below and one number scratched out](images/sea-stair.svg)
 sound: wind
 
@@ -106,6 +144,7 @@ The eleventh step has had its number scratched out so hard that there is a pale 
 [Go back along the sand](#path-3)
 
 ## count-steps
+theme: storm
 effect: wrong
 
 You count on the way up, because of the numbers, because once somebody shows you a number you are going to check it.
@@ -124,6 +163,7 @@ You stop counting. You do not stop knowing.
 [Go back along the sand](#path-3)
 
 ## the-ribs
+theme: storm
 The water is cold enough to take your voice away. You get out to her and climb in between the ribs and stand where a man used to stand.
 
 Under the aftmost seat, wedged in and furred over with rust, there is a tin box. The lid comes off with a noise like a word.
@@ -143,6 +183,7 @@ The tide is coming back. You can hear it deciding.
 [Wade back to shore](#path-3)
 
 ## clapper
+theme: storm
 It takes both hands and most of your language, and then it comes up out of the sand all at once, the way a tooth does.
 
 It is a bell clapper. Bell metal, bronze shackle, a bruise of rust where it sat.
@@ -158,6 +199,7 @@ get: iron clapper
 [Put it in your coat and keep looking](#the-ribs)
 
 ## log-page
+theme: storm
 The page has been folded for a long time and it opens along its creases like a thing with hinges. Pencil, pressed hard, in a hand you have already seen tonight, scratched into a slate on a clifftop.
 
 **2 November. Fog since four. Light not lit. My fault and I will say so.**
@@ -173,6 +215,7 @@ get: the log page
 [Fold it up and put it in your coat](#the-ribs)
 
 ## bonfire
+theme: ember
 sound: lamp
 
 You are standing inside forty years of salt-dried oak with an oil lantern in your hand, and the thought arrives fully grown.
@@ -190,6 +233,7 @@ In the morning there is a black ring on the sand and nothing in it. Up in the vi
 THE END
 
 ## hold
+theme: cave
 effect: dark
 
 What is left of the hold is a slot of black water in the bottom of the wreck, between the ribs, where the sand has not got in yet.
@@ -205,6 +249,7 @@ The water in there is not moving with the rest of the sea. It is moving slightly
 [Get back up into the air](#the-ribs)
 
 ## the-dive
+theme: deep
 game: undertow
 effect: underwater
 sound: splash
@@ -219,6 +264,7 @@ The sea has an opinion about you being here.
 [The sea keeps you](#undertow) on lose
 
 ## the-fold
+theme: deep
 ![Looking up through deep green water at a fishing boat going down above you, its lamp still burning, with bubbles rising and a drowning man reaching out with a key in his fist](images/the-fold.svg)
 effect: underwater
 sound: splash
@@ -234,6 +280,7 @@ Eight feet away, a man is in the water with his fist closed around something.
 [Stop swimming](#undertow)
 
 ## abernathy
+theme: deep
 effect: underwater, dread
 
 He is about thirty. That is the thing you were not ready for. Dark, big through the shoulders, with a nose you have seen painted on a wall this evening in ochre, and he is not frightened, he is *busy*, he is still trying to get somewhere.
@@ -249,6 +296,7 @@ He pushes his fist at you.
 [Let go and swim up](#surface) haunted lies
 
 ## his-page
+theme: deep
 You unfold his own page in front of his face, underwater, and hold it there.
 
 He reads it. You watch a man read his own last note in the handwriting he is going to have.
@@ -261,6 +309,7 @@ He laughs. Underwater. It is the worst sound you have ever heard and he means it
 [Tell him the ship made it](#mercy)
 
 ## his-watch
+theme: deep
 sound: tick
 
 You hold up the silver watch with its hands stopped at 9:47.
@@ -277,6 +326,7 @@ He shakes his head, once. Not at you.
 [Tell him the ship made it](#mercy)
 
 ## same-key
+theme: deep
 He puts it in your palm and closes your fingers over it himself, which takes him two goes.
 
 An iron key, as long as your hand, bright as a new nail, with a bend in the shank where somebody dropped it once on a stone floor.
@@ -291,6 +341,7 @@ get: the same key twice
 [Go up](#surface)
 
 ## the-grey
+theme: deep
 ![An enormous pale shape standing in the fog beyond the rocks, which slowly resolves into the shadow of the lighthouse thrown onto the fog](images/the-grey.svg)
 effect: static, wrong
 sound: heartbeat
@@ -311,6 +362,7 @@ There is nothing under this island. There never was. There are rocks, and weathe
 [Go up](#surface)
 
 ## mercy
+theme: deep
 effect: slow
 
 You tell him the ship made it.
@@ -330,6 +382,7 @@ Up on the cliff the slate still has eleven names and one empty line. You check, 
 THE END
 
 ## surface
+theme: storm
 lose: the log page
 
 You come up through the hold and the hold is not there any more, because the tide is in and the wreck is under four feet of moving water and you have to swim for it.
@@ -347,6 +400,7 @@ Up on the hill, the tower is still dark. Out in the fog, the horn goes again, an
 [Go back to the crossroads](#crossroads)
 
 ## crab
+theme: cave
 A bent spoon, half a boot, a cork, and a crab the size of a dinner plate who was having a perfectly good night until now.
 
 He is holding a brass button. A keeper's coat button, with the anchor on it, polished to a coin by his own hands over what must be years.
@@ -355,10 +409,97 @@ He does not let go of it. He lets go of everything else. He lets go of the spoon
 
 get: a brass button
 
+He is called Clackers. You did not name him. The name arrives the way a name
+arrives when you have been looking at something long enough, fully formed and
+not up for discussion.
+
+[Offer him your coat pocket](#pocket)
 [Negotiate with him](#crab-king)
 [Leave the man alone and get out](#hold)
 
+## pocket
+theme: cave
+catch: clackers
+sound: tick
+
+You hold your coat pocket open underwater, which is a thing you are doing now.
+
+He considers it for a long time. Then he walks in, turns round twice, wedges
+himself against the seam, and puts one claw out through the gap to keep an eye
+on the situation.
+
+He brings the button. Obviously he brings the button.
+
+(if run 2) He has done this before. He goes in faster this time.
+
+[Get back up into the air](#the-ribs)
+[There is something bigger further in](#old-molly)
+
+## old-molly
+theme: cave
+effect: dark, dread
+sound: heartbeat
+
+Further into the hold, where the ribs close in, somebody is already living
+here, and has been for a very long time, and is roughly the size of a bicycle
+wheel.
+
+She is pale from never seeing anything. One claw is the size of your head and
+the other one is missing entirely. There is a brass porthole frame wedged in
+the timber behind her, polished where she rests against it, which tells you
+exactly how long she has had this spot.
+
+Clackers comes out of your pocket without being asked.
+
+[Let him have a go](#molly-duel)
+[Apologise and back out](#hold)
+
+## molly-duel
+theme: cave
+game: duel
+against: Old Molly, 4
+effect: dark
+
+Nobody is going to be reasonable about this.
+
+[She lets you past](#molly-won) on win
+[She does not let you past](#molly-lost) on lose
+
+## molly-won
+theme: cave
+sound: splash
+
+Old Molly puts her one claw down, which is a sentence, and sidles off the
+timber she has been holding for most of a human lifetime.
+
+Behind her, pushed into the gap she was sitting on, is a brass porthole frame
+with the glass still in it, and wedged behind *that*, dry as a bone in an
+oilskin twist, is a second tin box.
+
+It is empty. Somebody got here first. On the inside of the lid, scratched with
+a nail in handwriting you have been seeing all night, it says: **GOOD. NOW GO
+AND DO THE JOB.**
+
+Clackers climbs back into your pocket and does not say anything about it.
+
+[Get back up into the air](#the-ribs)
+
+## molly-lost
+theme: cave
+
+Clackers comes back along the timber sideways and fast and gets into your
+pocket without being asked twice.
+
+Old Molly does not follow. She goes back to her spot, settles onto it, and
+watches you leave with the patience of something that has outlasted eleven of
+you already.
+
+(if run 2) You will try again. You have tried again before.
+
+[Get back up into the air](#the-ribs)
+
 ## crab-king
+theme: dawn
 You negotiate with a crab.
 
 It goes on for some time. You offer the spoon. You offer the boot. You offer, at a low point, the cork. He considers each offer with great seriousness, in the sense that he does not move at all, and then takes the thing and keeps the button.
@@ -374,6 +515,7 @@ There is no version of the last eight hours that you can say out loud and surviv
 THE END
 
 ## undertow
+theme: deep
 effect: underwater, slow
 sound: heartbeat
 
