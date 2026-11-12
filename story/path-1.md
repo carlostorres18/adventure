@@ -59,17 +59,17 @@ An old man opens the door just a crack. "Abernathy," he says. "I kept that light
 "Unless if you want to hear more about the urban legend going around..."
 
 [Go back to the crossroads](#crossroads)
-[Hear Abernathy out](#urban_legend)
+[Hear Abernathy out](#urban-legend)
 
-## urban_legend
+## urban-legend
 The old man opens the door for you, and let's you in. Inside you would see the usual stuff a fisherman would own. A couple of fishing rods, fishing memorabilia, a couple of photos that look like they were from the 1920's.
 
 "Sit down please"
 
-[Sit down in the old chair](#sit_down_old_chair)
-[Remain standing](#remain_standing)
+[Sit down in the old chair](#sit-down-old-chair)
+[Remain standing](#remain-standing)
 
-## sit_down_old_chair
+## sit-down-old-chair
 As soon as you sit down, the chair break. It was a really old chair. So you decide to remain standing.
 
 get: piece of wood
@@ -79,7 +79,7 @@ You then see the fisher man smile as he sits down on his chair. That made him la
 
 [Continue](#continue)
 
-## remain_standing
+## remain-standing
 You decide to not sit down. A gust of wind makes the chair crumble and then break. Both of you look at the chair.
 
 get: piece of wood
