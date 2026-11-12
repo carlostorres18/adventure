@@ -142,6 +142,8 @@ THE END                        this scene is an ending
 | **Back** | undo your last choice |
 | **Story map** | every scene as a box, every choice as an arrow, colored by file. Click a scene to jump there. |
 | **Test a draft** | paste a file you're still writing and play it, without committing anything |
+| **Memory** | everything this browser remembers about your goes at the story, and a button to wipe it |
+| **Sound** | short sounds, made by the browser. Off until you turn it on |
 | **✓ No problems** / **⚠ problems** | lists every mistake the engine found, with the file, the line, and how to fix it |
 | **Endings found** | how many endings this browser has reached |
 
@@ -160,9 +162,25 @@ the address: `.../adventure/?scene=cave&items=lantern`.
 
 ---
 
+## 6. The second half of the engine (optional)
+
+Everything above is all you need. If you want more, a scene can also
+
+- **remember earlier goes** at the story and say so: `(if run 3) You have done this twice already.`
+- **be played instead of read**: `game: undertow` turns a scene into a game,
+  which reads the items you are carrying and always has a button to skip it
+- **change how the page looks**: `effect: fog`, `sound: bell`
+- **misbehave**: `haunted gone` on a choice you can see and cannot pick
+
+It is all written up, with every rule, in **[docs/ENGINE.md](docs/ENGINE.md)**.
+None of it can trap a player: the checker refuses to build a story where it could.
+
+---
+
 ## More
 
 - [CHALLENGES.md](CHALLENGES.md): the Day 2 challenges.
+- [docs/ENGINE.md](docs/ENGINE.md): memories, games, effects and hauntings.
 - [docs/MAP.md](docs/MAP.md): a tour of every file and how they fit together.
 - [docs/IDEAS.md](docs/IDEAS.md): **optional** bigger features, if your team wants to go further.
 - Found something that doesn't work right? **Issues** → **New issue** → **Bug report**.

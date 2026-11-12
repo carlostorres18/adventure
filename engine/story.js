@@ -13,7 +13,36 @@ const Story = (() => {
   const SETTINGS = ["by", "theme"];
   const THEMES = ["paper", "night", "forest", "ocean"];
 
+  // Scenes that are played instead of read. See docs/ENGINE.md.
+  const GAMES = ["undertow", "bell"];
+  // What the page does while a scene is on screen.
+  const EFFECTS = ["underwater", "fog", "flicker", "shake", "slow", "dark",
+                   "dread", "static", "wrong"];
+  // Things that can be wrong with a choice. See docs/ENGINE.md.
+  //   flees   the button moves away from the pointer (the number key still works)
+  //   glitch  the words come apart
+  //   lies    the words are not the words that were there a second ago
+  //   gone    you can see it. You cannot pick it.
+  //   waits   it isn't there yet
+  const HAUNTINGS = ["flees", "glitch", "lies", "gone", "waits"];
+  // Short sounds the engine makes itself. There are no sound files to upload.
+  const SOUNDS = ["bell", "gull", "splash", "tick", "lamp", "heartbeat", "wind"];
+  // {things in curly brackets} that the engine fills in when it draws a scene.
+  const TOKENS = ["runs", "endings-found", "endings-total", "endings-list",
+                  "drownings", "clock", "first-played", "last-ending"];
+
   const clean = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
+
+  // A condition, in words, for messages and for the story map.
+  function describe(cond) {
+    if (!cond) return "";
+    if (cond.kind === "item") return cond.value;
+    if (cond.kind === "run") return "go number " + cond.value;
+    if (cond.kind === "remembered") return "having reached " + cond.value + " before";
+    if (cond.kind === "ending") return "having reached the ending " + cond.value + " before";
+    if (cond.kind === "kept") return cond.value;
+    return "";
+  }
 
   // Comments (<!-- like this -->) are notes for writers. Blank them out but
   // keep their line breaks, so line numbers in messages still match the file.
@@ -28,6 +57,32 @@ const Story = (() => {
       for (let j = 1; j <= b.length; j++)
         d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
     return d[a.length][b.length];
+  }
+
+  // What can come after a choice, and after "(if ...)" at the start of a
+  // paragraph. Returns a condition, or a string explaining what's wrong.
+  //   if lantern            an item the player is carrying
+  //   if run 3              this is their 3rd go at the story, or later
+  //   if remembered cave    they reached that scene on an earlier go
+  //   if ending sandcastle  they reached that ending on an earlier go
+  function condition(rest) {
+    const m = String(rest).trim().match(/^if\s+(.+)$/i);
+    if (!m) return 'After a choice, write "if" and then an item, like: if brass key';
+    const what = m[1].trim();
+    let g = what.match(/^run\s+(\d+)$/i);
+    if (g) {
+      const n = Number(g[1]);
+      if (n < 2) return 'if run 1 is always true, so the choice would never be hidden. Use 2 or more.';
+      return { kind: "run", value: n };
+    }
+    g = what.match(/^remembered\s+#?(.+)$/i);
+    if (g) return { kind: "remembered", value: clean(g[1]) };
+    g = what.match(/^ending\s+#?(.+)$/i);
+    if (g) return { kind: "ending", value: clean(g[1]) };
+    g = what.match(/^kept\s+(.+)$/i);
+    if (g) return { kind: "kept", value: clean(g[1]) };
+    if (/^(run|remembered|ending|kept)$/i.test(what)) return `"if ${what}" is missing what comes after it.`;
+    return { kind: "item", value: clean(what) };
   }
 
   function closest(name, names) {
@@ -81,10 +136,96 @@ const Story = (() => {
       } else if (s.choices.length && s.ending) {
         problem("warning", s.file, s.line, `${name} says THE END but also has choices.`,
           "An ending shouldn't have choices. Remove THE END, or remove the choices.");
-      } else if (s.choices.length && s.choices.every((c) => c.need)) {
-        const need = [...new Set(s.choices.map((c) => c.need))].join(" or ");
+      } else if (s.choices.length && !s.game && s.choices.every((c) => c.cond)) {
+        const need = [...new Set(s.choices.map((c) => describe(c.cond)))].join(" or ");
         problem("warning", s.file, s.line, `A player who reaches ${name} without ${need} has no choice they can pick.`,
           "Add at least one choice without an if, such as a way back.");
+      }
+    }
+
+    // Games: a game scene is played, not read, so it needs somewhere to go
+    // when the player wins and somewhere to go when they lose.
+    for (const name of names) {
+      const s = scenes[name];
+      const wins = s.choices.filter((c) => c.outcome === "win");
+      const loses = s.choices.filter((c) => c.outcome === "lose");
+      if (s.game) {
+        if (!wins.length) problem("error", s.file, s.gameLine || s.line,
+          `${name} has a game on it, but no choice says where to go when the player wins.`,
+          `Add a line like [You make it to the surface](#safe) on win`);
+        if (!loses.length) problem("error", s.file, s.gameLine || s.line,
+          `${name} has a game on it, but no choice says where to go when the player loses.`,
+          `Add a line like [The sea keeps you](#drowned) on lose`);
+        if (wins.length > 1) problem("error", s.file, wins[1].line, `${name} has more than one "on win" choice.`, "A game can only have one way to win.");
+        if (loses.length > 1) problem("error", s.file, loses[1].line, `${name} has more than one "on lose" choice.`, "A game can only have one way to lose.");
+        for (const c of s.choices) if (!c.outcome) problem("warning", s.file, c.line,
+          `The choice "${c.text}" is in a scene with a game on it, so the player never gets to click it.`,
+          "In a game scene, every choice ends with on win or on lose.");
+      } else {
+        for (const c of s.choices) if (c.outcome) problem("error", s.file, c.line,
+          `The choice "${c.text}" says "on ${c.outcome}", but ${name} has no game on it.`,
+          `Add a line like game: ${GAMES[0]} to this scene, or take the "on ${c.outcome}" off the choice.`);
+      }
+    }
+
+    // A haunted scene still has to be a scene you can leave.
+    for (const name of names) {
+      const s = scenes[name];
+      if (!s.choices.length || s.ending) continue;
+      const pickable = s.choices.filter((c) => c.haunted !== "gone");
+      if (!pickable.length) {
+        problem("error", s.file, s.line, `Every choice in ${name} is "haunted gone", so the player is stuck there for good.`,
+          "At least one choice has to be pickable. Haunt the one they want, not the way out.");
+      } else if (!pickable.some((c) => !c.cond && c.haunted !== "waits")) {
+        const held = pickable.filter((c) => c.haunted === "waits").length;
+        if (!held) problem("warning", s.file, s.line,
+          `Everything a player can pick in ${name} is behind an if.`,
+          "Add one plain choice, so nobody arrives empty-handed and gets stuck.");
+      }
+    }
+
+    // Conditions about earlier goes at the story must point at real scenes.
+    for (const name of names) {
+      const s = scenes[name];
+      const conds = s.choices.filter((c) => c.cond).map((c) => ({ cond: c.cond, line: c.line, what: `The choice "${c.text}"` }))
+        .concat(s.blocks.filter((b) => b.cond).map((b) => ({ cond: b.cond, line: b.line, what: "A paragraph here" })));
+      for (const { cond, line, what } of conds) {
+        if (cond.kind !== "remembered" && cond.kind !== "ending") continue;
+        const target = scenes[cond.value];
+        if (!target) {
+          const near = closest(cond.value, names);
+          problem("error", s.file, line, `${what} mentions a scene called ${cond.value}, but there's no such scene.`,
+            near ? `Did you mean ${near}?` : "Check the spelling. It has to be a scene name, not an item.");
+        } else if (cond.kind === "ending" && !target.ending) {
+          problem("error", s.file, line, `${what} says "if ending ${cond.value}", but ${cond.value} isn't an ending.`,
+            `Put THE END on its own line in ${cond.value}, or use "if remembered ${cond.value}" instead.`);
+        }
+      }
+    }
+
+    // Anything checked with "if kept" has to be kept by some scene.
+    const kept = new Set();
+    for (const name of names) for (const k of scenes[name].keeps) kept.add(k);
+    for (const name of names) {
+      const s = scenes[name];
+      const all = s.choices.filter((c) => c.cond).map((c) => ({ cond: c.cond, line: c.line, what: `The choice "${c.text}"` }))
+        .concat(s.blocks.filter((b) => b.cond).map((b) => ({ cond: b.cond, line: b.line, what: "A paragraph here" })));
+      for (const { cond, line, what } of all) {
+        if (cond.kind !== "kept" || kept.has(cond.value)) continue;
+        const near = closest(cond.value, [...kept]);
+        problem("warning", s.file, line, `${what} waits for "${cond.value}" to be remembered, but no scene ever does keep: ${cond.value}.`,
+          near ? `Did you mean "${near}"?` : `Add the line keep: ${cond.value} to the scene where it happens.`);
+      }
+    }
+
+    // {curly brackets} the engine fills in.
+    for (const name of names) {
+      for (const { tok, line } of scenes[name].tokens) {
+        const bare = tok.slice(1, -1);
+        if (TOKENS.includes(bare)) continue;
+        const near = closest(bare, TOKENS);
+        problem("warning", scenes[name].file, line, `The engine doesn't know what to put in place of ${tok}.`,
+          near ? `Did you mean {${near}}?` : `The ones it knows are: ${TOKENS.map((x) => "{" + x + "}").join(", ")}.`);
       }
     }
 
@@ -92,6 +233,19 @@ const Story = (() => {
     const given = new Set();
     for (const name of names) for (const it of scenes[name].gets) given.add(it);
     for (const name of names) {
+      for (const it of scenes[name].loses) {
+        if (given.has(it)) continue;
+        const near = closest(it, [...given]);
+        problem("warning", scenes[name].file, scenes[name].line,
+          `${name} takes away ${it}, but no scene ever gives ${it}.`,
+          near ? `Did you mean ${near}? Items must be spelled the same in get: and lose:.` : `Add get: ${it} to the scene where the player finds it.`);
+      }
+      for (const b of scenes[name].blocks) {
+        if (!b.cond || b.cond.kind !== "item" || given.has(b.cond.value)) continue;
+        problem("warning", scenes[name].file, b.line,
+          `A paragraph here only shows to a player carrying ${b.cond.value}, but no scene gives ${b.cond.value}, so nobody will ever read it.`,
+          `Add get: ${b.cond.value} to the scene where the player finds it.`);
+      }
       for (const c of scenes[name].choices) {
         if (c.need && !given.has(c.need)) {
           const near = closest(c.need, [...given]);
@@ -147,8 +301,14 @@ const Story = (() => {
     let scene = null, para = [], loose = 0;
 
     const flush = () => {
-      if (scene && para.length) scene.blocks.push({ type: "text", text: para.join(" "), line: scene._paraLine });
+      if (scene && para.length) {
+        const block = { type: "text", text: para.join(" "), line: scene._paraLine };
+        if (scene._paraCond) block.cond = scene._paraCond;
+        scene.blocks.push(block);
+        for (const tok of block.text.match(/\{[a-z-]*\}/g) || []) scene.tokens.push({ tok, line: block.line });
+      }
       para = [];
+      if (scene) scene._paraCond = null;
     };
 
     lines.forEach((text, i) => {
@@ -177,7 +337,8 @@ const Story = (() => {
             "Rename one of them. Every scene needs its own name, across all the files.");
           name = name + "~" + line;
         }
-        scene = { name, file: f.name, line, blocks: [], choices: [], gets: [], ending: false };
+        scene = { name, file: f.name, line, blocks: [], choices: [], gets: [], loses: [], keeps: [],
+                  ending: false, game: "", effects: [], sounds: [], tokens: [] };
         story.scenes[name] = scene;
         story.order.push(name);
         file.scenes.push(name);
@@ -221,6 +382,67 @@ const Story = (() => {
         return;
       }
 
+      // keep: thing  (remembered for good, across every go)
+      m = t.match(/^keep\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const things = m[1].split(",").map(clean).filter(Boolean);
+        if (!things.length) problem("error", f.name, line, "keep: needs something to remember.", "For example: keep: clocks running");
+        for (const k of things) { scene.keeps.push(k); scene.blocks.push({ type: "keep", thing: k, line }); }
+        return;
+      }
+
+      // lose: item
+      m = t.match(/^lose\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const items = m[1].split(",").map(clean).filter(Boolean);
+        if (!items.length) problem("error", f.name, line, "lose: needs the name of an item.", "For example: lose: brass key");
+        for (const it of items) { scene.loses.push(it); scene.blocks.push({ type: "lose", item: it, line }); }
+        return;
+      }
+
+      // game: name
+      m = t.match(/^game\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        const name = clean(m[1]);
+        if (!GAMES.includes(name))
+          problem("error", f.name, line, `There's no game called "${m[1].trim()}".`,
+            `The games the engine knows are: ${GAMES.join(", ")}. See docs/ENGINE.md.`);
+        else if (scene.game)
+          problem("error", f.name, line, `${scene.name} already has a game on it.`, "A scene can only have one game: line.");
+        else scene.game = name;
+        scene.gameLine = line;
+        return;
+      }
+
+      // effect: name
+      m = t.match(/^effect\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        for (const e of m[1].split(",").map(clean).filter(Boolean)) {
+          if (!EFFECTS.includes(e))
+            problem("warning", f.name, line, `There's no effect called "${e}".`,
+              `Choose from: ${EFFECTS.join(", ")}. See docs/ENGINE.md.`);
+          else scene.effects.push(e);
+        }
+        return;
+      }
+
+      // sound: name
+      m = t.match(/^sound\s*:\s*(.*)$/i);
+      if (m) {
+        flush();
+        for (const snd of m[1].split(",").map(clean).filter(Boolean)) {
+          if (!SOUNDS.includes(snd))
+            problem("warning", f.name, line, `There's no sound called "${snd}".`,
+              `Choose from: ${SOUNDS.join(", ")}. See docs/ENGINE.md.`);
+          else scene.sounds.push(snd);
+        }
+        return;
+      }
+
       // THE END
       if (ENDING.test(t)) { flush(); scene.ending = true; scene.endLine = line; return; }
 
@@ -256,10 +478,32 @@ const Story = (() => {
         }
         choice.to = target;
         if (rest) {
-          const need = rest.match(/^if\s+(.+)$/i);
-          if (need) choice.need = clean(need[1]);
-          else problem("error", f.name, line, `After a choice, the only thing allowed is "if" and an item. This line has: ${rest}`,
-            "For example: [Unlock the door](#vault) if brass key");
+          const outcome = rest.match(/^on\s+(win|lose)$/i);
+          const haunt = rest.match(/^haunted\s+([a-z]+)\s*(\d+)?$/i);
+          if (outcome) {
+            choice.outcome = outcome[1].toLowerCase();
+          } else if (haunt) {
+            const kind = clean(haunt[1]);
+            if (!HAUNTINGS.includes(kind)) {
+              const near = closest(kind, HAUNTINGS);
+              problem("error", f.name, line, `There's nothing wrong with a choice called "${haunt[1]}".`,
+                near ? `Did you mean haunted ${near}?` : `Choose from: ${HAUNTINGS.map((h) => "haunted " + h).join(", ")}. See docs/ENGINE.md.`);
+            } else {
+              choice.haunted = kind;
+              if (kind === "waits") choice.after = Number(haunt[2] || 6);
+              else if (haunt[2]) problem("warning", f.name, line, `"haunted ${kind}" doesn't take a number.`, `Only "haunted waits" does, like: haunted waits 8`);
+            }
+          } else {
+            const cond = condition(rest);
+            if (typeof cond === "string") {
+              problem("error", f.name, line, `After the choice "${choice.text}", this doesn't make sense: ${rest}`, cond);
+            } else {
+              choice.cond = cond;
+              // need is the old name for an item condition. The map and the
+              // "nobody can pick anything here" check both still use it.
+              if (cond.kind === "item") choice.need = cond.value;
+            }
+          }
         }
         scene.choices.push(choice);
         return;
@@ -275,13 +519,37 @@ const Story = (() => {
         problem("error", f.name, line, "A choice is in the middle of a sentence.", "Each choice goes on its own line, below the scene's text.");
       }
 
-      if (!para.length) scene._paraLine = line;
-      para.push(t);
+      // (if lantern) A paragraph that only shows when something is true.
+      let body = t;
+      if (para.length && /^\(\s*if\s/i.test(t)) {
+        problem("error", f.name, line, "This line starts a new (if ...) paragraph, but the paragraph above it hasn't finished.",
+          "Put a blank line between them. Without one they run together into one paragraph and the (if ...) is shown to the player as words.");
+        return;
+      }
+      if (!para.length) {
+        const cm = t.match(/^\(\s*(if\s[^)]*)\)\s*(.*)$/i);
+        if (cm) {
+          const cond = condition(cm[1]);
+          if (typeof cond === "string") {
+            problem("error", f.name, line, `This paragraph starts with (${cm[1].trim()}), which doesn't make sense.`, cond);
+          } else {
+            scene._paraCond = cond;
+          }
+          body = cm[2].trim();
+          if (!body) {
+            problem("error", f.name, line, "This line says when to show a paragraph, but there's no paragraph after it.",
+              "Put the words on the same line: (if lantern) The lantern lights the wall.");
+            return;
+          }
+        }
+        scene._paraLine = line;
+      }
+      para.push(body);
     });
     flush();
   }
 
-  return { FILES, THEMES, build, closest };
+  return { FILES, THEMES, GAMES, EFFECTS, SOUNDS, TOKENS, HAUNTINGS, build, closest, describe, condition };
 })();
 
 if (typeof module !== "undefined") module.exports = Story;

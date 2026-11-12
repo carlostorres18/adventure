@@ -131,3 +131,112 @@ button.small { margin-top: 10px; font-size: 13px; padding: 4px 10px; border-radi
   #book { padding: 18px 16px 16px; }
   #endings { margin-left: 0; width: 100%; }
 }
+
+/* ===================================================================
+   Added with the engine's second half: memories, games, effects and
+   hauntings. Everything below can be switched off by the player, and
+   everything below holds still under prefers-reduced-motion.
+   =================================================================== */
+
+/* A paragraph that only some players see, because of what they've done
+   before. Marked quietly, so the writer can spot it while testing. */
+#scene p.remembered { border-left: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); padding-left: 10px; margin-left: -12px; }
+.got.lost { border-left-color: var(--muted); opacity: 0.85; }
+.got.kept { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+
+#choices button .label { flex: 1 1 auto; }
+#choices button.locked .label { opacity: 0.85; }
+#choices.waiting { opacity: 0; pointer-events: none; transition: none; }
+#choices { transition: opacity 0.3s ease; }
+
+/* ---------- the games ---------- */
+.arcade { margin: 0 0 1em; }
+.arcade-stage { position: relative; display: flex; justify-content: center; }
+.arcade canvas {
+  display: block; border-radius: 10px; background: #061015;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3); touch-action: none; cursor: crosshair;
+  max-width: 100%;
+}
+.arcade-hud {
+  position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 14px; flex-wrap: wrap;
+  padding: 8px 12px; pointer-events: none;
+  font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace; color: #e9f3f6;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+.arcade-meter { display: inline-flex; align-items: center; gap: 4px; }
+.arcade-meter b, .arcade-depth b, .arcade-ring b { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; margin-right: 4px; }
+.arcade-meter i { width: 9px; height: 9px; border-radius: 2px; background: rgba(255,255,255,0.18); }
+.arcade-meter i.on { background: var(--pip, #ffd98a); box-shadow: 0 0 6px var(--pip, #ffd98a); }
+.arcade-ring i { display: inline-block; width: 70px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.18); position: relative; vertical-align: -1px; }
+.arcade-ring i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w, 0%); border-radius: 4px; background: #ffe9a8; box-shadow: 0 0 8px #ffe9a8; }
+.arcade-judge { color: #ffe9a8; }
+.arcade-say { margin: 10px 0 8px; color: var(--muted); font: italic 0.95em/1.5 var(--font); min-height: 1.5em; }
+.arcade-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.arcade-buttons button {
+  padding: 7px 13px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--page); cursor: pointer; font: 14px system-ui, sans-serif;
+}
+.arcade-buttons button:hover:not(:disabled) { border-color: var(--accent); }
+.arcade-buttons button:disabled { opacity: 0.5; cursor: default; }
+.arcade-buttons .arcade-skip { margin-left: auto; }
+
+/* ---------- what the island remembers ---------- */
+.memory-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+.memory-table th { text-align: left; vertical-align: top; padding: 6px 12px 6px 0; width: 38%; color: #3e4c59; font-weight: 600; }
+.memory-table td { padding: 6px 0; border-bottom: 1px solid #eceef1; }
+.memory-table code { background: #f1f3f5; border-radius: 4px; padding: 1px 5px; }
+.memory-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.memory-off { background: #fff4ce; border: 1px solid #e0c35c; border-radius: 6px; padding: 8px 10px; color: #5c4400; }
+
+/* ---------- effects ---------- */
+#fx { position: fixed; inset: 0; pointer-events: none; z-index: 5; display: none; }
+
+.fx-dark  #book { filter: brightness(0.74) contrast(1.06); }
+.fx-dread #book { animation: fx-breathe 5.5s ease-in-out infinite; }
+.fx-dread { --muted: #7a6a6a; }
+.fx-wrong #book > * { animation: fx-lean 11s ease-in-out infinite; }
+.fx-flicker #book { animation: fx-flick 4.1s steps(1, end) infinite; }
+.fx-underwater #book { filter: hue-rotate(-14deg) saturate(1.12); }
+.fx-underwater #scene p { animation: fx-sway 7s ease-in-out infinite; }
+.fx-jolt { animation: fx-jolt 0.55s cubic-bezier(.36,.07,.19,.97); }
+
+@keyframes fx-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.006); } }
+@keyframes fx-lean    { 0%,100% { transform: skewX(0deg); } 48% { transform: skewX(0.35deg); } 52% { transform: skewX(-0.3deg); } }
+@keyframes fx-flick   { 0%,88% { filter: none; } 89%,91% { filter: brightness(0.82); } 92%,95% { filter: none; } 96%,97% { filter: brightness(0.9); } }
+@keyframes fx-sway    { 0%,100% { transform: translateX(0); } 50% { transform: translateX(1.5px); } }
+@keyframes fx-jolt {
+  10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); } 40%, 60% { transform: translateX(7px); }
+}
+
+/* ---------- hauntings ---------- */
+/* The buttons are display:flex, which beats the plain [hidden] attribute, so
+   "haunted waits" would turn up immediately without this. */
+#choices button[hidden] { display: none; }
+#choices button.haunted { transition: transform 0.16s cubic-bezier(.2,.8,.3,1.4), opacity 0.2s ease; }
+#choices button.haunted-flees { cursor: not-allowed; }
+#choices button.haunted-caught { border-color: var(--accent); }
+#choices button.haunted-glitch .label { font-variant-ligatures: none; }
+#choices button.haunted-lies .label { font-style: italic; }
+#choices button.haunted-gone {
+  cursor: default; border-style: dashed; color: var(--muted);
+  background: repeating-linear-gradient(45deg, transparent, transparent 7px, rgba(127,127,127,0.07) 7px, rgba(127,127,127,0.07) 14px);
+}
+#choices button.haunted-gone .label { text-decoration: line-through; text-decoration-thickness: 1px; }
+#choices button.haunted-gone .num { background: var(--muted); }
+#choices button.haunted-faded { opacity: 0.45; }
+#choices button.haunted-refuse { animation: fx-refuse 0.4s ease; }
+#choices button.haunted-arrives { animation: fx-arrive 0.9s ease both; }
+@keyframes fx-refuse {
+  0% { transform: translateX(0); } 15% { transform: translateX(-5px) skewX(2deg); filter: blur(1.1px); }
+  35% { transform: translateX(6px) skewX(-2deg); } 55% { transform: translateX(-4px); filter: blur(0.6px); }
+  75% { transform: translateX(3px); } 100% { transform: translateX(0); filter: none; }
+}
+@keyframes fx-arrive { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-dread #book, .fx-wrong #book > *, .fx-flicker #book, .fx-underwater #scene p,
+  .fx-jolt, #choices button.haunted-refuse, #choices button.haunted-arrives { animation: none; }
+  #choices button.haunted { transition: none; }
+  #choices { transition: none; }
+}

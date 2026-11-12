@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><title>Look at a scene</title>
+<link rel="stylesheet" href="engine/style.css">
+</head>
+<body class="theme-paper">
+<div id="book">
+  <header id="top"><h1 id="title">…</h1><p id="byline"></p></header>
+  <div id="notice" hidden></div>
+  <article id="scene" tabindex="-1" aria-live="polite"></article>
+  <ol id="choices"></ol>
+  <p id="carrying" hidden></p>
+</div>
+<nav id="bar">
+  <button id="btn-restart">Start over</button><button id="btn-back">Back</button>
+  <button id="btn-map">Story map</button><button id="btn-draft">Test a draft</button>
+  <button id="btn-memory">Memory</button><button id="btn-sound"></button>
+  <button id="btn-problems"></button><span id="endings"></span>
+</nav>
+<p id="help"><kbd>1</kbd>–<kbd>9</kbd> pick a choice</p>
+<div id="panel" hidden role="dialog"><div id="panel-box">
+  <div id="panel-head"><h2 id="panel-title"></h2><button id="panel-close">×</button></div>
+  <div id="panel-body"></div></div></div>
+<script src="engine/story.js"></script>
+<script src="engine/memory.js"></script>
+<script src="engine/effects.js"></script>
+<script src="engine/arcade.js"></script>
+<script src="engine/map.js"></script>
+<script src="engine/draft.js"></script>
+<script src="engine/play.js"></script>
+<script>
+(function () {
+  const q = new URLSearchParams(location.search);
+  const grab = (n) => { const x = new XMLHttpRequest(); x.open("GET", "story/" + n, false);
+                        try { x.send(); } catch (e) { return null; }
+                        return x.status === 200 ? { name: n, text: x.responseText } : null; };
+  const files = Story.FILES.map(grab).filter(Boolean);
+  Play.testFrames = Number(q.get("frames") || 0);
+  // ?play=good pretends a competent player is at the keyboard, so a test can
+  // check a game is actually winnable and roughly how long it takes.
+  if (q.get("play")) {
+    Play.testDrive = (st, i) => {
+      const g = st.g;
+      if (g && typeof g.depth === "number") {            // undertow: swim up, dodge
+        st.keys.arrowup = true;
+        const near = (g.bullets || []).concat(g.bits || []).map(b => ({ dx: b.x - g.x, dy: b.y - g.y }))
+          .filter(b => Math.abs(b.dy) < 42 && Math.abs(b.dx) < 42).sort((a, b2) => Math.abs(a.dx) - Math.abs(b2.dx))[0];
+        st.keys.arrowleft = !!near && near.dx > 0;
+        st.keys.arrowright = !!near && near.dx <= 0;
+      } else if (g && typeof g.angle === "number") {     // bell: ring on the beat
+        const off = Math.abs(Math.sin(g.angle));
+        st.keys[" "] = off < g.window * 0.45;
+      }
+    };
+  }
+  if (q.get("runs")) { for (let i = 1; i < Number(q.get("runs")); i++) Memory.startRun(); }
+  if (q.get("forget")) Memory.forget();
+  Play.bootWith(files, q.get("scene") || undefined);
+  for (const it of (q.get("items") || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean)) Play.state.items.add(it);
+  if (q.get("scene")) Play.go(q.get("scene"));
+  // ?nowait=1 takes the typewriter off the scene before drawing it, for screenshots
+  if (q.get("nowait") && q.get("scene")) {
+    const sc = Play.state.story.scenes[q.get("scene")];
+    if (sc) sc.effects = sc.effects.filter(e => e !== "slow");
+    Play.go(q.get("scene"));
+    document.getElementById("choices").style.transition = "none";   // no fade, for the shot
+  }
+  if (q.get("panel") === "map") document.getElementById("btn-map").click();
+  if (q.get("panel") === "memory") document.getElementById("btn-memory").click();
+  if (q.get("dump")) {
+    const d = document.createElement("pre");
+    d.style.cssText = "position:fixed;right:4px;top:4px;background:#fff;color:#000;font:11px monospace;padding:6px;z-index:99;max-width:40ch";
+    d.textContent = "testFrames=" + Play.testFrames
+      + "\nscene=" + Play.state.scene
+      + "\ngame obj=" + (Play.state.game ? "yes" : "no")
+      + "\nhud=" + (document.querySelector(".arcade-hud") || {}).textContent
+      + "\nitems=" + [...Play.state.items].join("|")
+      + "\nchoices.className=" + document.getElementById("choices").className
+      + "\nchoices.count=" + document.getElementById("choices").children.length
+      + "\nchoicesHTML=" + document.getElementById("choices").innerHTML.replace(/</g,"<").slice(0,420);
+    document.body.appendChild(d);
+  }
+})();
+</script>
+</body></html>

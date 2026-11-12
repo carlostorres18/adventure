@@ -6,46 +6,56 @@
 
   HOW THIS PATH IS BUILT (notes for my reviewer)
 
-  This path and path-2.md are two halves of one puzzle. They link straight
-  into each other, not only through the crossroads:
+  This path and path-2.md are two halves of one puzzle and link straight
+  into each other:
      sea-stair -> #bell-house  (in path-2.md)
-     surface   -> #path-4      (straight to the lighthouse, carrying the key)
+     surface   -> #path-4      (to the tower, carrying the key)
      path-2.md sends players here through the-edge, star-count, the-gift
      and not-yet.
 
-  ITEMS THIS FILE GIVES
-     iron key            (the-ribs)     path-4.md needs this to open the tower
-     iron clapper        (clapper)      used in path-2.md to ring the fog bell
-     the log page        (log-page)     opens an extra choice at abernathy
-     a brass button      (crab)         flavour
-     the same key twice  (same-key)     the last lock on the secret ending
-
-  ITEMS THIS FILE NEEDS FROM OTHER PEOPLE
-     lantern        from path-1.md  (Rosa the baker) - burns the wreck
-     white feather  from path-2.md  (the Gull Queen) - lets you dive the hold
+  THIS IS THE PATH THAT CHANGES GENRE. Scene "the-dive" is not read, it is
+  played: a bullet hell, in the dark, under the wreck. What the player is
+  carrying changes the game itself:
+     white feather       more air, and longer to recover after a hit
+     lantern             you can see much further. Without it it is nearly black.
+     the same key twice  three blinks through the fold, on the space bar
+  There is always a button that skips straight to the winning scene, so a
+  player who can't or doesn't want to play a game never misses the story.
+  "Let go" is the losing button, and it is a real choice, not a failure:
+  it goes to the undertow ending on purpose.
 
   IMPORTANT TO THE WHOLE TEAM: the old keeper in path-1.md says the tower key
   went down with his boat. This file is where it is. Scene the-ribs still
   gives "iron key", spelled exactly that way, so path-4.md keeps working.
   Please don't rename it without telling me.
 
-  THE TWIST: the ship you can hear out in the fog is this wreck. On a foggy
-  night the island's nights lie on top of each other, and down in the hold of
-  Abernathy's Pride it is still 1984 and she is still going down. That is why
-  there are two of the same key.
+  THE TWIST, and how it fits Carlos's time loop: the ship you can hear out in
+  the fog is this wreck. On a foggy night the island's goes lie on top of each
+  other, and down in the hold it is still the night she went down. That is why
+  there are two of the same key, and it is the same reason there are eleven
+  names on the wall in path-2.md and only ever one person.
 
-  JUMP STRAIGHT TO A SCENE WHILE TESTING (add this to the live link):
-     ?scene=the-ribs
-     ?scene=hold&items=white feather
-     ?scene=the-ribs&items=lantern          (the bonfire ending unlocks)
+  ITEMS THIS FILE GIVES
+     iron key, iron clapper, the log page, a brass button, the same key twice
+  ITEMS IT NEEDS FROM OTHER PEOPLE
+     lantern        path-1.md (Rosa) - burns the wreck, and lights the game
+     white feather  path-2.md (the Gull Queen) - lets you dive at all
+     stopped watch  path-1.md (Abernathy's chair) - one extra scene in the fold
+
+  TESTING (add to the live link):
+     ?scene=the-dive&items=white feather,lantern     the game, lit
+     ?scene=the-dive&items=white feather             the game, nearly blind
+     ?scene=the-ribs&items=lantern                   the bonfire ending unlocks
 
   Lines inside these comment marks are notes. Players never see them.
 -->
 
-by:
+by: Nistopher Chrolan
 
 ## path-3
 ![The ribs of a wrecked boat standing out of wet grey sand at low tide, with the sea creeping back in and a cliff stair in the distance](images/wreck-lowtide.svg)
+effect: fog
+sound: wind
 
 The beach is cold grey sand, packed hard, ribbed like the roof of a mouth. The tide is a long way out and going to be sorry about it later.
 
@@ -55,6 +65,8 @@ Away to the south the cliff comes down to the sand, and there are steps cut into
 
 Out in the fog, a long way off, a ship's horn goes. Then, a bit closer, it goes again.
 
+(if run 2) The tide is exactly where it was last time. Of course it is. It is the same night.
+
 [Wade out to the ribs](#the-ribs)
 [Walk down to the steps in the cliff](#sea-stair)
 [Build a sandcastle](#sandcastle)
@@ -63,7 +75,7 @@ Out in the fog, a long way off, a ship's horn goes. Then, a bit closer, it goes 
 ## sandcastle
 ![Sunrise over calm water off Gull Island, the fog burning off, with the lighthouse standing on the cliff and a ferry coming in](images/dawn.svg)
 
-You are a grown adult with a job and you build a sandcastle, and you are not going to apologise for it.
+You are a grown adult with a job, and you build a sandcastle, and you are not going to apologise for it.
 
 It is a lighthouse. You build it to scale, because you have been looking at the real one all evening and your hands have opinions. Four courses of wet sand, tapering. A gallery of flat pebbles. A moat, which the real one lacks. A flag made out of a gull feather, which the real one also lacks and should have.
 
@@ -79,10 +91,13 @@ THE END
 
 ## sea-stair
 ![A steep flight of steps cut into a wet cliff face, numbers carved beside them, with spray bursting below and one number scratched out](images/sea-stair.svg)
+sound: wind
 
 Steps, cut straight into the cliff, going up to the trail. No rail. The stone is wet and the spray comes up through the gaps in a way that suggests the sea considers this a loophole.
 
 Somebody has carved a number beside each step. Not neatly. Over years, by different people, in different moods.
+
+Except that it is not different people, and you will work that out later tonight, up there, in the dark, with a lantern.
 
 The eleventh step has had its number scratched out so hard that there is a pale dish in the rock.
 
@@ -91,6 +106,8 @@ The eleventh step has had its number scratched out so hard that there is a pale 
 [Go back along the sand](#path-3)
 
 ## count-steps
+effect: wrong
+
 You count on the way up, because of the numbers, because once somebody shows you a number you are going to check it.
 
 One hundred and ten.
@@ -134,7 +151,7 @@ There is a fog bell up on that cliff with an empty pin, and it is a mile from he
 
 He took it with him. He got into a boat in the dark to go out to a ship, and the thing he made sure to bring was the voice of the bell.
 
-You do not know yet whether that was so he could use it or so nobody else could.
+You do not know yet whether that was so he could use it, or so nobody else could.
 
 get: iron clapper
 
@@ -156,33 +173,181 @@ get: the log page
 [Fold it up and put it in your coat](#the-ribs)
 
 ## bonfire
+sound: lamp
+
 You are standing inside forty years of salt-dried oak with an oil lantern in your hand, and the thought arrives fully grown.
 
 She goes up like a hymn.
 
-The ribs catch along the top edge first and then all at once, and the fire stands up off the sand twenty feet, and the wet sand underneath it throws the whole thing back up at the sky, doubled.
+The ribs catch along the top edge first and then all at once, and the fire stands up off the sand twenty feet, and the wet sand underneath throws the whole thing back up at the sky, doubled.
 
 You burn a dead man's boat to the waterline to save a live man's ship, and you stand well back and you say sorry out loud, several times, which does not help and is not for him.
 
 Out in the fog, a horn. Then the engine note changes. Then she is going away.
 
-In the morning there is a black ring on the sand and nothing in it. Up in the village, one window has had its curtain held open all night, and the old man behind it is not angry. He has been waiting since 1984 for somebody to be practical about this.
+In the morning there is a black ring on the sand and nothing in it. Up in the village, one window has had its curtain held open all night, and the old man behind it is not angry. He has been waiting a very long time for somebody to be practical about this.
 
 THE END
 
 ## hold
+effect: dark
+
 What is left of the hold is a slot of black water in the bottom of the wreck, between the ribs, where the sand has not got in yet.
 
 It is deeper than the boat is. You put your arm in to the shoulder and there is no bottom, and you take your arm out again rather fast and sit back on your heels and have a word with yourself about it.
 
 The water in there is not moving with the rest of the sea. It is moving slightly earlier.
 
-[Put the feather between your teeth and go down](#the-fold) if white feather
+(if ending undertow) You have been down there. You know what is down there. It has had you {drownings} times and it is still perfectly happy to wait.
+
+[Put the feather between your teeth and go down](#the-dive) if white feather
 [Just feel around down there](#crab)
 [Get back up into the air](#the-ribs)
 
+## the-dive
+game: undertow
+effect: underwater
+sound: splash
+
+You go down through the hold expecting four feet of cold, and you get a staircase.
+
+The water warms. It gets lighter instead of darker. There is a boat over your head with her lamp still lit, going down right now, this second, and she is the same boat you are standing inside, except that she is not a wreck yet, because it is not that year yet.
+
+The sea has an opinion about you being here.
+
+[You come up under her hull, in 1984](#the-fold) on win
+[The sea keeps you](#undertow) on lose
+
+## the-fold
+![Looking up through deep green water at a fishing boat going down above you, its lamp still burning, with bubbles rising and a drowning man reaching out with a key in his fist](images/the-fold.svg)
+effect: underwater
+sound: splash
+
+You come up under her and hang there in the warm part of the water with your hands on her planking, and she is whole, and she is lit, and she is going down.
+
+The feather in your teeth gives you one slow cold breath after another, which is the only thing about any of this you would describe as kind.
+
+Eight feet away, a man is in the water with his fist closed around something.
+
+[Swim to him](#abernathy)
+[Look at what is underneath you](#the-grey)
+[Stop swimming](#undertow)
+
+## abernathy
+effect: underwater, dread
+
+He is about thirty. That is the thing you were not ready for. Dark, big through the shoulders, with a nose you have seen painted on a wall this evening in ochre, and he is not frightened, he is *busy*, he is still trying to get somewhere.
+
+He sees you. He sees you properly, in the way of a man who has been expecting somebody for a while and has got tired of composing the speech.
+
+He pushes his fist at you.
+
+[Take what is in his hand](#same-key)
+[Show him the page in his own handwriting](#his-page) if the log page
+[Show him the watch that stopped](#his-watch) if stopped watch
+[Tell him the ship made it](#mercy)
+[Let go and swim up](#surface) haunted lies
+
+## his-page
+You unfold his own page in front of his face, underwater, and hold it there.
+
+He reads it. You watch a man read his own last note in the handwriting he is going to have.
+
+Then he understands the rest of it, all at once, which is that somebody came, and that the coming took forty years, and that the whole point of a note is that it gets found.
+
+He laughs. Underwater. It is the worst sound you have ever heard and he means it entirely kindly.
+
+[Take what is in his hand](#same-key)
+[Tell him the ship made it](#mercy)
+
+## his-watch
+sound: tick
+
+You hold up the silver watch with its hands stopped at 9:47.
+
+He stops moving. Then, slowly, he puts his free hand flat on his own chest, over the pocket, where the same watch is, ticking, because here it is still going.
+
+Two watches. One watch. Forty years apart and nine feet apart.
+
+He looks at the stopped one for a long moment and you can see him understand what it means that it stopped, and that somebody has been carrying it since, and that it is going to be handed to him in a hollow chair leg by a version of himself who has given up.
+
+He shakes his head, once. Not at you.
+
+[Take what is in his hand](#same-key)
+[Tell him the ship made it](#mercy)
+
+## same-key
+He puts it in your palm and closes your fingers over it himself, which takes him two goes.
+
+An iron key, as long as your hand, bright as a new nail, with a bend in the shank where somebody dropped it once on a stone floor.
+
+In your coat pocket, where it has been since you opened the tin box, the other one shifts against your hip. Rust-furred. Same length. Same teeth. Same bend, in the same place, because it is the same bend. It happened once and it is here twice.
+
+You are holding one key, forty years apart, in both hands.
+
+get: the same key twice
+
+[Look at what is underneath you](#the-grey)
+[Go up](#surface)
+
+## the-grey
+![An enormous pale shape standing in the fog beyond the rocks, which slowly resolves into the shadow of the lighthouse thrown onto the fog](images/the-grey.svg)
+effect: static, wrong
+sound: heartbeat
+
+You look down, and down there is not down. The fold does not have a floor, it has a direction, and in that direction, out past where the rocks ought to be, something is standing.
+
+It is the size of the island. It is pale, and vertical, and patient in a way that makes your chest hurt, and while you are watching it, a long pale slot opens near the top of it, the way an eye opens, and the island is being looked at.
+
+You stay very still for the rest of your life, which lasts about four seconds.
+
+Then the fog slides, and the shape slides with it, because it is on the fog, because it is a shadow. A tower's shadow. Thrown out onto a fog bank by a lamp that is not lit yet but will be, if anybody gets round to it.
+
+And the slot near the top is not an eye. It is the gap in the gallery rail where a keeper stands to clean the glass.
+
+There is nothing under this island. There never was. There are rocks, and weather, and one person who was five minutes late, over and over, for two hundred years.
+
+[Go back to him](#abernathy)
+[Go up](#surface)
+
+## mercy
+effect: slow
+
+You tell him the ship made it.
+
+You tell him the light was lit that night, lit on time, and that she came round the headland with two blasts of the horn to say thank you, and that his name is on the slate up there with a proper second date on it like everybody else's, and that nobody, not one single person on this island, ever said it was his fault.
+
+Every word of it is a lie and you deliver it like a weather report.
+
+He stops working. That is how you know he believed you. Forty years of a man trying to get somewhere, and he stops, and he goes easy, and the last thing he does with his face is the thing people do when they are told it is fine.
+
+You wake on your back on the sand with the tide at your knees and your hands empty, both of them.
+
+The wreck is a wreck. Out in the fog a horn is going, and going, and going, and you lie there and let it, because you have just spent everything you had on somebody who was already gone.
+
+Up on the cliff the slate still has eleven names and one empty line. You check, in the morning. You are not sure whether checking makes it better.
+
+THE END
+
+## surface
+lose: the log page
+
+You come up through the hold and the hold is not there any more, because the tide is in and the wreck is under four feet of moving water and you have to swim for it.
+
+You crawl out onto the sand and lie there coughing while the sea goes through the ribs of *Abernathy's Pride* behind you, in and out, the way it has for forty years, patiently, like something keeping a place warm.
+
+The page has come apart in your pocket into grey pulp with the pencil gone out of it. You lay the bits on a rock anyway.
+
+The keys are fine. Keys are always fine.
+
+Up on the hill, the tower is still dark. Out in the fog, the horn goes again, and it is closer than it was.
+
+[Go straight up the hill to the lighthouse](#path-4)
+[Climb the cliff steps to the bell on the clifftop](#sea-stair)
+[Go back to the crossroads](#crossroads)
+
 ## crab
-You feel around. You get: a bent spoon, half a boot, a cork, and a crab the size of a dinner plate who was having a perfectly good night until now.
+A bent spoon, half a boot, a cork, and a crab the size of a dinner plate who was having a perfectly good night until now.
 
 He is holding a brass button. A keeper's coat button, with the anchor on it, polished to a coin by his own hands over what must be years.
 
@@ -208,110 +373,10 @@ There is no version of the last eight hours that you can say out loud and surviv
 
 THE END
 
-## the-fold
-![Looking up through deep green water at a fishing boat going down above you, its lamp still burning, with bubbles rising and a drowning man reaching out with a key in his fist](images/the-fold.svg)
-
-You go down through the hold expecting four feet of cold and you get a staircase.
-
-The water warms. That is the first wrong thing. Then it gets lighter instead of darker, and the light is coming from above you and it is yellow, and it is swinging.
-
-There is a boat over your head. She is whole. Her lamp is lit. Her bow is up and her stern is down and she is going down right now, this second, with a noise you can feel in your back teeth, and she is the same boat you are standing inside, except that she is not a wreck yet, because it is not that year yet.
-
-The feather in your teeth gives you one slow cold breath after another, which is the only thing about any of this that you would describe as kind.
-
-Eight feet away, a man is in the water with his fist closed around something.
-
-[Swim to him](#abernathy)
-[Look at what is underneath you](#the-grey)
-[Stop swimming](#undertow)
-
-## abernathy
-He is about thirty. That is the thing you were not ready for. Dark, big through the shoulders, with a nose you have seen painted on a wall this evening in ochre, and he is not frightened, he is *busy*, he is still trying to get somewhere.
-
-He sees you. He sees you properly, in the way of a man who has been expecting somebody for a while and has got tired of composing the speech.
-
-He pushes his fist at you.
-
-[Take what is in his hand](#same-key)
-[Show him the page in his own handwriting](#his-page) if the log page
-[Tell him the ship made it](#mercy)
-[Let go and swim up](#surface)
-
-## his-page
-You unfold his own page in front of his face, underwater, in 1984, and hold it there.
-
-He reads it. You watch a man read his own last note in the handwriting he is going to have.
-
-Then he understands the rest of it, all at once, which is that somebody came, and that the coming took forty years, and that the whole point of a note is that it gets found.
-
-He laughs. Underwater. It is the worst sound you have ever heard and he means it entirely kindly.
-
-[Take what is in his hand](#same-key)
-[Tell him the ship made it](#mercy)
-
-## same-key
-He puts it in your palm and closes your fingers over it himself, which takes him two goes.
-
-An iron key, as long as your hand, bright as a new nail, with a bend in the shank where somebody dropped it once on a stone floor.
-
-In your coat pocket, where it has been since you opened the tin box, the other one shifts against your hip. Rust-furred. Same length. Same teeth. Same bend, in the same place, because it is the same bend. It happened once and it is here twice.
-
-You are holding one key, forty years apart, in both hands.
-
-get: the same key twice
-
-[Look at what is underneath you](#the-grey)
-[Go up](#surface)
-
-## the-grey
-![An enormous pale shape standing in the fog beyond the rocks, which slowly resolves into the shadow of the lighthouse thrown onto the fog](images/the-grey.svg)
-
-You look down, and down there is not down. The fold does not have a floor, it has a direction, and in that direction, out past where the rocks ought to be, something is standing.
-
-It is the size of the island. It is pale, and vertical, and patient in a way that makes your chest hurt, and while you are watching it, a long pale slot opens near the top of it, the way an eye opens, and the island is being looked at.
-
-You stay very still for the rest of your life, which lasts about four seconds.
-
-Then the fog slides, and the shape slides with it, because it is on the fog, because it is a shadow. A tower's shadow. Thrown out onto a fog bank by a lamp that is not lit yet but will be, if anyone gets round to it.
-
-And the slot near the top is not an eye. It is the gap in the gallery rail where a keeper stands to clean the glass.
-
-There is nothing under this island. There never was. There are rocks, and weather, and two hundred years of people who were five minutes late, and that has been enough all by itself.
-
-[Go back to him](#abernathy)
-[Go up](#surface)
-
-## mercy
-You tell him the ship made it.
-
-You tell him the light was lit that night, lit on time, and that she came round the headland with two blasts of the horn to say thank you, and that his name is on the slate up there with a proper second date on it like everyone else's, and that nobody, not one single person on this island, ever said it was his fault.
-
-Every word of it is a lie and you deliver it like a weather report.
-
-He stops working. That is how you know he believed you. Forty years of a man trying to get somewhere, and he stops, and he goes easy, and the last thing he does with his face is the thing people do when they are told it is fine.
-
-You wake on your back on the sand with the tide at your knees and your hands empty, both of them.
-
-The wreck is a wreck. Out in the fog a horn is going, and going, and going, and you lie there and let it, because you have just spent everything you had on somebody who was already gone.
-
-Up on the cliff the slate still has eleven names and one empty line. You check, in the morning. You are not sure whether checking makes it better.
-
-THE END
-
-## surface
-You come up through the hold and the hold is not there any more, because the tide is in and the wreck is under four feet of moving water and you have to swim for it.
-
-You crawl out onto the sand and lie there coughing while the sea goes through the ribs of *Abernathy's Pride* behind you, in and out, the way it has for forty years, patiently, like something keeping a place warm.
-
-The feather is gone. The keys are not.
-
-Up on the hill, the tower is still dark. Out in the fog, the horn goes again, and it is closer than it was.
-
-[Go straight up the hill to the lighthouse](#path-4)
-[Climb the cliff steps to the bell on the clifftop](#sea-stair)
-[Go back to the crossroads](#crossroads)
-
 ## undertow
+effect: underwater, slow
+sound: heartbeat
+
 You stop swimming.
 
 It is not a decision so much as the end of a long argument you did not know you were having. The feather goes out of your teeth and turns over once, going up, very white.

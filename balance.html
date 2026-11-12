@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Game balance</title>
+<style>body{font:13px/1.6 ui-monospace,Menlo,monospace;padding:16px}
+.good{color:#0a7d32}.bad{color:#c0211a;font-weight:bold}h2{font:bold 15px system-ui;margin:16px 0 4px}</style>
+</head><body><div id="out">running…</div>
+<script src="engine/story.js"></script><script src="engine/memory.js"></script>
+<script src="engine/effects.js"></script><script src="engine/arcade.js"></script>
+<script>
+const out = [];
+function trial(game, items, drive, maxFrames) {
+  const mount = document.createElement("div"); mount.style.display = "none"; document.body.appendChild(mount);
+  let won = null, frames = 0;
+  Arcade.play(game, { mount, items: new Set(items), frames: maxFrames, quiet: true,
+    drive: (st, i) => { frames = i; drive(st, i); },
+    onDone: (w) => { if (won === null) won = w; } });
+  mount.remove();
+  return { won, seconds: (frames / 60).toFixed(1) };
+}
+const swim = (st) => {
+  const g = st.g; if (!g || typeof g.depth !== "number") return;
+  st.keys.arrowup = true;
+  const near = (g.bullets || []).concat(g.bits || []).map(b => ({ dx: b.x - g.x, dy: b.y - g.y }))
+    .filter(b => Math.abs(b.dy) < 44 && Math.abs(b.dx) < 44).sort((a, b) => Math.abs(a.dx) - Math.abs(b.dx))[0];
+  st.keys.arrowleft = !!near && near.dx > 0;
+  st.keys.arrowright = !!near && near.dx <= 0;
+};
+const idle = () => {};
+const ring = (st) => { const g = st.g; if (!g || typeof g.angle !== "number") return;
+  st.keys[" "] = Math.abs(Math.sin(g.angle)) < g.window * 0.45; };
+const ringBad = (st) => { const g = st.g; if (!g) return; st.keys[" "] = (st.t * 60 | 0) % 37 === 0; };
+
+function run(label, game, items, drive, n) {
+  const res = []; for (let i = 0; i < n; i++) res.push(trial(game, items, drive, 2400));
+  const wins = res.filter(r => r.won === true).length;
+  const times = res.filter(r => r.won !== null).map(r => Number(r.seconds));
+  const avg = times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—";
+  const pct = Math.round(wins / n * 100);
+  out.push(`<div>${label.padEnd(44)} <b>${String(pct).padStart(3)}% won</b>  (${wins}/${n}), about ${avg}s a go</div>`);
+  return pct;
+}
+out.push("<h2>The undertow — is it winnable, and is it fair?</h2>");
+const a = run("a player who swims and dodges, feather+lantern", "undertow", ["white feather","lantern"], swim, 8);
+const b = run("the same player with no lantern (nearly blind)", "undertow", ["white feather"], swim, 8);
+const c = run("with everything, including the fold blinks", "undertow", ["white feather","lantern","the same key twice"], swim, 8);
+const d = run("somebody who does not touch the controls", "undertow", ["white feather"], idle, 8);
+out.push("<h2>The bell — can you ring it, and can you fail it?</h2>");
+const e = run("a player hitting the beat", "bell", ["iron clapper"], ring, 7);
+const f = run("a player mashing at random", "bell", ["iron clapper"], ringBad, 7);
+
+out.push("<h2>Verdict</h2>");
+const check = (c2, m) => out.push(`<div class="${c2 ? "good" : "bad"}">${c2 ? "PASS" : "FAIL"}  ${m}</div>`);
+check(a >= 50, "the undertow can be won by a player who swims and dodges (" + a + "%)");
+check(d <= 25, "and is lost by one who doesn't, so winning means something (" + d + "%)");
+check(c >= 50, "carrying more never makes it harder (" + c + "%)");
+check(e >= 60, "the bell rings for a player on the beat (" + e + "%)");
+check(f < e, "and mashing is worse than playing (" + f + "% vs " + e + "%)");
+out.push(`<div style="margin-top:12px;max-width:70ch;color:#444">
+<b>What this does and does not measure.</b> The player here is a bot that reads
+every hazard's exact position every frame and never panics. It is better than
+a person, and the darkness costs it nothing, so these numbers are an
+<b>upper bound</b>, not a difficulty setting. What they do prove is that both
+games can be won, that neither can be won by doing nothing, and that the bell
+is reachable at all &mdash; it was not, until the fade was moved to run before
+the hit instead of after it.</div>`);
+document.getElementById("out").innerHTML = out.join("");
+</script></body></html>

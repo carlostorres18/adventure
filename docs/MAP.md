@@ -13,9 +13,15 @@ adventure/
 │   ├── start.md            title, opening, and the crossroads (the owner)
 │   └── path-1.md ...       one path per teammate
 ├── images/                 pictures used in the story
-├── engine/                 ← the machinery (about 1,100 lines)
+├── test.html               a self-test for the engine (players never see it)
+├── look.html               jump straight to one scene, to look at it closely
+├── balance.html            plays the games with a bot, to check they're fair
+├── engine/                 ← the machinery
 │   ├── story.js            reads the story files and checks them for mistakes
 │   ├── play.js             shows scenes, tracks items, remembers endings
+│   ├── memory.js           what this browser remembers about earlier goes
+│   ├── arcade.js           the scenes that are played instead of read
+│   ├── effects.js          fog, lamplight, the typewriter, sound, hauntings
 │   ├── map.js              draws the story map
 │   ├── draft.js            the "Test a draft" panel
 │   ├── check-cli.js        the Story check that GitHub runs on pull requests
@@ -26,6 +32,7 @@ adventure/
 │   └── ISSUE_TEMPLATE/             the bug report form
 └── docs/
     ├── MAP.md              you are here
+    ├── ENGINE.md           memories, games, effects and hauntings
     └── IDEAS.md            optional bigger features
 ```
 
@@ -51,13 +58,20 @@ Those three questions are most of what the problems list checks.
 
 ## What happens when you open the page
 
-1. `index.html` loads the four engine files.
+1. `index.html` loads the engine files.
 2. `play.js` asks GitHub's web server for each file in `story/`, the same
    way your browser asks for any web page. Files that don't exist are skipped.
 3. `story.js` reads the files line by line. `##` starts a scene, `[...](#...)`
    is a choice, `get:` is an item, and so on. Then it checks the whole story
    and makes the problems list.
 4. `play.js` shows the first scene of `start.md` and waits for a choice.
+
+If a scene has any of the extra lines from [ENGINE.md](ENGINE.md), three more
+files get involved. `memory.js` answers questions about earlier goes at the
+story, like `if run 3`. `effects.js` does `effect:` and `sound:` and the
+haunted choices. `arcade.js` takes over a scene that has a `game:` line and
+hands back a win or a lose. None of them can stop a player getting through:
+`story.js` refuses to build a story where they could.
 
 ## What the story remembers, and where
 
