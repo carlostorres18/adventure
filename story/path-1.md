@@ -104,7 +104,7 @@ He has your face. Not someone who looks like you. *Your* face, down to the littl
 
 On the back, in faded ink, in **your handwriting**:
 
-*Don't eat the pie. The key is in the wreck. In the cave, wind the watch.*
+*Don't eat the pie. The key is in the wreck. Keep the watch. Whatever you do, keep the watch.*
 
 You don't remember writing it. You don't remember ever being here.
 
